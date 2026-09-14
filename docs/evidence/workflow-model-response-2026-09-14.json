@@ -1,0 +1,53 @@
+{
+  "kind": "failed-main-and-user-rerun-comparison",
+  "run": "https://github.com/ArcForges/AI/actions/runs/34870686257",
+  "sourceCommit": "5e08d32d8923d6c0e6f4b5d0eb3cfd8712b708dd",
+  "buildVersion": "0.1.0-ci.15.1",
+  "candidateManifestSha256": "b3ad5d309d909b8e46d292c1eba2c15946b49a4faf3aaf67183322af8f2feeac",
+  "failedAttempt": {
+    "attempt": 1,
+    "workerVersion": "5108dc23-28a9-4d1c-bb25-eb53b561c0e5",
+    "runId": "hello-5108dc23-28a9-4d1c-bb25-eb53b561c0e5",
+    "status": "errored",
+    "admissionAccepted": true,
+    "admissionMatchedWorkerSourceAndBuild": true,
+    "failedStep": "request-tool-1",
+    "stepAttempts": 1,
+    "stepCount": 2,
+    "startedAt": "2026-09-14T16:48:31.930Z",
+    "endedAt": "2026-09-14T16:48:33.513Z",
+    "error": "Expected a completed assistant message without refusal or legacy tools.",
+    "modelResponsePersisted": false,
+    "exactInvalidResponseField": "not-observable-from-retained-evidence"
+  },
+  "successfulUserRerun": {
+    "attempt": 2,
+    "workerVersion": "18217528-41b8-47df-beac-dbe13408c0be",
+    "runId": "hello-18217528-41b8-47df-beac-dbe13408c0be",
+    "deployedAt": "2026-09-14T16:54:24.407Z",
+    "verifiedAt": "2026-09-14T16:54:33.093Z",
+    "sameSourceBuildAndCandidateManifest": true,
+    "admissionMatchedWorkerSourceAndBuild": true,
+    "modelCalls": 2
+  },
+  "githubTokenMetadata": {
+    "lastUpdatedAt": "2026-09-14T15:08:04Z",
+    "unchangedAcrossAttempts": true,
+    "secretValueRead": false
+  },
+  "diagnosticRestSamples": {
+    "profile": "original-requestTool-adapter-without-explicit-temperature",
+    "maxCalls": 6,
+    "actualCalls": 6,
+    "acceptedStructuredToolResponses": 6,
+    "finishReasons": ["tool_calls"],
+    "completionTokens": [32, 32, 32, 33, 42, 32],
+    "reproducedOriginalFailure": false,
+    "realWorkflowEvidence": false
+  },
+  "boundaries": [
+    "The original failed instance was preserved without restart.",
+    "A successful rerun does not identify which field failed in the original response.",
+    "Neither these samples nor zero temperature guarantee deterministic responses or a zero failure rate."
+  ]
+}

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { SayHelloRequestSchema, SayHelloResponseSchema } from "@arcforges/proto";
 import { create, fromBinary, toBinary } from "@bufbuild/protobuf";
+import { type ModelPhase, responseFailure } from "./model-diagnostics";
 
 export const MODEL_ID = "@cf/openai/gpt-oss-20b" as const;
 export const TOOL_NAME = "say_hello";
@@ -40,33 +41,34 @@ export function sayHello(params: HelloParams): string {
   return fromBinary(SayHelloResponseSchema, toBinary(SayHelloResponseSchema, response)).message;
 }
 
-function completionMessage(value: unknown, finishReason: "tool_calls" | "stop") {
-  if (
-    !isRecord(value) ||
-    value.error ||
-    !Array.isArray(value.choices) ||
-    value.choices.length !== 1
-  ) {
-    throw new Error("Expected one Chat Completions choice.");
+function completionMessage(value: unknown, phase: ModelPhase) {
+  if (!isRecord(value)) throw responseFailure(phase, "RESPONSE_SHAPE", value);
+  if (value.error) throw responseFailure(phase, "RESPONSE_ERROR", value);
+  if (!Array.isArray(value.choices) || value.choices.length !== 1) {
+    throw responseFailure(phase, "CHOICE_COUNT", value);
   }
   const choice = value.choices[0];
-  if (
-    !isRecord(choice) ||
-    choice.finish_reason !== finishReason ||
-    !isRecord(choice.message) ||
-    choice.message.role !== "assistant" ||
-    choice.message.refusal ||
-    choice.message.function_call
-  ) {
-    throw new Error("Expected a completed assistant message without refusal or legacy tools.");
+  if (!isRecord(choice)) throw responseFailure(phase, "CHOICE_SHAPE", value);
+  if (!isRecord(choice.message)) throw responseFailure(phase, "MESSAGE_SHAPE", value);
+  if (choice.message.role !== "assistant") throw responseFailure(phase, "MESSAGE_ROLE", value);
+  if (choice.message.refusal) throw responseFailure(phase, "REFUSAL", value);
+  if (choice.message.function_call) throw responseFailure(phase, "LEGACY_FUNCTION_CALL", value);
+  if (choice.finish_reason === "length" || choice.finish_reason === "model_length") {
+    throw responseFailure(phase, "OUTPUT_TRUNCATED", value);
+  }
+  if (choice.finish_reason === "content_filter") {
+    throw responseFailure(phase, "CONTENT_FILTERED", value);
+  }
+  if (choice.finish_reason !== (phase === "request-tool" ? "tool_calls" : "stop")) {
+    throw responseFailure(phase, "FINISH_REASON", value);
   }
   return choice.message;
 }
 
 export function parseToolResponse(value: unknown, expected: HelloParams): ToolProposal {
-  const calls = completionMessage(value, "tool_calls").tool_calls;
+  const calls = completionMessage(value, "request-tool").tool_calls;
   if (!Array.isArray(calls) || calls.length !== 1) {
-    throw new Error("The model must request exactly one say_hello tool.");
+    throw responseFailure("request-tool", "TOOL_COUNT", value);
   }
   const tool = calls[0];
   if (
@@ -79,26 +81,37 @@ export function parseToolResponse(value: unknown, expected: HelloParams): ToolPr
     typeof tool.function.arguments !== "string" ||
     tool.function.arguments.length > 2048
   ) {
-    throw new Error("Unsupported tool proposal.");
+    throw responseFailure("request-tool", "TOOL_SHAPE", value);
   }
-  const params = parseParams(JSON.parse(tool.function.arguments));
+  let argumentsValue: unknown;
+  try {
+    argumentsValue = JSON.parse(tool.function.arguments);
+  } catch {
+    throw responseFailure("request-tool", "TOOL_ARGUMENTS_JSON", value);
+  }
+  let params: HelloParams;
+  try {
+    params = parseParams(argumentsValue);
+  } catch {
+    throw responseFailure("request-tool", "TOOL_ARGUMENTS_INVALID", value);
+  }
   if (params.name !== expected.name) {
-    throw new Error("The tool must preserve the supplied name.");
+    throw responseFailure("request-tool", "TOOL_NAME_CHANGED", value);
   }
   return { params, callId: tool.id };
 }
 
 export function parseFinalResponse(value: unknown): string {
-  const message = completionMessage(value, "stop");
+  const message = completionMessage(value, "finish-greeting");
   if (
     message.tool_calls != null &&
     (!Array.isArray(message.tool_calls) || message.tool_calls.length !== 0)
   ) {
-    throw new Error("Expected final text without further tools.");
+    throw responseFailure("finish-greeting", "FINAL_TOOL_CALLS", value);
   }
   const text = message.content;
   if (typeof text !== "string" || !text.trim() || text.length > 4096) {
-    throw new Error("Invalid final text length.");
+    throw responseFailure("finish-greeting", "FINAL_TEXT", value);
   }
   return text;
 }

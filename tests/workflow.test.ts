@@ -3,6 +3,7 @@ import { introspectWorkflowInstance } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 import type { VerifiedHelloParams } from "../src/deployment";
 import { MODEL_ID } from "../src/hello";
+import { readModelFailure, responseFailure } from "../src/model-diagnostics";
 
 describe("local durable Hello Agent", () => {
   const guarded = (name = "世界"): VerifiedHelloParams => ({
@@ -105,21 +106,35 @@ describe("local durable Hello Agent", () => {
     expect(await instance.getOutput()).toMatchObject({ toolMessage: "Hello, 世界!" });
   });
 
-  it("fails a possibly dispatched model step without automatically repeating it", async () => {
-    const id = crypto.randomUUID();
-    await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
-    await instance.modify(async (modifier) => {
-      await modifier.disableRetryDelays();
-      await modifier.mockStepError(
-        { name: "request-tool" },
-        new Error("injected-model-failure"),
-        1,
-      );
-    });
-    await env.HELLO_AGENT.create({ id, params: { name: "World" } });
-    await instance.waitForStatus("errored");
-    expect((await instance.getError()).message).toContain("injected-model-failure");
-  });
+  it.each(["request-tool", "finish-greeting"] as const)(
+    "preserves %s diagnostics without automatically repeating a dispatched model step",
+    async (modelStep) => {
+      const id = crypto.randomUUID();
+      await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
+      await instance.modify(async (modifier) => {
+        await modifier.disableRetryDelays();
+        if (modelStep === "finish-greeting") {
+          await modifier.mockStepResult(
+            { name: "request-tool" },
+            { params: { name: "World" }, callId: "call_hello_1" },
+          );
+        }
+        await modifier.mockStepError(
+          { name: modelStep },
+          responseFailure(modelStep, "OUTPUT_TRUNCATED", {
+            choices: [{ finish_reason: "length", message: { role: "assistant" } }],
+          }),
+          1,
+        );
+      });
+      await env.HELLO_AGENT.create({ id, params: { name: "World" } });
+      await instance.waitForStatus("errored");
+      expect(readModelFailure((await instance.getError()).message)).toMatchObject({
+        phase: modelStep,
+        code: "OUTPUT_TRUNCATED",
+      });
+    },
+  );
 
   it("rejects invalid input before entering any model step", async () => {
     const id = crypto.randomUUID();

@@ -5,6 +5,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import { readModelFailure } from "../src/model-diagnostics.ts";
 import {
   CANDIDATE,
   ROOT,
@@ -179,8 +180,11 @@ function rejectedBeforeModel(status, expected) {
     assert.deepEqual(jsonValue(status.params), params, "Unexpected rejected instance input.");
     return { reason: "older-runtime-rejected-guarded-input", modelCalls: 0 };
   }
+  // Failed/pending instances may have empty or opaque output. Their error and
+  // step history must remain observable without trying to parse a final result.
+  if (status.status !== "complete") return null;
   const output = jsonValue(status.output);
-  if (status.status !== "complete" || output?.kind !== "deployment-rejected") return null;
+  if (output?.kind !== "deployment-rejected") return null;
   assert.deepEqual(jsonValue(status.params), params, "Unexpected rejected instance input.");
   assert.equal(output.runId, expected.runId);
   assert.deepEqual(output.expected, params.expected);
@@ -202,6 +206,43 @@ function rejectedBeforeModel(status, expected) {
     "Matching identity unexpectedly rejected admission.",
   );
   return { reason: "deployment-identity-rejected", modelCalls: 0, actual };
+}
+
+export function workflowFailure(status, code = "WORKFLOW_FAILED") {
+  const steps = Array.isArray(status.steps) ? status.steps : [];
+  const failed = steps.findLast((step) => step?.success === false) ?? steps.at(-1);
+  const attempts = Array.isArray(failed?.attempts) ? failed.attempts : [];
+  const error = attempts.findLast((attempt) => attempt?.error)?.error ?? status.error;
+  const diagnostic = readModelFailure(error?.message) ?? readModelFailure(status.error?.message);
+  const step = [
+    "admit-deployment-1",
+    "request-tool-1",
+    "say-hello-1",
+    "finish-greeting-1",
+  ].includes(failed?.name)
+    ? failed.name
+    : "unknown";
+  const modelStepsObserved = steps.filter((item) =>
+    ["request-tool-1", "finish-greeting-1"].includes(item?.name),
+  ).length;
+  const legacyResponseError =
+    error?.message === "Expected a completed assistant message without refusal or legacy tools.";
+  return {
+    code:
+      diagnostic?.code ??
+      (legacyResponseError
+        ? "LEGACY_RESPONSE_VALIDATION"
+        : error?.name === "WorkflowTimeoutError"
+          ? "WORKFLOW_STEP_TIMEOUT"
+          : code),
+    step,
+    attempts: Array.isArray(failed?.attempts) ? attempts.length : null,
+    modelStepsObserved,
+    // Missing history is not evidence of zero calls, and a timeout cannot
+    // establish whether a dispatched provider request stopped or was billed.
+    modelUsage: modelStepsObserved > 0 || diagnostic ? "possibly-incurred" : "unknown",
+    ...(diagnostic ? { diagnostic } : {}),
+  };
 }
 
 // Every candidate instance checks its OWN identity before AI. Only a proven
@@ -249,13 +290,18 @@ export async function probe(
         break;
       }
       if (status.status === "complete") return validateLiveOutput(status, target);
-      assert(
-        ["queued", "running", "waiting"].includes(status.status),
-        `Workflow ${runId} is ${status.status}; no automatic restart was attempted.`,
-      );
-      if (now() >= deadline) {
+      if (!["queued", "running", "waiting"].includes(status.status)) {
+        const failure = workflowFailure(status);
+        record({ ...observed, failure });
         throw new Error(
-          `Workflow ${runId} has not completed. Preserve its evidence and rerun test:live to query the SAME instance.`,
+          `Workflow ${runId} failed: ${JSON.stringify(failure)}. No automatic restart was attempted. Inspect this instance before a new paid attempt.`,
+        );
+      }
+      if (now() >= deadline) {
+        const failure = workflowFailure(status, "WORKFLOW_POLL_TIMEOUT");
+        record({ ...observed, failure });
+        throw new Error(
+          `Workflow ${runId} has not completed: ${JSON.stringify(failure)}. Preserve its evidence and rerun test:live to query the SAME instance.`,
         );
       }
       await wait(pollMs);
