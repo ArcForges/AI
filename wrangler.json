@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "arcforges-ai-hello",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "ai": { "binding": "AI", "remote": true },
+  "version_metadata": { "binding": "CF_VERSION" },
+  "workflows": [
+    { "name": "arcforges-ai-hello", "binding": "HELLO_AGENT", "class_name": "HelloAgentWorkflow" }
+  ],
+  "vars": { "BUILD_VERSION": "development", "SOURCE_COMMIT": "development" },
+  "observability": { "enabled": true },
+  "limits": { "cpu_ms": 30000 }
+}

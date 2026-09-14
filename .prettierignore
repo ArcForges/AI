@@ -1,0 +1,8 @@
+node_modules/
+.worktree/
+.wrangler/
+artifacts/
+coverage/
+LICENSE
+src/env.generated.d.ts
+package-lock.json

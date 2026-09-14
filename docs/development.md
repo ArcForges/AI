@@ -1,0 +1,47 @@
+# Development
+
+## Toolchain
+
+| Component                          | Pinned version         | Reason                                                                          |
+| ---------------------------------- | ---------------------- | ------------------------------------------------------------------------------- |
+| Node / npm                         | 24.21.0 / 11.19.0      | Current LTS line shared with Contracts                                          |
+| TypeScript                         | 7.0.2                  | Current release checked on 2026-09-14                                           |
+| Wrangler                           | 4.131.2                | Worker bundling, deployment and local test harness                              |
+| Workers types                      | 5.20260914.1           | Current binding and model input/output types                                    |
+| Cloudflare Vitest plugin           | 1.1.9                  | Local Workerd/Workflow integration                                              |
+| Vitest                             | 4.1.11                 | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
+| Biome / Prettier                   | 2.5.13 / 3.9.6         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
+| ArcForges proto / protobuf runtime | 1.0.0-ci.25.1 / 2.14.1 | Published Contracts messages, not sibling source                                |
+
+`npm ci --ignore-scripts` restores the committed dependency graph on Windows and Linux without lifecycle scripts. The selected tools work with this installation mode. `package-lock.json` includes transitive/platform packages for reproducibility; do not shorten it by hand. Both platforms are verified in CI.
+
+## Commands
+
+| Command               | Result                                                                                 |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `npm run hooks`       | Enables this worktree's pre-commit and pre-push hooks                                  |
+| `npm run format`      | Formats repository text; generated bindings and npm's lockfile are excluded            |
+| `npm run types`       | Regenerates the small binding declaration from Wrangler config                         |
+| `npm run check`       | Repository policy, formatting, lint, type checks, unit/Workflow and release-tool tests |
+| `npm run build`       | Offline dry-run bundle and hash-verified candidate under `artifacts/candidate/`        |
+| `npm run test:bundle` | Executes the final compiled Worker and Workflow with explicit model-step mocks         |
+| `npm run deploy`      | Uploads the verified candidate using Cloudflare credentials; does not rebuild          |
+| `npm run test:live`   | Starts or resumes the deployment's real Workflow smoke test                            |
+
+Hooks intentionally do not deploy or call a model. They configure `core.hooksPath` for the current worktree, leaving other worktrees' hook choices intact. CI remains authoritative because local hooks are opt-in and can be bypassed.
+
+To inspect the local health response, run `npm run dev -- --remote-bindings=false`, then request `http://localhost:8787/health`. That handler returns build metadata only. The default AI binding is remote when enabled; real invocation consumes Workers AI usage even from local development. The test configuration explicitly disables remote bindings, and the compiled-bundle harness omits the remote AI binding entirely.
+
+## Dependency and contract changes
+
+Update exact versions with `npm install --save-exact <package>@<version>` or `--save-dev` as appropriate, preserving `--ignore-scripts`. Review the manifest and lockfile together. Run the complete check/build/bundle sequence and the dependency audit. A binding/toolchain update also requires regeneration and review of `src/env.generated.d.ts`.
+
+Keep the Cloudflare plugin, Wrangler and Vitest updates in a compatible group. Dependabot does not independently propose a Vitest major upgrade; review that upgrade explicitly when the Cloudflare plugin supports it. Keep `@arcforges/proto` and `@bufbuild/protobuf` compatible with the published Contracts manifest. No package can float to a different implementation between candidate testing and deployment.
+
+Local candidates built with uncommitted changes declare `sourceDirty: true` and can be tested but cannot be deployed. Commit the reviewed source and rebuild to obtain a candidate whose provenance identifies the exact source tree.
+
+## Test boundaries
+
+`tests/model.test.ts` checks the Responses request/response adapter with a fake AI binding. `tests/workflow.test.ts` uses a real local Workflow engine while mocking model steps; the protobuf tool executes. `eng/tests/` verifies candidate integrity, version provenance and safe resumption of remote smoke checks. `npm run test:bundle` runs the actual compiled entry point, not a rebuilt consumer or source substitute.
+
+Negative Workflow tests intentionally exercise invalid inputs and model errors. Workerd may log those injected errors even when the assertions pass. Unexpected errors or test-process failures still fail CI. Real provider compatibility, account permissions, quotas, latency and billing require the separate live gate.

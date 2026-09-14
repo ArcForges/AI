@@ -1,0 +1,18 @@
+name: Bug report
+description: Report a reproducible runtime, tooling or deployment issue.
+title: "[Bug]: "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Commit or release
+      description: Include the commit or candidate version and platform.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and observed result
+      description: Include expected behavior and sanitized logs. State whether model calls were mocked or real. Do not include tokens or private prompts.
+    validations:
+      required: true
