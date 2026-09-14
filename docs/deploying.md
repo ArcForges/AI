@@ -14,6 +14,8 @@
 
 There is no publish enable/disable variable and no npm/NuGet credential. Missing settings produce a failing deployment with a clear error, instead of a green skipped publication. Do not add a required environment reviewer if every successful main merge should deploy automatically.
 
+The bootstrap uses the account plan's default CPU limits. Do not add `limits.cpu_ms` for a Workers Free account: Cloudflare rejects custom CPU limits on that plan, even when the requested value equals the Paid default. Free Workflows have a 10 ms CPU limit per step; time waiting for the model response is not CPU time. The two model steps still enforce their separate 90-second timeout, 1,024-output-token limit and zero automatic retries. A successful Hello run does not establish capacity for a production workload. See [Workflow limits](https://developers.cloudflare.com/workflows/reference/limits/).
+
 For local verification, use `npm exec -- wrangler login` to authorize the local Wrangler client, and set `CLOUDFLARE_ACCOUNT_ID` in the current terminal. The deployment script captures the OAuth credential internally without printing it. CI always uses the environment API token, never a copied OAuth refresh token. An account token can alternatively be injected into the local process by a secret manager.
 
 ## First real run

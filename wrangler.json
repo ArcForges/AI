@@ -12,6 +12,5 @@
     { "name": "arcforges-ai-hello", "binding": "HELLO_AGENT", "class_name": "HelloAgentWorkflow" }
   ],
   "vars": { "BUILD_VERSION": "development", "SOURCE_COMMIT": "development" },
-  "observability": { "enabled": true },
-  "limits": { "cpu_ms": 30000 }
+  "observability": { "enabled": true }
 }
