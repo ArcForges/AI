@@ -141,17 +141,90 @@ export function validateLiveOutput(result, expected) {
   return output;
 }
 
+// A completed probe is immutable, so a stale result needs a new probe ID.
+// Only these model-free probes may repeat; the real inference instance may not.
+export async function waitForWorkerVersion(
+  api,
+  expected,
+  { pollMs = 10_000, timeoutMs = 300_000, record = () => {}, wait = delay, now = Date.now } = {},
+) {
+  const base = `/workflows/${WORKFLOW}/instances`;
+  const deadline = now() + timeoutMs;
+  for (let attempt = 1; attempt <= 30 && now() < deadline; attempt++) {
+    const runId = `ready-${expected.workerVersion}-${attempt}`;
+    const route = `${base}/${runId}`;
+    let status = await api(route, { allowMissing: true });
+    if (status === null) {
+      record({ runId, status: "submitting" });
+      const created = await api(base, {
+        method: "POST",
+        body: { instance_id: runId, params: { kind: "deployment-probe" } },
+      });
+      assert.equal(created.id, runId, "Cloudflare returned an unexpected readiness instance ID.");
+      status = await api(route);
+    }
+    while (["queued", "running", "waiting"].includes(status.status) && now() < deadline) {
+      record({ runId, status: status.status });
+      await wait(pollMs);
+      status = await api(route);
+    }
+    if (status.status === "complete") {
+      const output = typeof status.output === "string" ? JSON.parse(status.output) : status.output;
+      assert.equal(output?.kind, "deployment-probe", "Unexpected readiness output.");
+      assert.equal(output.runId, runId);
+      assert.equal(output.modelCalls, 0, "Readiness must not call a model.");
+      const observed = {
+        runId,
+        status: "complete",
+        workflowVersion: status.versionId,
+        workerVersion: output.workerVersion,
+        sourceCommit: output.sourceCommit,
+        buildVersion: output.buildVersion,
+        modelCalls: output.modelCalls,
+      };
+      record(observed);
+      if (
+        now() < deadline &&
+        output.workerVersion === expected.workerVersion &&
+        output.sourceCommit === expected.sourceCommit &&
+        output.buildVersion === expected.version
+      ) {
+        return observed;
+      }
+    } else {
+      // Bootstrap versions reject this non-Hello payload before any AI call.
+      // A timeout or an error here never restarts a real inference instance.
+      record({ runId, status: status.status });
+      assert(
+        ["errored", "terminated", "queued", "running", "waiting"].includes(status.status),
+        `Readiness Workflow is ${status.status}; inspect it before continuing.`,
+      );
+    }
+    if (now() < deadline) await wait(pollMs);
+  }
+  throw new Error(
+    "Workflow has not observed the deployed candidate within the readiness limit; no live inference was started.",
+  );
+}
+
 // A stable ID permits read-only resumption after a lost POST response. Do not
 // restart failed instances or create a replacement ID inside this function.
 export async function probe(
   api,
   expected,
-  { pollMs = 6000, timeoutMs = 300_000, record = () => {}, wait = delay } = {},
+  {
+    pollMs = 6000,
+    timeoutMs = 300_000,
+    record = () => {},
+    wait = delay,
+    beforeCreate = async () => {},
+  } = {},
 ) {
   const base = `/workflows/${WORKFLOW}/instances`;
   const instance = `${base}/${expected.runId}`;
   let status = await api(instance, { allowMissing: true });
   if (status === null) {
+    await beforeCreate();
     record({ status: "submitting", ...expected });
     // Match the pinned Wrangler implementation: params is the object itself.
     // The REST reference currently labels it a JSON string; encoding it twice
@@ -255,7 +328,22 @@ async function smoke() {
     sha256(fs.readFileSync(path.join(CANDIDATE, "candidate.json"))),
   );
   assert(UUID.test(expected.workerVersion) && expected.runId === `hello-${expected.workerVersion}`);
-  const output = await probe(createApi(auth), expected, {
+  const api = createApi(auth);
+  const output = await probe(api, expected, {
+    beforeCreate: async () => {
+      console.log("Waiting for the deployed Workflow identity without calling a model.");
+      const ready = await waitForWorkerVersion(api, expected, {
+        record: (state) =>
+          writeJson(path.join(EVIDENCE, "readiness", `${state.runId}.json`), state),
+      });
+      writeJson(path.join(EVIDENCE, "readiness-evidence.json"), {
+        ...ready,
+        checkedAt: new Date().toISOString(),
+      });
+      console.log(
+        "Workflow identity matches the candidate. Starting the single live inference instance.",
+      );
+    },
     record: (state) => writeJson(path.join(EVIDENCE, "live-state.json"), state),
   });
   writeJson(path.join(EVIDENCE, "live-evidence.json"), {

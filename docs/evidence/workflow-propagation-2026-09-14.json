@@ -1,0 +1,66 @@
+{
+  "kind": "cloudflare-deployment-propagation-verification",
+  "verifiedAt": "2026-09-14T16:09:36.396Z",
+  "runtimeSource": "d9c635e5f63032bcbc70a295bfafd755dd860114",
+  "buildVersion": "0.1.0-local",
+  "candidateSha256": "9b4cad0fb4dc671b332c3bfddf6252661160a99f9105f195b3c15a15ca5292ed",
+  "workerVersion": "6fb4c24c-648b-4815-a497-20bdcfee1b28",
+  "readiness": [
+    {
+      "runId": "ready-6fb4c24c-648b-4815-a497-20bdcfee1b28-1",
+      "status": "errored",
+      "workflowVersion": "cd747674-f1d6-4646-be93-437a035517e7",
+      "stepCount": 0,
+      "errorMessage": "NonRetryableError: Invalid Hello Agent input; no model call was admitted."
+    },
+    {
+      "runId": "ready-6fb4c24c-648b-4815-a497-20bdcfee1b28-2",
+      "status": "complete",
+      "workflowVersion": "cd747674-f1d6-4646-be93-437a035517e7",
+      "workerVersion": "6fb4c24c-648b-4815-a497-20bdcfee1b28",
+      "sourceCommit": "d9c635e5f63032bcbc70a295bfafd755dd860114",
+      "buildVersion": "0.1.0-local",
+      "modelCalls": 0,
+      "stepCount": 0
+    }
+  ],
+  "live": {
+    "runId": "hello-6fb4c24c-648b-4815-a497-20bdcfee1b28",
+    "status": "complete",
+    "workflowVersion": "cd747674-f1d6-4646-be93-437a035517e7",
+    "start": "2026-09-14T16:08:44.865Z",
+    "end": "2026-09-14T16:08:46.343Z",
+    "steps": [
+      {
+        "name": "request-tool-1",
+        "success": true,
+        "attempts": 1
+      },
+      {
+        "name": "say-hello-1",
+        "success": true,
+        "attempts": 1
+      },
+      {
+        "name": "finish-greeting-1",
+        "success": true,
+        "attempts": 1
+      }
+    ],
+    "output": {
+      "runId": "hello-6fb4c24c-648b-4815-a497-20bdcfee1b28",
+      "buildVersion": "0.1.0-local",
+      "sourceCommit": "d9c635e5f63032bcbc70a295bfafd755dd860114",
+      "workerVersion": "6fb4c24c-648b-4815-a497-20bdcfee1b28",
+      "model": "@cf/openai/gpt-oss-20b",
+      "modelCalls": 2,
+      "tool": "say_hello",
+      "toolMessage": "Hello, ArcForges!",
+      "message": "Hello, ArcForges!"
+    }
+  },
+  "publicEndpoints": {
+    "workersDevEnabled": false,
+    "previewUrlsEnabled": false
+  }
+}

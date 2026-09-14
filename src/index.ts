@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from "cloudflare:workers";
 import { NonRetryableError } from "cloudflare:workflows";
-import { type HelloParams, MODEL_ID, parseParams, sayHello, TOOL_NAME } from "./hello";
+import { type HelloParams, isRecord, MODEL_ID, parseParams, sayHello, TOOL_NAME } from "./hello";
 import { finishGreeting, requestTool } from "./model";
+
+type WorkflowParams = HelloParams | { kind: "deployment-probe" };
 
 export interface Env {
   AI: Ai;
-  HELLO_AGENT: Workflow<HelloParams>;
+  HELLO_AGENT: Workflow<WorkflowParams>;
   BUILD_VERSION: string;
   SOURCE_COMMIT: string;
   CF_VERSION: { id: string };
@@ -18,8 +20,24 @@ const MODEL_STEP = {
   timeout: "90 seconds",
 } as const;
 
-export class HelloAgentWorkflow extends WorkflowEntrypoint<Env, HelloParams> {
-  override async run(event: WorkflowEvent<HelloParams>, step: WorkflowStep) {
+export class HelloAgentWorkflow extends WorkflowEntrypoint<Env, WorkflowParams> {
+  override async run(event: WorkflowEvent<WorkflowParams>, step: WorkflowStep) {
+    const identity = {
+      runId: event.instanceId,
+      buildVersion: this.env.BUILD_VERSION,
+      sourceCommit: this.env.SOURCE_COMMIT,
+      workerVersion: this.env.CF_VERSION.id,
+    };
+    // This private deployment probe returns before any model or tool step.
+    // Earlier versions reject its payload because it contains no Hello name.
+    if (
+      isRecord(event.payload) &&
+      Object.keys(event.payload).length === 1 &&
+      "kind" in event.payload &&
+      event.payload.kind === "deployment-probe"
+    ) {
+      return { kind: "deployment-probe" as const, ...identity, modelCalls: 0 as const };
+    }
     let params: HelloParams;
     try {
       params = parseParams(event.payload);
@@ -34,10 +52,7 @@ export class HelloAgentWorkflow extends WorkflowEntrypoint<Env, HelloParams> {
       finishGreeting(this.env.AI, proposal, toolMessage),
     );
     return {
-      runId: event.instanceId,
-      buildVersion: this.env.BUILD_VERSION,
-      sourceCommit: this.env.SOURCE_COMMIT,
-      workerVersion: this.env.CF_VERSION.id,
+      ...identity,
       model: MODEL_ID,
       modelCalls: 2,
       tool: TOOL_NAME,

@@ -224,6 +224,22 @@ async function testBundle() {
     const health = await response.json();
     assert.equal(health.sourceCommit, manifest.sourceCommit);
     assert.equal(health.version, manifest.version);
+    const bindings = await worker.getEnv();
+    const readinessId = randomUUID();
+    const readinessInstance = await worker.introspectWorkflowInstance("HELLO_AGENT", readinessId);
+    let readiness;
+    try {
+      // The harness has no AI binding: this must complete without model mocks.
+      await bindings.HELLO_AGENT.create({ id: readinessId, params: { kind: "deployment-probe" } });
+      await readinessInstance.waitForStatus("complete");
+      readiness = await readinessInstance.getOutput();
+      assert.equal(readiness.kind, "deployment-probe");
+      assert.equal(readiness.modelCalls, 0);
+      assert.equal(readiness.sourceCommit, manifest.sourceCommit);
+      assert.equal(readiness.buildVersion, manifest.version);
+    } finally {
+      await readinessInstance.dispose();
+    }
     const id = randomUUID();
     const instance = await worker.introspectWorkflowInstance("HELLO_AGENT", id);
     try {
@@ -234,7 +250,6 @@ async function testBundle() {
         );
         await modifier.mockStepResult({ name: "finish-greeting" }, "Hello, Bundle!");
       });
-      const bindings = await worker.getEnv();
       await bindings.HELLO_AGENT.create({ id, params: { name: "Bundle" } });
       await instance.waitForStatus("complete");
       const output = await instance.getOutput();
@@ -243,6 +258,7 @@ async function testBundle() {
       writeJson(path.join(ROOT, "artifacts/bundle-evidence.json"), {
         kind: "local-bundle-mocked-inference",
         ...output,
+        readiness,
       });
     } finally {
       await instance.dispose();

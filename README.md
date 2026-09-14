@@ -33,7 +33,7 @@ The Worker has no public route, workers.dev URL or preview URL. Remote runs are 
 
 ## Delivery
 
-PRs validate source, dependencies, the local runtime and the final bundle on GitHub. A merge/push to `main` automatically deploys the verified candidate from that run, performs a real model/tool/model smoke test, and creates a GitHub prerelease with the candidate and deployment evidence. Failed checks or missing deployment settings fail the gate; no fake success or automatic model fallback is used.
+PRs validate source, dependencies, the local runtime and the final bundle on GitHub. A merge/push to `main` automatically deploys the verified candidate from that run, waits for model-free Workflow probes to observe its exact version, performs a real model/tool/model smoke test, and creates a GitHub prerelease with the candidate and deployment evidence. Failed checks or missing deployment settings fail the gate; no fake success or automatic model fallback is used.
 
 This is a deployable Worker, not an npm library. Versions are automatic: `0.1.0-ci.<run-number>.<run-attempt>`. No manual version edit, npm account, NuGet key or PGP key is needed.
 
