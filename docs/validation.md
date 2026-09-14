@@ -5,9 +5,9 @@ This file records observed bootstrap results and their boundaries. The live reco
 | Gate                          | Evidence                                                                                                                                                                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Dependencies                  | Pinned Node 24.21.0/npm 11.19.0 installation with lifecycle scripts disabled; the initial npm audit reported zero vulnerabilities                                                                                                        |
-| Source and local Workflow     | Formatting, recommended Biome rules, TypeScript checks and 25 runtime tests passed; model calls were explicitly mocked                                                                                                                   |
+| Source and local Workflow     | Formatting, recommended Biome rules, TypeScript checks and 29 runtime tests passed; model calls were explicitly mocked                                                                                                                   |
 | Compiled artifact             | The actual Wrangler bundle executed locally; its Workflow and published protobuf tool passed with model-step fixtures                                                                                                                    |
-| Deployment tooling            | 10 release-tool tests, candidate integrity checks and actionlint passed                                                                                                                                                                  |
+| Deployment tooling            | 14 release-tool tests, candidate integrity checks and actionlint passed                                                                                                                                                                  |
 | GitHub CI                     | [Bootstrap PR checks](https://github.com/ArcForges/AI/pull/1/checks) passed: Linux/Windows, both CodeQL languages, dependency/secret checks and the compiled candidate. The first main run's deployment skip is recorded below.          |
 | Cloudflare configuration      | Main-only GitHub cloudflare environment has the Account ID and token secret. The GitHub token successfully uploaded a Worker and invoked a real Workflow in run 34865236650; candidate identity failed as described below.               |
 | Real deployment and inference | Passed on 2026-09-14: the deployed Workflow completed both model steps and the protobuf tool, each in one attempt, returning `Hello, ArcForges!`. Worker/source provenance matched; workers.dev and preview URLs were confirmed disabled |
@@ -46,6 +46,18 @@ The implementation defect was treating a successful check in one instance as adm
 
 The current fix persists deployment admission inside the actual inference instance and rechecks identity inside both model callbacks. Only strict proof of a pre-model rejection permits a bounded next ID. Unknown errors, lost responses, possible model execution and inconsistent step history stop the run. Independent readiness probes have been removed. Local checks and real evidence for this guarded candidate are recorded separately below; historical successes do not validate either failed main run.
 
-Guarded-candidate live verification is pending. A main run containing this fix must still pass the real Workflow gate and create the GitHub prerelease. PR checks use no Cloudflare secret.
+## Guarded candidate verification
+
+The [guarded verification record](evidence/workflow-admission-2026-09-14.json) records a real local OAuth deployment on 2026-09-14, using the unchanged verified candidate from runtime commit `3a173697026b6f4d52a79b45f0acb9b0b4662329`:
+
+- Worker `0b8f1762-37d0-477a-be97-308743f03726`, build `0.1.0-local`.
+- `hello-0b8f1762-37d0-477a-be97-308743f03726` completed admission, both real model steps and the protobuf tool, each in one attempt. Its persisted admission and final output matched the deployed Worker, source and build, returning `Hello, ArcForges!`.
+- A deliberately incorrect Worker target completed with `deployment-rejected`, zero model calls and exactly one successful admission step. The real native Worker identity matched this candidate.
+- Before that deployment, the older runtime rejected the guarded payload with the known invalid-input error and zero steps. This confirms the supported transition path does not dispatch AI.
+- workers.dev and preview URLs remained disabled. No model failure or completed stale model run was retried.
+
+All 29 runtime tests and 14 release-tool tests passed locally, along with formatting, lint, TypeScript, generated-binding checks and final-bundle execution. Local model steps were explicitly mocked; the compiled bundle's stale-target rejection ran without an AI binding. These checks include the independent-probe counterexample, lost-response resumption, rejection after possible model execution, bounded admission and both pre-model version guards.
+
+A main run containing this fix must still pass the real Workflow gate and create the GitHub prerelease. This local OAuth result is distinct from GitHub's main deployment; PR checks use no Cloudflare secret.
 
 This Hello run does not verify production authorization, budgets/accounting, abuse resistance, streaming, R2, load capacity or the complete product harness. A real model response is not evidence that those product capabilities exist.
