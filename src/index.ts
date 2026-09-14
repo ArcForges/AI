@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { WorkflowEntrypoint, type WorkflowEvent, type WorkflowStep } from "cloudflare:workers";
 import { NonRetryableError } from "cloudflare:workflows";
-import { type HelloParams, isRecord, MODEL_ID, parseParams, sayHello, TOOL_NAME } from "./hello";
+import { matchesDeployment, parseWorkflowParams, type VerifiedHelloParams } from "./deployment";
+import { type HelloParams, MODEL_ID, sayHello, TOOL_NAME } from "./hello";
 import { finishGreeting, requestTool } from "./model";
 
-type WorkflowParams = HelloParams | { kind: "deployment-probe" };
+type WorkflowParams = HelloParams | VerifiedHelloParams;
 
 export interface Env {
   AI: Ai;
@@ -22,37 +23,55 @@ const MODEL_STEP = {
 
 export class HelloAgentWorkflow extends WorkflowEntrypoint<Env, WorkflowParams> {
   override async run(event: WorkflowEvent<WorkflowParams>, step: WorkflowStep) {
-    const identity = {
+    const identity = () => ({
       runId: event.instanceId,
       buildVersion: this.env.BUILD_VERSION,
       sourceCommit: this.env.SOURCE_COMMIT,
       workerVersion: this.env.CF_VERSION.id,
-    };
-    // This private deployment probe returns before any model or tool step.
-    // Earlier versions reject its payload because it contains no Hello name.
-    if (
-      isRecord(event.payload) &&
-      Object.keys(event.payload).length === 1 &&
-      "kind" in event.payload &&
-      event.payload.kind === "deployment-probe"
-    ) {
-      return { kind: "deployment-probe" as const, ...identity, modelCalls: 0 as const };
-    }
-    let params: HelloParams;
+    });
+    let parsed: ReturnType<typeof parseWorkflowParams>;
     try {
-      params = parseParams(event.payload);
+      parsed = parseWorkflowParams(event.payload);
     } catch {
       throw new NonRetryableError("Invalid Hello Agent input; no model call was admitted.");
     }
-    const proposal = await step.do("request-tool", MODEL_STEP, () =>
-      requestTool(this.env.AI, params),
-    );
+    const { hello: params, expected } = parsed;
+    // Persist the admission decision in THIS inference instance. A replay must
+    // not rewrite an earlier accepted decision as a model-free rejection.
+    const admission = expected
+      ? await step.do("admit-deployment", { ...MODEL_STEP, timeout: "10 seconds" }, async () => {
+          const actual = identity();
+          return { accepted: matchesDeployment(actual, expected), actual, expected };
+        })
+      : undefined;
+    if (admission && !admission.accepted) {
+      return {
+        kind: "deployment-rejected" as const,
+        ...admission.actual,
+        expected: admission.expected,
+        modelCalls: 0 as const,
+      };
+    }
+    const requireVersion = () => {
+      if (expected && !matchesDeployment(identity(), expected)) {
+        throw new NonRetryableError(
+          "Deployment identity changed after admission; do not automatically restart this instance.",
+        );
+      }
+    };
+    const proposal = await step.do("request-tool", MODEL_STEP, () => {
+      requireVersion();
+      return requestTool(this.env.AI, params);
+    });
     const toolMessage = await step.do("say-hello", async () => sayHello(proposal.params));
-    const message = await step.do("finish-greeting", MODEL_STEP, () =>
-      finishGreeting(this.env.AI, proposal, toolMessage),
-    );
+    const message = await step.do("finish-greeting", MODEL_STEP, () => {
+      requireVersion();
+      return finishGreeting(this.env.AI, proposal, toolMessage);
+    });
+    requireVersion();
     return {
-      ...identity,
+      ...identity(),
+      ...(admission ? { admission } : {}),
       model: MODEL_ID,
       modelCalls: 2,
       tool: TOOL_NAME,

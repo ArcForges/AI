@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-09-14T16:19:20.728Z",
+  "expected": {
+    "workerVersion": "7f4c392e-f0d8-40d0-989e-02a6340959cf",
+    "sourceCommit": "438821d736e081cc57b11b20702403e5d7c82e98",
+    "buildVersion": "0.1.0-ci.11.1"
+  },
+  "instances": [
+    {
+      "id": "ready-7f4c392e-f0d8-40d0-989e-02a6340959cf-1",
+      "status": "complete",
+      "workflowVersion": "e060629d-47fe-474f-a12d-1c4d58d3646e",
+      "start": "2026-09-14T16:15:25.438Z",
+      "end": "2026-09-14T16:15:25.487Z",
+      "output": {
+        "kind": "deployment-probe",
+        "runId": "ready-7f4c392e-f0d8-40d0-989e-02a6340959cf-1",
+        "buildVersion": "0.1.0-ci.11.1",
+        "sourceCommit": "438821d736e081cc57b11b20702403e5d7c82e98",
+        "workerVersion": "7f4c392e-f0d8-40d0-989e-02a6340959cf",
+        "modelCalls": 0
+      },
+      "steps": [],
+      "stepCount": 0
+    },
+    {
+      "id": "hello-7f4c392e-f0d8-40d0-989e-02a6340959cf",
+      "status": "complete",
+      "workflowVersion": "e060629d-47fe-474f-a12d-1c4d58d3646e",
+      "start": "2026-09-14T16:15:34.611Z",
+      "end": "2026-09-14T16:15:35.478Z",
+      "output": {
+        "runId": "hello-7f4c392e-f0d8-40d0-989e-02a6340959cf",
+        "buildVersion": "0.1.0-local",
+        "sourceCommit": "d9c635e5f63032bcbc70a295bfafd755dd860114",
+        "workerVersion": "6fb4c24c-648b-4815-a497-20bdcfee1b28",
+        "model": "@cf/openai/gpt-oss-20b",
+        "modelCalls": 2,
+        "tool": "say_hello",
+        "toolMessage": "Hello, ArcForges!",
+        "message": "Hello, ArcForges!"
+      },
+      "steps": [
+        {
+          "name": "request-tool-1",
+          "success": true,
+          "attempts": 1
+        },
+        {
+          "name": "say-hello-1",
+          "success": true,
+          "attempts": 1
+        },
+        {
+          "name": "finish-greeting-1",
+          "success": true,
+          "attempts": 1
+        }
+      ],
+      "stepCount": 3
+    }
+  ],
+  "currentDeployment": [
+    {
+      "id": "e94820a3-bc4c-43f3-aa97-502c26b14b7f",
+      "versions": [
+        {
+          "version_id": "7f4c392e-f0d8-40d0-989e-02a6340959cf",
+          "percentage": 100
+        }
+      ],
+      "createdOn": "2026-09-14T16:15:17.841864Z"
+    }
+  ]
+}

@@ -18,6 +18,7 @@ import {
 const WORKFLOW = "arcforges-ai-hello";
 const EVIDENCE = path.join(ROOT, "artifacts/deployment");
 const DEPLOYMENT = path.join(EVIDENCE, "deployment.json");
+const SMOKE_PROTOCOL = "verified-hello-v1";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 
 function credentials() {
@@ -130,6 +131,12 @@ export function validateLiveOutput(result, expected) {
   );
   assert.equal(output.sourceCommit, expected.sourceCommit);
   assert.equal(output.buildVersion, expected.version);
+  assert.equal(output.admission?.accepted, true, "Workflow did not record deployment admission.");
+  assert.deepEqual(output.admission.expected, verifiedHelloParams(expected).expected);
+  assert.deepEqual(output.admission.actual, {
+    runId: expected.runId,
+    ...verifiedHelloParams(expected).expected,
+  });
   assert.equal(output.model, "@cf/openai/gpt-oss-20b");
   assert.equal(output.modelCalls, 2);
   assert.equal(output.tool, "say_hello");
@@ -141,113 +148,123 @@ export function validateLiveOutput(result, expected) {
   return output;
 }
 
-// A completed probe is immutable, so a stale result needs a new probe ID.
-// Only these model-free probes may repeat; the real inference instance may not.
-export async function waitForWorkerVersion(
+export function verifiedHelloParams(expected) {
+  return {
+    kind: "verified-hello",
+    expected: {
+      workerVersion: expected.workerVersion,
+      sourceCommit: expected.sourceCommit,
+      buildVersion: expected.version,
+    },
+    hello: { name: "ArcForges" },
+  };
+}
+
+function jsonValue(value) {
+  return typeof value === "string" ? JSON.parse(value) : value;
+}
+
+function rejectedBeforeModel(status, expected) {
+  const params = verifiedHelloParams(expected);
+  // Never advance on an arbitrary error, missing step history, or an output
+  // claiming zero calls after a model step may already have been dispatched.
+  if (
+    status.status === "errored" &&
+    status.error?.message ===
+      "NonRetryableError: Invalid Hello Agent input; no model call was admitted." &&
+    status.step_count === 0 &&
+    Array.isArray(status.steps) &&
+    status.steps.length === 0
+  ) {
+    assert.deepEqual(jsonValue(status.params), params, "Unexpected rejected instance input.");
+    return { reason: "older-runtime-rejected-guarded-input", modelCalls: 0 };
+  }
+  const output = jsonValue(status.output);
+  if (status.status !== "complete" || output?.kind !== "deployment-rejected") return null;
+  assert.deepEqual(jsonValue(status.params), params, "Unexpected rejected instance input.");
+  assert.equal(output.runId, expected.runId);
+  assert.deepEqual(output.expected, params.expected);
+  assert.equal(output.modelCalls, 0);
+  assert.equal(status.step_count, 1, "Rejection has unexpected step history; stop for inspection.");
+  assert.equal(status.steps?.length, 1);
+  assert.equal(status.steps[0].name, "admit-deployment-1");
+  assert.equal(status.steps[0].success, true);
+  const actual = {
+    workerVersion: output.workerVersion,
+    sourceCommit: output.sourceCommit,
+    buildVersion: output.buildVersion,
+  };
+  assert(UUID.test(actual.workerVersion));
+  assert(typeof actual.sourceCommit === "string" && typeof actual.buildVersion === "string");
+  assert.notDeepEqual(
+    actual,
+    params.expected,
+    "Matching identity unexpectedly rejected admission.",
+  );
+  return { reason: "deployment-identity-rejected", modelCalls: 0, actual };
+}
+
+// Every candidate instance checks its OWN identity before AI. Only a proven
+// model-free rejection permits another ID. Pending/unknown/model failures stop.
+export async function probe(
   api,
   expected,
-  { pollMs = 10_000, timeoutMs = 300_000, record = () => {}, wait = delay, now = Date.now } = {},
+  { pollMs = 6000, timeoutMs = 300_000, record = () => {}, wait = delay, now = Date.now } = {},
 ) {
+  assert.equal(
+    expected.smokeProtocol,
+    SMOKE_PROTOCOL,
+    "Legacy smoke record: inspect its existing instance; deploy a guarded candidate before a new smoke.",
+  );
   const base = `/workflows/${WORKFLOW}/instances`;
   const deadline = now() + timeoutMs;
   for (let attempt = 1; attempt <= 30 && now() < deadline; attempt++) {
-    const runId = `ready-${expected.workerVersion}-${attempt}`;
+    const runId = attempt === 1 ? expected.runId : `${expected.runId}-${attempt}`;
+    const target = { ...expected, runId };
     const route = `${base}/${runId}`;
     let status = await api(route, { allowMissing: true });
     if (status === null) {
       record({ runId, status: "submitting" });
+      // Match the pinned Wrangler implementation: params is an object, not
+      // double-encoded JSON. Older runtimes reject this shape before any AI.
       const created = await api(base, {
         method: "POST",
-        body: { instance_id: runId, params: { kind: "deployment-probe" } },
+        body: { instance_id: runId, params: verifiedHelloParams(expected) },
       });
-      assert.equal(created.id, runId, "Cloudflare returned an unexpected readiness instance ID.");
+      assert.equal(created.id, runId, "Cloudflare returned an unexpected instance ID.");
       status = await api(route);
     }
-    while (["queued", "running", "waiting"].includes(status.status) && now() < deadline) {
-      record({ runId, status: status.status });
-      await wait(pollMs);
-      status = await api(route);
-    }
-    if (status.status === "complete") {
-      const output = typeof status.output === "string" ? JSON.parse(status.output) : status.output;
-      assert.equal(output?.kind, "deployment-probe", "Unexpected readiness output.");
-      assert.equal(output.runId, runId);
-      assert.equal(output.modelCalls, 0, "Readiness must not call a model.");
+    while (true) {
       const observed = {
         runId,
-        status: "complete",
+        status: status.status,
         workflowVersion: status.versionId,
-        workerVersion: output.workerVersion,
-        sourceCommit: output.sourceCommit,
-        buildVersion: output.buildVersion,
-        modelCalls: output.modelCalls,
+        stepCount: status.step_count,
+        checkedAt: new Date().toISOString(),
       };
       record(observed);
-      if (
-        now() < deadline &&
-        output.workerVersion === expected.workerVersion &&
-        output.sourceCommit === expected.sourceCommit &&
-        output.buildVersion === expected.version
-      ) {
-        return observed;
+      const rejected = rejectedBeforeModel(status, target);
+      if (rejected) {
+        record({ ...observed, ...rejected });
+        break;
       }
-    } else {
-      // Bootstrap versions reject this non-Hello payload before any AI call.
-      // A timeout or an error here never restarts a real inference instance.
-      record({ runId, status: status.status });
+      if (status.status === "complete") return validateLiveOutput(status, target);
       assert(
-        ["errored", "terminated", "queued", "running", "waiting"].includes(status.status),
-        `Readiness Workflow is ${status.status}; inspect it before continuing.`,
+        ["queued", "running", "waiting"].includes(status.status),
+        `Workflow ${runId} is ${status.status}; no automatic restart was attempted.`,
       );
+      if (now() >= deadline) {
+        throw new Error(
+          `Workflow ${runId} has not completed. Preserve its evidence and rerun test:live to query the SAME instance.`,
+        );
+      }
+      await wait(pollMs);
+      status = await api(route);
     }
     if (now() < deadline) await wait(pollMs);
   }
   throw new Error(
-    "Workflow has not observed the deployed candidate within the readiness limit; no live inference was started.",
-  );
-}
-
-// A stable ID permits read-only resumption after a lost POST response. Do not
-// restart failed instances or create a replacement ID inside this function.
-export async function probe(
-  api,
-  expected,
-  {
-    pollMs = 6000,
-    timeoutMs = 300_000,
-    record = () => {},
-    wait = delay,
-    beforeCreate = async () => {},
-  } = {},
-) {
-  const base = `/workflows/${WORKFLOW}/instances`;
-  const instance = `${base}/${expected.runId}`;
-  let status = await api(instance, { allowMissing: true });
-  if (status === null) {
-    await beforeCreate();
-    record({ status: "submitting", ...expected });
-    // Match the pinned Wrangler implementation: params is the object itself.
-    // The REST reference currently labels it a JSON string; encoding it twice
-    // would deliver a string to WorkflowEvent.payload instead of HelloParams.
-    const created = await api(base, {
-      method: "POST",
-      body: { instance_id: expected.runId, params: { name: "ArcForges" } },
-    });
-    assert.equal(created.id, expected.runId, "Cloudflare returned an unexpected instance ID.");
-  }
-  const deadline = Date.now() + timeoutMs;
-  do {
-    status = await api(instance);
-    record({ ...expected, status: status.status, checkedAt: new Date().toISOString() });
-    if (status.status === "complete") return validateLiveOutput(status, expected);
-    assert(
-      ["queued", "running", "waiting"].includes(status.status),
-      `Workflow is ${status.status}; no automatic restart was attempted.`,
-    );
-    await wait(pollMs);
-  } while (Date.now() < deadline);
-  throw new Error(
-    `Workflow ${expected.runId} has not completed. Run npm run test:live again to query the SAME instance.`,
+    "Deployment admission limit reached; all observed attempts were rejected before AI. Inspect the recorded instances before continuing.",
   );
 }
 
@@ -302,6 +319,7 @@ async function deploy() {
   writeJson(DEPLOYMENT, {
     accountId: auth.accountId,
     workflow: WORKFLOW,
+    smokeProtocol: SMOKE_PROTOCOL,
     workerVersion,
     runId,
     sourceCommit: manifest.sourceCommit,
@@ -329,30 +347,22 @@ async function smoke() {
   );
   assert(UUID.test(expected.workerVersion) && expected.runId === `hello-${expected.workerVersion}`);
   const api = createApi(auth);
+  console.log("Each live instance must admit the deployed identity before either model call.");
   const output = await probe(api, expected, {
-    beforeCreate: async () => {
-      console.log("Waiting for the deployed Workflow identity without calling a model.");
-      const ready = await waitForWorkerVersion(api, expected, {
-        record: (state) =>
-          writeJson(path.join(EVIDENCE, "readiness", `${state.runId}.json`), state),
-      });
-      writeJson(path.join(EVIDENCE, "readiness-evidence.json"), {
-        ...ready,
-        checkedAt: new Date().toISOString(),
-      });
-      console.log(
-        "Workflow identity matches the candidate. Starting the single live inference instance.",
-      );
+    record: (state) => {
+      writeJson(path.join(EVIDENCE, "admission", `${state.runId}.json`), state);
+      writeJson(path.join(EVIDENCE, "live-state.json"), state);
+      if (state.reason) console.log(`${state.runId}: ${state.reason}; zero model calls.`);
     },
-    record: (state) => writeJson(path.join(EVIDENCE, "live-state.json"), state),
   });
   writeJson(path.join(EVIDENCE, "live-evidence.json"), {
     kind: "cloudflare-real-inference",
     verifiedAt: new Date().toISOString(),
     ...expected,
+    runId: output.runId,
     output,
   });
-  console.log(`Real Workflow/model/tool/model passed for ${expected.runId}: ${output.message}`);
+  console.log(`Real Workflow/model/tool/model passed for ${output.runId}: ${output.message}`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

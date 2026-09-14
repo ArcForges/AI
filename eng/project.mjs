@@ -225,20 +225,36 @@ async function testBundle() {
     assert.equal(health.sourceCommit, manifest.sourceCommit);
     assert.equal(health.version, manifest.version);
     const bindings = await worker.getEnv();
-    const readinessId = randomUUID();
-    const readinessInstance = await worker.introspectWorkflowInstance("HELLO_AGENT", readinessId);
-    let readiness;
+    const target = {
+      workerVersion: bindings.CF_VERSION.id,
+      sourceCommit: manifest.sourceCommit,
+      buildVersion: manifest.version,
+    };
+    const rejectedId = randomUUID();
+    const rejectedInstance = await worker.introspectWorkflowInstance("HELLO_AGENT", rejectedId);
+    let rejection;
     try {
-      // The harness has no AI binding: this must complete without model mocks.
-      await bindings.HELLO_AGENT.create({ id: readinessId, params: { kind: "deployment-probe" } });
-      await readinessInstance.waitForStatus("complete");
-      readiness = await readinessInstance.getOutput();
-      assert.equal(readiness.kind, "deployment-probe");
-      assert.equal(readiness.modelCalls, 0);
-      assert.equal(readiness.sourceCommit, manifest.sourceCommit);
-      assert.equal(readiness.buildVersion, manifest.version);
+      // No AI binding or mocks: a stale actual inference request must stop at admission.
+      await bindings.HELLO_AGENT.create({
+        id: rejectedId,
+        params: {
+          kind: "verified-hello",
+          expected: { ...target, workerVersion: randomUUID() },
+          hello: { name: "Bundle" },
+        },
+      });
+      await rejectedInstance.waitForStatus("complete");
+      rejection = await rejectedInstance.getOutput();
+      assert.equal(rejection.kind, "deployment-rejected");
+      assert.equal(rejection.modelCalls, 0);
+      assert.equal(rejection.sourceCommit, manifest.sourceCommit);
+      assert.equal(rejection.buildVersion, manifest.version);
+      // Wrangler's local Workflow harness uses a separate Worker identity from
+      // getEnv(). Use that observed local identity as the positive test fixture;
+      // the next instance must still pass its own real admission step.
+      target.workerVersion = rejection.workerVersion;
     } finally {
-      await readinessInstance.dispose();
+      await rejectedInstance.dispose();
     }
     const id = randomUUID();
     const instance = await worker.introspectWorkflowInstance("HELLO_AGENT", id);
@@ -250,15 +266,20 @@ async function testBundle() {
         );
         await modifier.mockStepResult({ name: "finish-greeting" }, "Hello, Bundle!");
       });
-      await bindings.HELLO_AGENT.create({ id, params: { name: "Bundle" } });
+      await bindings.HELLO_AGENT.create({
+        id,
+        params: { kind: "verified-hello", expected: target, hello: { name: "Bundle" } },
+      });
       await instance.waitForStatus("complete");
       const output = await instance.getOutput();
       assert.equal(output.toolMessage, "Hello, Bundle!");
+      assert.equal(output.admission.accepted, true);
+      assert.deepEqual(output.admission.actual, { runId: id, ...target });
       assert.equal(output.sourceCommit, manifest.sourceCommit);
       writeJson(path.join(ROOT, "artifacts/bundle-evidence.json"), {
         kind: "local-bundle-mocked-inference",
         ...output,
-        readiness,
+        rejection,
       });
     } finally {
       await instance.dispose();

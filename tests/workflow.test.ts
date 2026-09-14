@@ -1,23 +1,78 @@
 import { env, exports } from "cloudflare:workers";
 import { introspectWorkflowInstance } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
+import type { VerifiedHelloParams } from "../src/deployment";
 import { MODEL_ID } from "../src/hello";
 
 describe("local durable Hello Agent", () => {
-  it("reports deployment identity without entering a model or tool step", async () => {
-    const id = crypto.randomUUID();
-    await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
-    await env.HELLO_AGENT.create({ id, params: { kind: "deployment-probe" } });
-    await instance.waitForStatus("complete");
-    expect(await instance.getOutput()).toEqual({
-      kind: "deployment-probe",
-      runId: id,
-      buildVersion: env.BUILD_VERSION,
-      sourceCommit: env.SOURCE_COMMIT,
+  const guarded = (name = "世界"): VerifiedHelloParams => ({
+    kind: "verified-hello",
+    expected: {
       workerVersion: env.CF_VERSION.id,
-      modelCalls: 0,
-    });
+      sourceCommit: env.SOURCE_COMMIT,
+      buildVersion: env.BUILD_VERSION,
+    },
+    hello: { name },
   });
+
+  it.each(["workerVersion", "sourceCommit", "buildVersion"] as const)(
+    "rejects a stale %s in the actual inference instance without model mocks",
+    async (field) => {
+      const id = crypto.randomUUID();
+      const params = guarded();
+      params.expected[field] =
+        field === "workerVersion"
+          ? crypto.randomUUID()
+          : field === "sourceCommit"
+            ? "a".repeat(40)
+            : "old";
+      await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
+      await env.HELLO_AGENT.create({ id, params });
+      await instance.waitForStatus("complete");
+      expect(await instance.waitForStepResult({ name: "admit-deployment" })).toMatchObject({
+        accepted: false,
+      });
+      expect(await instance.getOutput()).toMatchObject({
+        kind: "deployment-rejected",
+        runId: id,
+        expected: params.expected,
+        modelCalls: 0,
+        workerVersion: env.CF_VERSION.id,
+      });
+    },
+  );
+
+  it.each(["request-tool", "finish-greeting"])(
+    "rechecks identity inside %s even if replayed admission was accepted",
+    async (modelStep) => {
+      const id = crypto.randomUUID();
+      const params = guarded();
+      params.expected.workerVersion = crypto.randomUUID();
+      await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
+      await instance.modify(async (modifier) => {
+        await modifier.mockStepResult(
+          { name: "admit-deployment" },
+          {
+            accepted: true,
+            actual: { runId: id, ...params.expected },
+            expected: params.expected,
+          },
+        );
+        if (modelStep === "finish-greeting") {
+          await modifier.mockStepResult(
+            { name: "request-tool" },
+            { params: params.hello, callId: "call_hello_1" },
+          );
+        }
+      });
+      await env.HELLO_AGENT.create({ id, params });
+      await instance.waitForStatus("errored");
+      // The local engine wraps a step's NonRetryableError in a generic terminal
+      // message. Ordinary AI binding/adapter failures are not NonRetryableError.
+      expect((await instance.getError()).message).toContain("NonRetryableError");
+      await expect(instance.waitForStepResult({ name: modelStep })).rejects.toThrow();
+    },
+  );
 
   it("executes the real tool between explicit mocked model steps", async () => {
     const id = crypto.randomUUID();
@@ -29,11 +84,16 @@ describe("local durable Hello Agent", () => {
       );
       await modifier.mockStepResult({ name: "finish-greeting" }, "Hello, 世界!");
     });
-    await env.HELLO_AGENT.create({ id, params: { name: "世界" } });
+    await env.HELLO_AGENT.create({ id, params: guarded() });
     await instance.waitForStatus("complete");
     expect(await instance.waitForStepResult({ name: "say-hello" })).toBe("Hello, 世界!");
     expect(await instance.getOutput()).toMatchObject({
       runId: id,
+      admission: {
+        accepted: true,
+        expected: guarded().expected,
+        actual: { runId: id, ...guarded().expected },
+      },
       model: MODEL_ID,
       modelCalls: 2,
       tool: "say_hello",
