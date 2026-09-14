@@ -4,6 +4,21 @@ import { describe, expect, it } from "vitest";
 import { MODEL_ID } from "../src/hello";
 
 describe("local durable Hello Agent", () => {
+  it("reports deployment identity without entering a model or tool step", async () => {
+    const id = crypto.randomUUID();
+    await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
+    await env.HELLO_AGENT.create({ id, params: { kind: "deployment-probe" } });
+    await instance.waitForStatus("complete");
+    expect(await instance.getOutput()).toEqual({
+      kind: "deployment-probe",
+      runId: id,
+      buildVersion: env.BUILD_VERSION,
+      sourceCommit: env.SOURCE_COMMIT,
+      workerVersion: env.CF_VERSION.id,
+      modelCalls: 0,
+    });
+  });
+
   it("executes the real tool between explicit mocked model steps", async () => {
     const id = crypto.randomUUID();
     await using instance = await introspectWorkflowInstance(env.HELLO_AGENT, id);
