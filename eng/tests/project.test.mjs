@@ -46,7 +46,7 @@ test("candidate validation rejects tampering and another source commit", () => {
     verifyCandidate(directory, commit);
     assert.throws(() => verifyCandidate(directory, "b".repeat(40)), /source mismatch/u);
     fs.appendFileSync(path.join(directory, "wrangler.json"), " ");
-    assert.throws(() => verifyCandidate(directory), /Candidate changed/u);
+    assert.throws(() => verifyCandidate(directory, commit), /Candidate changed/u);
   } finally {
     for (const file of ["wrangler.json", "candidate.json", "worker/index.js"])
       fs.unlinkSync(path.join(directory, file));
