@@ -1,0 +1,126 @@
+{
+  "kind": "guarded-workflow-real-verification",
+  "verifiedAt": "2026-09-14T16:37:36.122Z",
+  "runtimeSource": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+  "buildVersion": "0.1.0-local",
+  "workerVersion": "0b8f1762-37d0-477a-be97-308743f03726",
+  "candidateSha256": "49161f5dbe97aa0990d5a733c2cd2dab13590a1df3fe681db467d654e1f264a8",
+  "live": {
+    "id": "hello-0b8f1762-37d0-477a-be97-308743f03726",
+    "status": "complete",
+    "workflowVersion": "e060629d-47fe-474f-a12d-1c4d58d3646e",
+    "start": "2026-09-14T16:36:27.516Z",
+    "end": "2026-09-14T16:36:28.681Z",
+    "output": {
+      "runId": "hello-0b8f1762-37d0-477a-be97-308743f03726",
+      "buildVersion": "0.1.0-local",
+      "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+      "workerVersion": "0b8f1762-37d0-477a-be97-308743f03726",
+      "admission": {
+        "accepted": true,
+        "actual": {
+          "runId": "hello-0b8f1762-37d0-477a-be97-308743f03726",
+          "buildVersion": "0.1.0-local",
+          "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+          "workerVersion": "0b8f1762-37d0-477a-be97-308743f03726"
+        },
+        "expected": {
+          "workerVersion": "0b8f1762-37d0-477a-be97-308743f03726",
+          "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+          "buildVersion": "0.1.0-local"
+        }
+      },
+      "model": "@cf/openai/gpt-oss-20b",
+      "modelCalls": 2,
+      "tool": "say_hello",
+      "toolMessage": "Hello, ArcForges!",
+      "message": "Hello, ArcForges!"
+    },
+    "stepCount": 4,
+    "steps": [
+      {
+        "name": "admit-deployment-1",
+        "success": true,
+        "attempts": 1
+      },
+      {
+        "name": "request-tool-1",
+        "success": true,
+        "attempts": 1
+      },
+      {
+        "name": "say-hello-1",
+        "success": true,
+        "attempts": 1
+      },
+      {
+        "name": "finish-greeting-1",
+        "success": true,
+        "attempts": 1
+      }
+    ]
+  },
+  "staleRequest": {
+    "id": "guarded-stale-0b8f1762-37d0-477a-be97-308743f03726",
+    "status": "complete",
+    "workflowVersion": "54daec28-8c50-4727-a927-9154a731795e",
+    "params": {
+      "kind": "verified-hello",
+      "expected": {
+        "workerVersion": "00000000-0000-0000-0000-000000000000",
+        "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+        "buildVersion": "0.1.0-local"
+      },
+      "hello": {
+        "name": "ArcForges"
+      }
+    },
+    "output": {
+      "kind": "deployment-rejected",
+      "runId": "guarded-stale-0b8f1762-37d0-477a-be97-308743f03726",
+      "buildVersion": "0.1.0-local",
+      "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+      "workerVersion": "0b8f1762-37d0-477a-be97-308743f03726",
+      "expected": {
+        "workerVersion": "00000000-0000-0000-0000-000000000000",
+        "sourceCommit": "3a173697026b6f4d52a79b45f0acb9b0b4662329",
+        "buildVersion": "0.1.0-local"
+      },
+      "modelCalls": 0
+    },
+    "stepCount": 1,
+    "steps": [
+      {
+        "name": "admit-deployment-1",
+        "success": true,
+        "attempts": 1
+      }
+    ]
+  },
+  "olderRuntimeRejection": {
+    "id": "guarded-legacy-7f4c392e-f0d8-40d0-989e-02a6340959cf",
+    "status": "errored",
+    "params": {
+      "kind": "verified-hello",
+      "expected": {
+        "workerVersion": "7f4c392e-f0d8-40d0-989e-02a6340959cf",
+        "sourceCommit": "438821d736e081cc57b11b20702403e5d7c82e98",
+        "buildVersion": "0.1.0-ci.11.1"
+      },
+      "hello": {
+        "name": "ArcForges"
+      }
+    },
+    "error": {
+      "name": "Error",
+      "message": "NonRetryableError: Invalid Hello Agent input; no model call was admitted."
+    },
+    "stepCount": 0,
+    "steps": [],
+    "workflowVersion": "e060629d-47fe-474f-a12d-1c4d58d3646e"
+  },
+  "publicAccess": {
+    "workersDev": false,
+    "previewUrls": false
+  }
+}

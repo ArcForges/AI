@@ -6,22 +6,27 @@ import {
   parseWorkerVersion,
   probe,
   validateLiveOutput,
-  waitForWorkerVersion,
+  verifiedHelloParams,
 } from "../cloudflare.mjs";
 
 const expected = {
+  smokeProtocol: "verified-hello-v1",
   runId: "hello-11111111-1111-4111-8111-111111111111",
   workerVersion: "11111111-1111-4111-8111-111111111111",
   sourceCommit: "a".repeat(40),
   version: "0.1.0-ci.1.1",
 };
-const completed = () => ({
+const otherWorker = "22222222-2222-4222-8222-222222222222";
+const completed = (runId = expected.runId) => ({
   status: "complete",
   output: {
-    runId: expected.runId,
-    workerVersion: expected.workerVersion,
-    sourceCommit: expected.sourceCommit,
-    buildVersion: expected.version,
+    runId,
+    ...verifiedHelloParams(expected).expected,
+    admission: {
+      accepted: true,
+      expected: verifiedHelloParams(expected).expected,
+      actual: { runId, ...verifiedHelloParams(expected).expected },
+    },
     model: "@cf/openai/gpt-oss-20b",
     modelCalls: 2,
     tool: "say_hello",
@@ -29,162 +34,239 @@ const completed = () => ({
     message: "Hello, ArcForges!",
   },
 });
-
-test("a lost create response is never retried within a smoke run", async () => {
-  const calls = [];
-  const api = async (route, options) => {
-    calls.push({ route, options });
-    if (calls.length === 1) return null;
-    throw new Error("simulated connection loss after submission");
-  };
-  await assert.rejects(probe(api, expected), /connection loss/u);
-  assert.equal(calls.length, 2);
-  assert.deepEqual(calls[1].options.body, {
-    instance_id: expected.runId,
-    params: { name: "ArcForges" },
-  });
+const rejected = (runId = expected.runId, actual = { workerVersion: otherWorker }) => ({
+  status: "complete",
+  params: verifiedHelloParams(expected),
+  step_count: 1,
+  steps: [{ name: "admit-deployment-1", success: true }],
+  output: {
+    kind: "deployment-rejected",
+    runId,
+    ...verifiedHelloParams(expected).expected,
+    ...actual,
+    expected: verifiedHelloParams(expected).expected,
+    modelCalls: 0,
+  },
+});
+const oldInputRejection = () => ({
+  status: "errored",
+  params: JSON.stringify(verifiedHelloParams(expected)),
+  step_count: 0,
+  steps: [],
+  error: { message: "NonRetryableError: Invalid Hello Agent input; no model call was admitted." },
 });
 
-test("resuming an existing instance never posts or reruns its model", async () => {
-  const calls = [];
-  const result = await probe(
-    async (route, options) => {
-      calls.push({ route, options });
-      return completed();
-    },
-    expected,
-    {
-      beforeCreate: async () =>
-        assert.fail("Existing inference must not repeat readiness or create another instance."),
-    },
-  );
-  assert.equal(result.message, "Hello, ArcForges!");
-  assert(calls.every((call) => call.options?.method !== "POST"));
-});
-
-function readinessOutput(runId, identity = expected) {
+function fakeClock(timeoutMs = 100) {
+  let clock = 0;
   return {
-    status: "complete",
-    output: {
-      kind: "deployment-probe",
-      runId,
-      workerVersion: identity.workerVersion,
-      sourceCommit: identity.sourceCommit,
-      buildVersion: identity.version,
-      modelCalls: 0,
+    pollMs: 1,
+    timeoutMs,
+    now: () => clock,
+    wait: async () => {
+      clock++;
     },
   };
 }
 
-test("deployment propagation uses model-free probes until all candidate identities match", async () => {
+test("a lost create response stops; resumption reads the same instance without another POST", async () => {
   const posts = [];
   const records = [];
-  let clock = 0;
-  const stale = [
-    null,
-    { ...expected, workerVersion: "22222222-2222-4222-8222-222222222222" },
-    { ...expected, sourceCommit: "b".repeat(40) },
-    { ...expected, version: "0.1.0-local" },
-    expected,
+  const api = async (_route, options) => {
+    if (options?.method === "POST") {
+      posts.push(options.body);
+      assert.equal(records.at(-1).status, "submitting");
+      throw new Error("simulated connection loss after submission");
+    }
+    return posts.length ? completed() : null;
+  };
+  await assert.rejects(
+    probe(api, expected, { record: (state) => records.push(state) }),
+    /connection loss/u,
+  );
+  const resumed = await probe(api, expected);
+  assert.equal(resumed.runId, expected.runId);
+  assert.deepEqual(posts, [{ instance_id: expected.runId, params: verifiedHelloParams(expected) }]);
+});
+
+test("only proven pre-model rejections advance to another guarded inference instance", async () => {
+  const posts = [];
+  const records = [];
+  const observations = [
+    () => oldInputRejection(),
+    (id) => rejected(id),
+    (id) => rejected(id, { sourceCommit: "b".repeat(40) }),
+    (id) => rejected(id, { buildVersion: "old" }),
+    (id) => completed(id),
   ];
-  const result = await waitForWorkerVersion(
+  const output = await probe(
     async (route, options) => {
       if (options?.method === "POST") {
         posts.push(options.body);
         return { id: options.body.instance_id };
       }
       if (options?.allowMissing) return null;
-      const identity = stale[posts.length - 1];
-      return identity ? readinessOutput(route.split("/").at(-1), identity) : { status: "errored" };
+      return observations[posts.length - 1](route.split("/").at(-1));
     },
     expected,
-    {
-      pollMs: 1,
-      timeoutMs: 20,
-      now: () => clock,
-      wait: async () => {
-        clock++;
-      },
-      record: (state) => records.push(state),
-    },
+    { ...fakeClock(), record: (state) => records.push(state) },
   );
+  assert.equal(output.runId, `${expected.runId}-5`);
+  assert.equal(output.modelCalls, 2);
   assert.equal(posts.length, 5);
-  assert.equal(result.workerVersion, expected.workerVersion);
-  assert.equal(result.sourceCommit, expected.sourceCommit);
-  assert.equal(result.buildVersion, expected.version);
   assert(
     posts.every(
-      (body) => JSON.stringify(body.params) === JSON.stringify({ kind: "deployment-probe" }),
+      (body) => JSON.stringify(body.params) === JSON.stringify(verifiedHelloParams(expected)),
     ),
   );
   assert.equal(new Set(posts.map((body) => body.instance_id)).size, posts.length);
-  assert.equal(records.filter((record) => record.status === "submitting").length, posts.length);
+  assert.equal(records.filter((state) => state.modelCalls === 0).length, 4);
 });
 
-test("a readiness timeout blocks the real inference POST", async () => {
-  let clock = 0;
-  const api = async (_route, options) => {
-    assert.notEqual(options?.method, "POST", "No real inference may start before readiness.");
-    return null;
-  };
-  await assert.rejects(
-    probe(api, expected, {
-      beforeCreate: () =>
-        waitForWorkerVersion(
-          async (route) =>
-            readinessOutput(route.split("/").at(-1), { ...expected, version: "old" }),
-          expected,
-          {
-            pollMs: 1,
-            timeoutMs: 3,
-            now: () => clock,
-            wait: async () => {
-              clock++;
-            },
-          },
-        ),
-    }),
-    /no live inference was started/u,
-  );
-  assert.equal(clock, 3);
-});
-
-test("a lost readiness create response stops without posting a replacement", async () => {
-  const posts = [];
-  const runId = `ready-${expected.workerVersion}-1`;
-  const api = async (_route, options) => {
-    if (options?.method === "POST") {
-      posts.push(options.body.instance_id);
-      throw new Error("readiness response lost");
-    }
-    return posts.length ? readinessOutput(runId) : null;
-  };
-  await assert.rejects(waitForWorkerVersion(api, expected), /response lost/u);
-  const resumed = await waitForWorkerVersion(api, expected);
-  assert.equal(resumed.runId, runId);
-  assert.deepEqual(posts, [runId]);
-});
-
-test("failed instances are reported without automatic restart", async () => {
+test("a model-free probe from another instance cannot authorize inference", async () => {
   let calls = 0;
   await assert.rejects(
     probe(async () => {
       calls++;
-      return { status: "errored" };
+      return {
+        status: "complete",
+        output: {
+          kind: "deployment-probe",
+          runId: expected.runId,
+          ...verifiedHelloParams(expected).expected,
+          modelCalls: 0,
+        },
+      };
     }, expected),
-    /no automatic restart/u,
+    /did not record deployment admission/u,
   );
-  assert.equal(calls, 2);
+  assert.equal(calls, 1);
 });
 
-test("real evidence must match both the candidate and the deployed Worker version", () => {
+test("a completed stale inference remains a failure and is never replaced", async () => {
+  const status = completed();
+  status.output.workerVersion = otherWorker;
+  let calls = 0;
+  await assert.rejects(
+    probe(async () => {
+      calls++;
+      return status;
+    }, expected),
+    /another Worker version/u,
+  );
+  assert.equal(calls, 1);
+});
+
+test("a claimed zero-call rejection with a model step cannot cause another inference", async () => {
+  const status = rejected();
+  status.step_count = 2;
+  status.steps.push({ name: "request-tool-1", success: true });
+  let calls = 0;
+  await assert.rejects(
+    probe(async () => {
+      calls++;
+      return status;
+    }, expected),
+    /unexpected step history/u,
+  );
+  assert.equal(calls, 1);
+});
+
+test("missing or inconsistent rejection evidence fails closed", async () => {
+  const badParams = rejected();
+  badParams.params = { name: "ArcForges" };
+  const failedAdmission = rejected();
+  failedAdmission.steps[0].success = false;
+  const missingSteps = oldInputRejection();
+  delete missingSteps.step_count;
+  const modelError = oldInputRejection();
+  modelError.error.message = "Model timed out after dispatch";
+  for (const status of [
+    badParams,
+    failedAdmission,
+    missingSteps,
+    modelError,
+    { status: "terminated" },
+  ]) {
+    let calls = 0;
+    await assert.rejects(
+      probe(async () => {
+        calls++;
+        return status;
+      }, expected),
+    );
+    assert.equal(calls, 1);
+  }
+});
+
+test("a pending or timed-out instance never causes a replacement", async () => {
+  const ids = new Set();
+  await assert.rejects(
+    probe(
+      async (route, options) => {
+        assert.notEqual(options?.method, "POST");
+        ids.add(route);
+        return { status: "running" };
+      },
+      expected,
+      fakeClock(3),
+    ),
+    /SAME instance/u,
+  );
+  assert.equal(ids.size, 1);
+});
+
+test("admission has both a wall-clock limit and a total instance limit", async () => {
+  for (const timeout of [3, 1000]) {
+    const ids = new Set();
+    await assert.rejects(
+      probe(
+        async (route, options) => {
+          assert.notEqual(options?.method, "POST");
+          ids.add(route);
+          return rejected(route.split("/").at(-1));
+        },
+        expected,
+        fakeClock(timeout),
+      ),
+      /admission limit reached/u,
+    );
+    assert.equal(ids.size, timeout === 3 ? 3 : 30);
+  }
+});
+
+test("resuming after a pre-model rejection queries the already admitted next ID", async () => {
+  const routes = [];
+  const result = await probe(
+    async (route, options) => {
+      assert.notEqual(options?.method, "POST");
+      routes.push(route);
+      return route.endsWith(expected.runId) ? rejected() : completed(`${expected.runId}-2`);
+    },
+    expected,
+    fakeClock(),
+  );
+  assert.equal(result.runId, `${expected.runId}-2`);
+  assert.equal(routes.length, 2);
+});
+
+test("legacy deployment records cannot create a guarded replacement for an old paid smoke", async () => {
+  await assert.rejects(
+    probe(async () => assert.fail("No API access for legacy records"), {
+      ...expected,
+      smokeProtocol: undefined,
+    }),
+    /Legacy smoke record/u,
+  );
+});
+
+test("real evidence requires native Worker identity and persisted admission identity", () => {
   const status = completed();
   assert.equal(
     validateLiveOutput({ ...status, output: JSON.stringify(status.output) }, expected).modelCalls,
     2,
   );
-  status.output.workerVersion = "22222222-2222-4222-8222-222222222222";
-  assert.throws(() => validateLiveOutput(status, expected), /another Worker version/u);
+  status.output.admission.actual.workerVersion = otherWorker;
+  assert.throws(() => validateLiveOutput(status, expected));
   assert.equal(
     parseWorkerVersion(`Current Version ID: ${expected.workerVersion}`),
     expected.workerVersion,
