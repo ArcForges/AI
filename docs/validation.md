@@ -1,6 +1,6 @@
 # Validation evidence
 
-This file records observed bootstrap results and their boundaries. The live record identifies the exact runtime commit; documentation-only updates do not imply another deployment.
+This file records observed bootstrap results and their boundaries. The table summarizes the initial bootstrap; later corrections and their verification appear below. Each live record identifies its exact runtime commit; documentation-only updates do not imply another deployment.
 
 | Gate                          | Evidence                                                                                                                                                                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -67,5 +67,13 @@ In [main run 34870686257](https://github.com/ArcForges/AI/actions/runs/348706862
 The user's attempt 2 succeeded with the same source commit `5e08d32d8923d6c0e6f4b5d0eb3cfd8712b708dd`, build `0.1.0-ci.15.1` and candidate manifest SHA-256. The GitHub token's last-update timestamp did not change. The rerun uploaded a new Worker version and started a new instance; it did not repair or replace the original failed instance's history. The intervening merge updated development-only Node types, with no model request or deployment-profile change. The [sanitized comparison](evidence/workflow-model-response-2026-09-14.json) preserves the observations and limits.
 
 Six bounded diagnostic REST requests using the original tool-request adapter all returned a valid structured tool call. They did not reproduce the original failure and are not Workflow evidence. The original requests omitted temperature, inheriting the selected model's documented default of 0.6. The current mitigation explicitly sets zero for both calls and replaces ambiguous response errors with safe per-check diagnostics. This reduces sampling variability and makes a recurrence actionable; it does not establish that sampling caused the original response or guarantee future provider success. Strict tool/finish validation, version admission and the prohibition on automatic retries after possible model execution remain unchanged.
+
+## Model diagnostics candidate verification
+
+Runtime commit `5b16d309e0075e95f070e6ed2774c794d138b009` passed 56 runtime tests and 20 release-tool tests, formatting, lint, TypeScript checks and binding regeneration without a diff. The final compiled bundle passed its local Workflow checks with explicit model mocks. The regressions cover both model phases, malformed/truncated/refused responses, safe provider error metadata, Workflow error serialization, step/poll timeouts and no additional model calls or instance replacements after possible dispatch. Failed instances with opaque output no longer lose their actual error to premature JSON parsing.
+
+The [real verification record](evidence/workflow-runtime-verification-2026-09-14.json) records a local OAuth deployment of that same clean, verified candidate on 2026-09-14. Worker `8e908d40-958d-454f-89f1-23a03cddf5f5` and instance `hello-8e908d40-958d-454f-89f1-23a03cddf5f5` passed admission, both real model calls and the protobuf tool, each in one attempt. The output matched the candidate's native Worker/source/build identity. workers.dev and preview URLs remained disabled.
+
+The new CLI also queried the original failed instance once using GET only. It reported `LEGACY_RESPONSE_VALIDATION`, step `request-tool-1`, one attempt and possible model usage, without starting another instance or claiming to recover the missing response. This verifies the improved diagnosis against a real retained failure as well as the local fixtures. No automatic model retry was introduced. This change's GitHub main deployment remains a separate gate after merge; a single successful real Workflow does not prove a zero provider failure rate.
 
 This Hello run does not verify production authorization, budgets/accounting, abuse resistance, streaming, R2, load capacity or the complete product harness. A real model response is not evidence that those product capabilities exist.
