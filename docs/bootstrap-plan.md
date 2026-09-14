@@ -7,12 +7,12 @@
 - The accepted Design architecture puts the only model/tool loop in a Cloudflare Workflow, calling selected Workers AI models directly. Business authorization, transactions and metering remain in Cloud. No Node sidecar or Agents SDK chat loop is introduced.
 - Contracts main is `1fb1dfaaaaa7a9f2f4c64a6e1c6a2b7de47d67b0`. The public npm Hello World artifact is `@arcforges/proto@1.0.0-ci.25.1`, with `@bufbuild/protobuf@2.14.1`.
 - Registry and official documentation checked on 2026-09-14: TypeScript 7.0.2, Wrangler 4.131.2, Workers types 5.20260914.1, Cloudflare Vitest plugin 1.1.9. The plugin requires Vitest 4.1; use 4.1.11 rather than unsupported Vitest 5. Node 24.21.0 LTS and npm 11.19.0 match Contracts.
-- The machine and repository currently have no discovered Cloudflare credentials or deployment settings. Real deployment/inference is a separate account-dependent gate.
+- At initial collection, the machine and repository had no discovered Cloudflare credentials or deployment settings. Real deployment/inference is a separate account-dependent gate.
 
 ## Implementation decisions
 
 1. Build a private Worker exporting `HelloAgentWorkflow` and a local health handler. Disable workers.dev and preview URLs. Trigger and inspect remote runs through the authenticated Cloudflare Workflow API; no public demo token or new product API is needed.
-2. Select `@cf/openai/gpt-oss-20b`, the accepted lower-latency text profile, using its Responses API binding profile. The model's generic catalog example has a different legacy shape; the GPT-OSS-specific announcement and current Workers types govern this adapter. A bounded model/tool/model sequence requests one `say_hello` tool, validates its arguments, performs a published-protobuf round trip, then asks the model for the final greeting. Reject unsupported/multiple tools and malformed/empty output. Each model step has zero automatic retries and a bounded timeout/output size. Never silently substitute a fake response in deployed code.
+2. Select `@cf/openai/gpt-oss-20b`, the accepted lower-latency text profile, using its Chat Completions binding profile. The current model types support this profile, and live compatibility checks selected it over the initially planned Responses profile. A bounded model/tool/model sequence requests one `say_hello` tool, validates its arguments, performs a published-protobuf round trip, then asks the model for the final greeting. Reject unsupported/multiple tools, calls serialized into prose, truncated responses and malformed/empty output. Each model step has zero automatic retries and a bounded timeout/output size. Never silently substitute a fake response in deployed code.
 3. This is a packaging/runtime demonstration. It does not implement WP-52, Cloud business authority, approvals, billing, streaming or R2 object routes. Demo names/results are non-sensitive and small enough for Workflow checkpoints; they are not a product persistence contract.
 4. Pin dependencies and commit npm's lockfile. Use TypeScript 7 for checking; Biome for lint and Prettier for formatting without relying on the retired TypeScript compiler JavaScript API.
 5. Test validation and provider adaptation, real local Workflow execution with explicit mocked model steps, failure/no-retry behavior, published Contracts interoperability, and the final bundled Worker. Live verification requires a Cloudflare account and is never claimed from mocks.
@@ -30,7 +30,7 @@ Closure evidence must separately identify local unit/runtime tests, bundled-arti
 - [Vitest integration](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/)
 - [Workflow test APIs](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/)
 - [Selected model](https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/)
-- [GPT-OSS binding uses Responses](https://developers.cloudflare.com/changelog/post/2025-08-05-openai-open-models/)
+- [Cloudflare's current model adapter](https://github.com/cloudflare/ai/tree/main/packages/workers-ai-provider)
 - [GitHub Actions deployment](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/)
 - [TypeScript](https://www.typescriptlang.org/)
 

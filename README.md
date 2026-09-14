@@ -23,7 +23,7 @@ The toolchain pins TypeScript **7.0.2**, Wrangler **4.131.2** and `@arcforges/pr
 ## Hello Agent
 
 1. Validate `{ "name": "ArcForges" }` before admitting a model call.
-2. Ask `@cf/openai/gpt-oss-20b` for exactly one `say_hello` function call using the model's Responses API profile.
+2. Ask `@cf/openai/gpt-oss-20b` for exactly one `say_hello` function call using the model's Chat Completions binding profile.
 3. Validate the tool and its arguments, then encode/decode the published request and response protobuf messages to produce `Hello, ArcForges!`.
 4. Supply that result to the model and require a bounded final text reply with no further tools.
 

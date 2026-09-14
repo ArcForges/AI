@@ -20,7 +20,11 @@ describe("published Contracts greeting", () => {
 
 describe("model output boundaries", () => {
   const expected = { name: "ArcForges" };
-  const call = toolResponse("ArcForges").output[0];
+  const choice = toolResponse("ArcForges").choices[0];
+  const call = choice.message.tool_calls[0];
+  const withCalls = (calls: unknown[]) => ({
+    choices: [{ ...choice, message: { ...choice.message, tool_calls: calls } }],
+  });
 
   it("accepts one exact allowed proposal", () => {
     expect(parseToolResponse(toolResponse("ArcForges"), expected)).toEqual({
@@ -31,11 +35,14 @@ describe("model output boundaries", () => {
 
   it.each([
     {},
-    { status: "completed", output: [] },
-    { status: "completed", output: [call, call] },
-    { status: "completed", output: [{ ...call, name: "execute_shell" }] },
+    withCalls([]),
+    withCalls([call, call]),
+    withCalls([{ ...call, function: { ...call.function, name: "execute_shell" } }]),
     toolResponse("other"),
-    { status: "completed", output: [{ ...call, arguments: "broken JSON" }] },
+    withCalls([{ ...call, function: { ...call.function, arguments: "broken JSON" } }]),
+    { choices: [choice, choice] },
+    { choices: [{ ...choice, finish_reason: "length" }] },
+    textResponse(JSON.stringify({ name: "say_hello", arguments: { name: "ArcForges" } })),
   ])("rejects unsupported or malformed proposals %j", (response) => {
     expect(() => parseToolResponse(response, expected)).toThrow();
   });
@@ -48,7 +55,23 @@ describe("model output boundaries", () => {
       textResponse(" "),
       textResponse("x".repeat(4097)),
       toolResponse(),
-      { ...textResponse(), status: "incomplete" },
+      { choices: [{ ...textResponse().choices[0], finish_reason: "length" }] },
+      {
+        choices: [
+          {
+            ...textResponse().choices[0],
+            message: { ...textResponse().choices[0].message, refusal: "refused" },
+          },
+        ],
+      },
+      {
+        choices: [
+          {
+            ...textResponse().choices[0],
+            message: { ...textResponse().choices[0].message, tool_calls: [call] },
+          },
+        ],
+      },
     ]) {
       expect(() => parseFinalResponse(response)).toThrow();
     }

@@ -14,9 +14,13 @@ describe("direct Workers AI adapter", () => {
     expect(run).toHaveBeenCalledExactlyOnceWith(
       MODEL_ID,
       expect.objectContaining({
-        max_output_tokens: 1024,
+        max_tokens: 1024,
         stream: false,
-        tools: [expect.objectContaining({ name: "say_hello" })],
+        messages: expect.any(Array),
+        tool_choice: { type: "function", function: { name: "say_hello" } },
+        tools: [
+          expect.objectContaining({ function: expect.objectContaining({ name: "say_hello" }) }),
+        ],
       }),
     );
   });
@@ -32,10 +36,16 @@ describe("direct Workers AI adapter", () => {
     ).toBe("Hello, World!");
     const request = run.mock.calls[0]?.[1];
     expect(request.tools).toBeUndefined();
-    expect(request.input[2]).toEqual({
-      type: "function_call_output",
-      call_id: "call_hello_1",
-      output: "Hello, World!",
+    expect(request.tool_choice).toBe("none");
+    expect(request.messages[2]).toMatchObject({
+      role: "assistant",
+      content: "",
+      tool_calls: [expect.objectContaining({ id: "call_hello_1" })],
+    });
+    expect(request.messages[3]).toEqual({
+      role: "tool",
+      tool_call_id: "call_hello_1",
+      content: "Hello, World!",
     });
   });
 

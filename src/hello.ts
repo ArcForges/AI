@@ -40,60 +40,65 @@ export function sayHello(params: HelloParams): string {
   return fromBinary(SayHelloResponseSchema, toBinary(SayHelloResponseSchema, response)).message;
 }
 
-function responseOutput(value: unknown): unknown[] {
+function completionMessage(value: unknown, finishReason: "tool_calls" | "stop") {
   if (
     !isRecord(value) ||
-    value.status !== "completed" ||
     value.error ||
-    !Array.isArray(value.output) ||
-    value.output.length > 16
+    !Array.isArray(value.choices) ||
+    value.choices.length !== 1
   ) {
-    throw new Error("Expected a completed, bounded Responses API result.");
+    throw new Error("Expected one Chat Completions choice.");
   }
-  return value.output;
+  const choice = value.choices[0];
+  if (
+    !isRecord(choice) ||
+    choice.finish_reason !== finishReason ||
+    !isRecord(choice.message) ||
+    choice.message.role !== "assistant" ||
+    choice.message.refusal ||
+    choice.message.function_call
+  ) {
+    throw new Error("Expected a completed assistant message without refusal or legacy tools.");
+  }
+  return choice.message;
 }
 
 export function parseToolResponse(value: unknown, expected: HelloParams): ToolProposal {
-  const calls = responseOutput(value).filter(
-    (item) => isRecord(item) && item.type === "function_call",
-  );
-  if (calls.length !== 1) {
+  const calls = completionMessage(value, "tool_calls").tool_calls;
+  if (!Array.isArray(calls) || calls.length !== 1) {
     throw new Error("The model must request exactly one say_hello tool.");
   }
   const tool = calls[0];
   if (
     !isRecord(tool) ||
-    tool.name !== TOOL_NAME ||
-    typeof tool.call_id !== "string" ||
-    !/^[\w-]{1,256}$/u.test(tool.call_id) ||
-    typeof tool.arguments !== "string" ||
-    tool.arguments.length > 2048
+    tool.type !== "function" ||
+    !isRecord(tool.function) ||
+    tool.function.name !== TOOL_NAME ||
+    typeof tool.id !== "string" ||
+    !/^[\w-]{1,256}$/u.test(tool.id) ||
+    typeof tool.function.arguments !== "string" ||
+    tool.function.arguments.length > 2048
   ) {
     throw new Error("Unsupported tool proposal.");
   }
-  const params = parseParams(JSON.parse(tool.arguments));
+  const params = parseParams(JSON.parse(tool.function.arguments));
   if (params.name !== expected.name) {
     throw new Error("The tool must preserve the supplied name.");
   }
-  return { params, callId: tool.call_id };
+  return { params, callId: tool.id };
 }
 
 export function parseFinalResponse(value: unknown): string {
-  const text: string[] = [];
-  for (const item of responseOutput(value)) {
-    if (!isRecord(item)) throw new Error("Malformed response item.");
-    if (item.type === "reasoning") continue;
-    if (item.type !== "message" || item.role !== "assistant" || !Array.isArray(item.content)) {
-      throw new Error("Expected final text without further tools.");
-    }
-    for (const part of item.content) {
-      if (!isRecord(part) || part.type !== "output_text" || typeof part.text !== "string") {
-        throw new Error("Expected text, not a refusal or another content type.");
-      }
-      text.push(part.text);
-    }
+  const message = completionMessage(value, "stop");
+  if (
+    message.tool_calls != null &&
+    (!Array.isArray(message.tool_calls) || message.tool_calls.length !== 0)
+  ) {
+    throw new Error("Expected final text without further tools.");
   }
-  const message = text.join("\n");
-  if (!message.trim() || message.length > 4096) throw new Error("Invalid final text length.");
-  return message;
+  const text = message.content;
+  if (typeof text !== "string" || !text.trim() || text.length > 4096) {
+    throw new Error("Invalid final text length.");
+  }
+  return text;
 }

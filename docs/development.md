@@ -42,6 +42,6 @@ Local candidates built with uncommitted changes declare `sourceDirty: true` and 
 
 ## Test boundaries
 
-`tests/model.test.ts` checks the Responses request/response adapter with a fake AI binding. `tests/workflow.test.ts` uses a real local Workflow engine while mocking model steps; the protobuf tool executes. `eng/tests/` verifies candidate integrity, version provenance and safe resumption of remote smoke checks. `npm run test:bundle` runs the actual compiled entry point, not a rebuilt consumer or source substitute.
+`tests/model.test.ts` checks the Chat Completions request/response adapter with a fake AI binding, including the named-function choice and string content required when replaying a tool call. `tests/workflow.test.ts` uses a real local Workflow engine while mocking model steps; the protobuf tool executes. `eng/tests/` verifies candidate integrity, version provenance and safe resumption of remote smoke checks. `npm run test:bundle` runs the actual compiled entry point, not a rebuilt consumer or source substitute.
 
 Negative Workflow tests intentionally exercise invalid inputs and model errors. Workerd may log those injected errors even when the assertions pass. Unexpected errors or test-process failures still fail CI. Real provider compatibility, account permissions, quotas, latency and billing require the separate live gate.

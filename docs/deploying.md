@@ -30,7 +30,9 @@ npm run deploy
 npm run test:live
 ```
 
-The last two commands modify the selected Cloudflare account and consume model usage. The smoke name is the non-sensitive string `ArcForges`. A successful run makes two bounded model calls and one local greeting tool call. It proves that the deployed Workflow, selected model, Responses adapter and published protobuf package interoperate. It does not verify product authorization, billing, streaming, R2 or full AI task execution.
+The last two commands modify the selected Cloudflare account and consume model usage. The smoke name is the non-sensitive string `ArcForges`. A successful run makes two bounded model calls and one local greeting tool call. It proves that the deployed Workflow, selected model, Chat Completions adapter and published protobuf package interoperate. It does not verify product authorization, billing, streaming, R2 or full AI task execution.
+
+Use the selected model's Chat Completions binding profile: `messages`, a named-function `tool_choice`, `max_tokens` and `reasoning_effort`. The follow-up includes an assistant tool-call message with `content: ""` and a tool message with the same call ID. Live checks on 2026-09-14 found that forced-tool Responses requests returned Workers AI error 3030, while equivalent Chat Completions requests succeeded; replaying `content: null` was rejected with error 5006. The adapter accepts exactly one structured tool call and a final `stop` response. It does not recover tool calls from prose, retry a different protocol or switch models after failure.
 
 Inspect `artifacts/deployment/`: `intent.json` records the attempted upload, `deployment.json` records its confirmed Worker version and the stable smoke ID, `live-state.json` records progress, and `live-evidence.json` is written only after full live validation. Evidence must match the candidate's source commit, build version and native Worker version metadata. The model's greeting may vary; the tool result and provenance must match exactly.
 
@@ -64,6 +66,6 @@ Do not overwrite an existing GitHub release with different artifacts. To release
 - [API token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/)
 - [Workflow instance creation](https://developers.cloudflare.com/api/resources/workflows/subresources/instances/methods/create/)
 - [Workflow status](https://developers.cloudflare.com/api/resources/workflows/subresources/instances/methods/get/)
-- [GPT-OSS Responses support](https://developers.cloudflare.com/changelog/post/2025-08-05-openai-open-models/)
+- [Selected GPT-OSS model and binding usage](https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/)
 
 The pinned Wrangler trigger implementation sends an object in `params`, as the Workflow event expects. The current REST reference labels that field a JSON string; this implementation follows the shipping CLI and does not double-encode the payload. Actual service behavior remains part of the live gate.
