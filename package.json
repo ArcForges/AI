@@ -1,0 +1,49 @@
+{
+  "name": "@arcforges/ai",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "ArcForges Cloudflare Workflow Hello Agent bootstrap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArcForges/AI.git"
+  },
+  "engines": {
+    "node": ">=24.21.0 <25",
+    "npm": ">=11.19.0 <12"
+  },
+  "packageManager": "npm@11.19.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "types": "wrangler types src/env.generated.d.ts --include-runtime=false",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tests/tsconfig.json && tsc -p tsconfig.tools.json",
+    "lint": "biome lint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:tooling": "node --test eng/tests/*.test.mjs",
+    "check": "node eng/project.mjs check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:tooling",
+    "build": "node eng/project.mjs build",
+    "verify:candidate": "node eng/project.mjs verify",
+    "test:bundle": "node eng/project.mjs test-bundle",
+    "deploy": "node eng/cloudflare.mjs deploy",
+    "test:live": "node eng/cloudflare.mjs smoke",
+    "hooks": "node eng/project.mjs hooks"
+  },
+  "dependencies": {
+    "@arcforges/proto": "1.0.0-ci.25.1",
+    "@bufbuild/protobuf": "2.14.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.13",
+    "@cloudflare/vitest-plugin": "1.1.9",
+    "@cloudflare/workers-types": "5.20260914.1",
+    "@types/node": "24.13.4",
+    "prettier": "3.9.6",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11",
+    "wrangler": "4.131.2"
+  }
+}

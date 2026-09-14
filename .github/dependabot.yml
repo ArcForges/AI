@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    ignore:
+      # Upgrade Vitest's major together with a plugin that explicitly supports it.
+      - dependency-name: vitest
+        update-types: ["version-update:semver-major"]
+    groups:
+      cloudflare-runtime:
+        patterns:
+          - "@cloudflare/*"
+          - wrangler
+          - vitest
+      contracts:
+        patterns:
+          - "@arcforges/*"
+          - "@bufbuild/*"
+      tooling:
+        patterns:
+          - "@biomejs/*"
+          - "@types/*"
+          - prettier
+          - typescript
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns:
+          - "*"

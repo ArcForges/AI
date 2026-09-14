@@ -1,0 +1,11 @@
+name: Change proposal
+description: Propose a bounded change with observable acceptance criteria.
+title: "[Proposal]: "
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Problem and proposed outcome
+      description: Explain the need, scope, acceptance criteria and any effect on Cloud, Contracts or deployment.
+    validations:
+      required: true
