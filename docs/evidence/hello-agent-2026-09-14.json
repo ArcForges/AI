@@ -1,0 +1,42 @@
+{
+  "verifiedAt": "2026-09-14T15:33:31.313Z",
+  "sourceCommit": "025a41ed3ddd325b0fa86d84019f054f5124d887",
+  "version": "0.1.0-local",
+  "candidateSha256": "0452b34e6f28cc48e4135957af56e55028c779275628944e6df2e14c5d8dca82",
+  "workerVersion": "20ebe270-8336-496e-9828-07c20f391907",
+  "workflowVersion": "48395559-6202-4efd-9614-89cba337e7b8",
+  "runId": "hello-20ebe270-8336-496e-9828-07c20f391907",
+  "status": "complete",
+  "startedAt": "2026-09-14T15:33:23.463Z",
+  "completedAt": "2026-09-14T15:33:24.481Z",
+  "steps": [
+    {
+      "name": "request-tool-1",
+      "success": true,
+      "attempts": 1
+    },
+    {
+      "name": "say-hello-1",
+      "success": true,
+      "attempts": 1
+    },
+    {
+      "name": "finish-greeting-1",
+      "success": true,
+      "attempts": 1
+    }
+  ],
+  "workersDevEnabled": false,
+  "previewUrlsEnabled": false,
+  "output": {
+    "runId": "hello-20ebe270-8336-496e-9828-07c20f391907",
+    "buildVersion": "0.1.0-local",
+    "sourceCommit": "025a41ed3ddd325b0fa86d84019f054f5124d887",
+    "workerVersion": "20ebe270-8336-496e-9828-07c20f391907",
+    "model": "@cf/openai/gpt-oss-20b",
+    "modelCalls": 2,
+    "tool": "say_hello",
+    "toolMessage": "Hello, ArcForges!",
+    "message": "Hello, ArcForges!"
+  }
+}
