@@ -45,6 +45,9 @@ PR validation runs without Cloudflare credentials. Merging to `main` performs th
 3. Require the aggregate **Verify** check to pass.
 4. Download that candidate by its GitHub artifact ID, verify its source and files, and deploy it with `--no-bundle` through the `cloudflare` environment.
 5. Run the real Workflow smoke test and publish its evidence. Only a successful live test creates the `ai-0.1.0-ci.<run>.<attempt>` GitHub prerelease with the deployable candidate.
+6. Require **Verify deployment** to observe a successful deployment job. An unexpectedly skipped deployment cannot leave a non-cancelled main run green.
+
+**Dependency review** compares a PR's dependency changes and intentionally skips on push. **Verify** accepts that skip outside PRs, while still requiring every applicable validation gate to pass. Deployment uses an explicit `!cancelled()` status condition and requires successful Verify and candidate results, so the PR-only job cannot suppress deployment through GitHub's implicit `success()` condition. PR, manual and scheduled runs do not deploy.
 
 The candidate contains the bundle/configuration, file hashes, source identity, Contracts provenance, runtime SBOM and licenses. It is not published to npm. The same artifact is consumed by deployment; no dependency resolution or recompilation changes its Worker code. Installing the pinned CLI in the deployment job is tooling setup only.
 
@@ -52,6 +55,7 @@ Deployment jobs serialize access to the account. A superseded main run cannot in
 
 ## Failure and recovery
 
+- **Main deployment unexpectedly skipped:** inspect the workflow conditions, not an enable variable. After a workflow fix, merge it and inspect the new main run; rerunning the old run uses its old workflow revision. The final deployment check reports an unexpected skip as failure.
 - **Credential/permission/model access failure:** correct the account or GitHub setting, then rerun the failed job. Do not change code to return a fake result or disable required verification.
 - **Workflow status query fails or times out:** retain the candidate and `artifacts/deployment/`, then rerun `npm run test:live`. It queries the same `hello-<worker-version>` instance; if a previous create response was lost, an existing instance is read without a new POST. Never restart an errored instance automatically. The `submitting` record preserves the chosen ID before the POST.
 - **Model call fails:** model steps have zero automatic retries. Inspect the failed instance in Cloudflare. Starting a new deployment/run is an explicit new attempt and may incur additional usage. A step timeout cannot prove that the provider stopped processing the dispatched request.
