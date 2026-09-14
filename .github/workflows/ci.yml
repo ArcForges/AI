@@ -171,7 +171,16 @@ jobs:
   deploy:
     name: Deploy and verify Cloudflare
     needs: [verify, candidate]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Dependency review is intentionally skipped outside PRs. A status function
+    # prevents that ancestor from implicitly skipping this verified deployment.
+    if: >-
+      ${{
+        !cancelled() &&
+        github.event_name == 'push' &&
+        github.ref == 'refs/heads/main' &&
+        needs.verify.result == 'success' &&
+        needs.candidate.result == 'success'
+      }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: cloudflare
@@ -228,3 +237,19 @@ jobs:
         run: |
           printf 'Verified private Cloudflare Hello Agent. The attached candidate was deployed without rebuilding and passed a real model/tool/model Workflow test.\n\nSource: %s\nCI: https://github.com/%s/actions/runs/%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > "$RUNNER_TEMP/release-notes.md"
           gh release create "ai-$CANDIDATE_VERSION" "$RUNNER_TEMP/ai-worker.zip" artifacts/candidate/candidate.json artifacts/deployment/live-evidence.json --target "$GITHUB_SHA" --prerelease --title "AI $CANDIDATE_VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
+
+  delivery:
+    name: Verify deployment
+    needs: [deploy]
+    if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require successful Cloudflare deployment
+        env:
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+        run: |
+          test "$DEPLOY_RESULT" = success || {
+            echo "::error::Cloudflare deployment must complete successfully on main (received $DEPLOY_RESULT)."
+            exit 1
+          }
