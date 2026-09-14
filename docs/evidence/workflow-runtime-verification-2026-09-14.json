@@ -1,0 +1,74 @@
+{
+  "kind": "real-workflow-model-diagnostics-verification",
+  "verifiedAt": "2026-09-14T17:15:42.587Z",
+  "authentication": "local-wrangler-oauth",
+  "sourceCommit": "5b16d309e0075e95f070e6ed2774c794d138b009",
+  "buildVersion": "0.1.0-local",
+  "workerVersion": "8e908d40-958d-454f-89f1-23a03cddf5f5",
+  "candidateManifestSha256": "d02d6f58978616790349853edb9d07df4b326c70deaa7ee77db181bd2359375b",
+  "runId": "hello-8e908d40-958d-454f-89f1-23a03cddf5f5",
+  "workflowVersion": "2bec7d84-4746-442e-b5b4-fa931166d4c8",
+  "status": "complete",
+  "startedAt": "2026-09-14T17:15:34.632Z",
+  "completedAt": "2026-09-14T17:15:35.910Z",
+  "steps": [
+    {
+      "name": "admit-deployment-1",
+      "success": true,
+      "attempts": 1
+    },
+    {
+      "name": "request-tool-1",
+      "success": true,
+      "attempts": 1
+    },
+    {
+      "name": "say-hello-1",
+      "success": true,
+      "attempts": 1
+    },
+    {
+      "name": "finish-greeting-1",
+      "success": true,
+      "attempts": 1
+    }
+  ],
+  "model": "@cf/openai/gpt-oss-20b",
+  "modelCalls": 2,
+  "samplingTemperature": 0,
+  "admission": {
+    "accepted": true,
+    "actual": {
+      "runId": "hello-8e908d40-958d-454f-89f1-23a03cddf5f5",
+      "buildVersion": "0.1.0-local",
+      "sourceCommit": "5b16d309e0075e95f070e6ed2774c794d138b009",
+      "workerVersion": "8e908d40-958d-454f-89f1-23a03cddf5f5"
+    },
+    "expected": {
+      "workerVersion": "8e908d40-958d-454f-89f1-23a03cddf5f5",
+      "sourceCommit": "5b16d309e0075e95f070e6ed2774c794d138b009",
+      "buildVersion": "0.1.0-local"
+    }
+  },
+  "finalOutputValidated": true,
+  "toolMessage": "Hello, ArcForges!",
+  "workersDevEnabled": false,
+  "previewUrlsEnabled": false,
+  "originalFailureInspection": {
+    "runId": "hello-5108dc23-28a9-4d1c-bb25-eb53b561c0e5",
+    "requests": 1,
+    "methods": ["GET"],
+    "failure": {
+      "code": "LEGACY_RESPONSE_VALIDATION",
+      "step": "request-tool-1",
+      "attempts": 1,
+      "modelStepsObserved": 1,
+      "modelUsage": "possibly-incurred"
+    },
+    "originalInstanceRetained": true
+  },
+  "boundaries": [
+    "One real Workflow does not establish a zero provider failure rate.",
+    "PR checks are credential-free; the main deployment of this change remains a separate gate."
+  ]
+}
