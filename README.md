@@ -43,6 +43,7 @@ Before the first merge, complete [Cloudflare setup and deployment](docs/deployin
 
 - [Bootstrap plan](docs/bootstrap-plan.md)
 - [Development and hooks](docs/development.md)
+- [Project licence declarations and checks](docs/licence-boundary.md)
 - [Cloudflare setup, release and recovery](docs/deploying.md)
 - [Contributing](CONTRIBUTING.md), [conduct](CODE_OF_CONDUCT.md) and [security](SECURITY.md)
 - [AGPL-3.0-only license](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md)
