@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
+import { auditLicences } from "./licence-boundary.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const CANDIDATE = path.resolve(ROOT, process.env.CANDIDATE_DIR ?? "artifacts/candidate");
@@ -124,6 +125,7 @@ export function verifyCandidate(directory = CANDIDATE, expectedCommit = process.
 }
 
 async function build() {
+  writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
   resetGeneratedCandidate();
   const version = process.env.GITHUB_RUN_NUMBER
     ? versionFromRun(process.env.GITHUB_RUN_NUMBER, process.env.GITHUB_RUN_ATTEMPT ?? "1")
@@ -291,6 +293,7 @@ async function testBundle() {
 }
 
 function check() {
+  writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
   const listed = run("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"])
     .split("\0")
     .filter(Boolean);
