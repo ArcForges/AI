@@ -6,3 +6,6 @@ coverage/
 LICENSE
 src/env.generated.d.ts
 package-lock.json
+eng/provenance/records/
+eng/provenance/artifact-profiles/
+third-party/

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "protobuf-legal-r1",
+  "kind": "legal-document",
+  "sourceRepository": "https://github.com/protocolbuffers/protobuf",
+  "sourceCommit": "4b0c3aacf0657fbf38253b38918d3358dd4319ec",
+  "sourcePaths": [
+    "LICENSE"
+  ],
+  "licence": {
+    "spdx": "BSD-3-Clause",
+    "category": "permissive",
+    "evidence": [
+      {
+        "path": "LICENSE",
+        "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "finding": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+      }
+    ],
+    "scope": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "copyingPermission": "Preserve this complete legal document verbatim under its stated reproduction and attribution terms. Legal text does not admit the implementation it governs."
+  },
+  "attribution": [
+    "Copyright 2008 Google Inc. Full BSD terms are retained for the original descriptor schema; the existing published varint BSD header is also preserved independently."
+  ],
+  "targets": [
+    {
+      "path": "third-party/Protobuf.LICENSE.txt",
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Copyright 2008 Google Inc. Full BSD terms are retained for the original descriptor schema; the existing published varint BSD header is also preserved independently.",
+    "files": [
+      "eng/provenance/NOTICE.txt",
+      "third-party/Protobuf.LICENSE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": null
+}

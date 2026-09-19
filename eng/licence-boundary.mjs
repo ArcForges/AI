@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { lstatSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
+import { gitEnvironment } from "./provenance.mjs";
 
 const firstParty = new Set([
   "@arcforges/proto",
@@ -19,7 +20,12 @@ const firstParty = new Set([
 export function auditLicences(root) {
   root = realpathSync(root);
   const git = (...args) =>
-    execFileSync("git", args, { cwd: root, encoding: "utf8", windowsHide: true }).trim();
+    execFileSync("git", args, {
+      cwd: root,
+      encoding: "utf8",
+      windowsHide: true,
+      env: gitEnvironment(),
+    }).trim();
   const files = [
     ...new Set(
       git("ls-files", "-z", "--cached", "--others", "--exclude-standard")

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "buf-legal-r1",
+  "kind": "legal-document",
+  "sourceRepository": "https://github.com/bufbuild/protobuf-es",
+  "sourceCommit": "f72f5295c853b7be8c0828f350e4f2803c8afdde",
+  "sourcePaths": [
+    "LICENSE"
+  ],
+  "licence": {
+    "spdx": "Apache-2.0",
+    "category": "permissive",
+    "evidence": [
+      {
+        "path": "LICENSE",
+        "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+        "finding": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+      }
+    ],
+    "scope": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "copyingPermission": "Preserve this complete legal document verbatim under its stated reproduction and attribution terms. Legal text does not admit the implementation it governs."
+  },
+  "attribution": [
+    "Copyright 2021-2026 Buf Technologies, Inc. The complete Apache-2.0 document includes Buf attribution and is byte-identical in the selected 2.14.1 and 2.15.0 sources."
+  ],
+  "targets": [
+    {
+      "path": "third-party/Buf.LICENSE.txt",
+      "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Copyright 2021-2026 Buf Technologies, Inc. The complete Apache-2.0 document includes Buf attribution and is byte-identical in the selected 2.14.1 and 2.15.0 sources.",
+    "files": [
+      "eng/provenance/NOTICE.txt",
+      "third-party/Buf.LICENSE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": null
+}

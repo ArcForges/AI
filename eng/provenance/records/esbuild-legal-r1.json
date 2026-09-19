@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "esbuild-legal-r1",
+  "kind": "legal-document",
+  "sourceRepository": "https://github.com/evanw/esbuild",
+  "sourceCommit": "bb9db84c02433fbe37b3509f53f9f3e3cc48725e",
+  "sourcePaths": [
+    "LICENSE.md"
+  ],
+  "licence": {
+    "spdx": "MIT",
+    "category": "permissive",
+    "evidence": [
+      {
+        "path": "LICENSE.md",
+        "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+        "finding": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+      }
+    ],
+    "scope": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "copyingPermission": "Preserve this complete legal document verbatim under its stated reproduction and attribution terms. Legal text does not admit the implementation it governs."
+  },
+  "attribution": [
+    "Copyright (c) 2020 Evan Wallace. Complete MIT terms accompany the actual generated helper in the Worker."
+  ],
+  "targets": [
+    {
+      "path": "third-party/Esbuild.LICENSE.txt",
+      "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Copyright (c) 2020 Evan Wallace. Complete MIT terms accompany the actual generated helper in the Worker.",
+    "files": [
+      "eng/provenance/NOTICE.txt",
+      "third-party/Esbuild.LICENSE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": null
+}

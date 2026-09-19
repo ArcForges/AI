@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "wrangler-legal-r1",
+  "kind": "legal-document",
+  "sourceRepository": "https://github.com/cloudflare/workers-sdk",
+  "sourceCommit": "a256f9556bb24081e01281284056c6d370992cd7",
+  "sourcePaths": [
+    "LICENSE-MIT"
+  ],
+  "licence": {
+    "spdx": "MIT",
+    "category": "permissive",
+    "evidence": [
+      {
+        "path": "LICENSE-MIT",
+        "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+        "finding": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+      }
+    ],
+    "scope": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "copyingPermission": "Preserve this complete legal document verbatim under its stated reproduction and attribution terms. Legal text does not admit the implementation it governs."
+  },
+  "attribution": [
+    "Copyright (c) 2020 Cloudflare, Inc. Complete selected MIT terms are retained for generated declaration and artifact README templates."
+  ],
+  "targets": [
+    {
+      "path": "third-party/Wrangler.LICENSE.txt",
+      "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Copyright (c) 2020 Cloudflare, Inc. Complete selected MIT terms are retained for generated declaration and artifact README templates.",
+    "files": [
+      "eng/provenance/NOTICE.txt",
+      "third-party/Wrangler.LICENSE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Reviewed reproduction of the complete pinned upstream legal document under its own terms, including every copyright line. This record binds legal text only and does not relicense implementation.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": null
+}

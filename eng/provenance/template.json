@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "instructions": "Complete all ten evidence subjects and conditional generated/temporary obligations before introducing material. This configuration-derived example is not approved. Used records are immutable; register newly reviewed superseding revisions and follow docs/provenance.md.",
+  "example": {
+    "schemaVersion": 1,
+    "id": "material-name-r1",
+    "kind": "generated",
+    "sourceRepository": "https://github.com/ArcForges/AI",
+    "sourceCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "sourcePaths": ["wrangler.json", "src/index.ts"],
+    "licence": {
+      "spdx": "AGPL-3.0-only",
+      "category": "agpl-compatible",
+      "evidence": [
+        {
+          "path": "LICENSE",
+          "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+          "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+        },
+        {
+          "path": "src/env.generated.d.ts",
+          "sha256": "1f86a2f1b832c1c6b268cbc892cb1ff3168a0edf070168f86866b249ee8a25d1",
+          "finding": "Retained generated declarations reproduce the pinned Wrangler MIT template and owner configuration; no Workerd runtime or web UI is embedded."
+        }
+      ],
+      "scope": "Reconciliation of existing configuration-derived declarations from owner AGPL inputs and compatible Wrangler MIT templates. Preserve the MIT notice alongside the AGPL source. This development declaration is absent from the deployed Worker.",
+      "copyingPermission": null
+    },
+    "attribution": [
+      "Generated binding declarations: Copyright ArcForges contributors; generator templates Copyright (c) 2020 Cloudflare, Inc., MIT alternative retained in third-party/Wrangler.LICENSE.txt."
+    ],
+    "targets": [
+      {
+        "path": "src/env.generated.d.ts",
+        "sha256": "1f86a2f1b832c1c6b268cbc892cb1ff3168a0edf070168f86866b249ee8a25d1",
+        "normalization": "lf"
+      }
+    ],
+    "artifactTargets": [],
+    "disposition": "Rewrite",
+    "verification": {
+      "kind": "regeneration",
+      "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+      "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+      "artifacts": []
+    },
+    "notice": {
+      "required": true,
+      "text": "Generated binding declarations: Copyright ArcForges contributors; generator templates Copyright (c) 2020 Cloudflare, Inc., MIT alternative retained in third-party/Wrangler.LICENSE.txt.",
+      "files": ["eng/provenance/NOTICE.txt"],
+      "distribution": "source-and-applicable-artifacts",
+      "reason": "Reconciliation of existing configuration-derived declarations from owner AGPL inputs and compatible Wrangler MIT templates. Preserve the MIT notice alongside the AGPL source. This development declaration is absent from the deployed Worker."
+    },
+    "lifetime": {
+      "status": "permanent",
+      "owner": "AI Licensing and Provenance Owner",
+      "removalTrigger": null
+    },
+    "generation": {
+      "generators": [
+        {
+          "repository": "https://github.com/cloudflare/workers-sdk",
+          "commit": "a256f9556bb24081e01281284056c6d370992cd7",
+          "paths": [
+            "packages/wrangler/src/type-generation/index.ts",
+            "packages/wrangler/src/type-generation/helpers.ts"
+          ],
+          "spdx": "MIT",
+          "evidence": [
+            {
+              "path": "LICENSE-MIT",
+              "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+              "finding": "Reviewed the particular type-generation, bundling and README-template paths; no subordinate override was found. Select the compatible MIT alternative and retain its full terms."
+            }
+          ]
+        }
+      ],
+      "inputs": [
+        {
+          "repository": "https://github.com/ArcForges/AI",
+          "commit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+          "paths": ["wrangler.json", "src/index.ts"],
+          "spdx": "AGPL-3.0-only",
+          "evidence": [
+            {
+              "path": "LICENSE",
+              "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+              "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+            }
+          ]
+        }
+      ],
+      "command": "npm ci --ignore-scripts; npm run types; git diff --exit-code -- src/env.generated.d.ts. --include-runtime=false generates only this small configuration-derived declaration.",
+      "outputSpdx": "AGPL-3.0-only"
+    },
+    "review": {
+      "owner": "Licensing and Provenance Owner",
+      "reviewer": "REVIEWER_REQUIRED",
+      "reviewedOn": "2026-09-19",
+      "decision": "REVIEW_REQUIRED",
+      "rationale": "Complete a material-specific review before use; this template is not approved.",
+      "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+      "reconciliation": true
+    },
+    "supersedes": null
+  }
+}

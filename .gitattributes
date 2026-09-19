@@ -6,3 +6,4 @@
 *.wasm binary
 *.zip binary
 LICENSE text eol=lf
+third-party/** whitespace=-blank-at-eol,-blank-at-eof

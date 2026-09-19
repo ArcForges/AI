@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "cloud-provenance-port-r1",
+  "kind": "source",
+  "sourceRepository": "https://github.com/ArcForges/Cloud",
+  "sourceCommit": "3165c97cccd3ea1e0b230d66e22ab9c775ca19d8",
+  "sourcePaths": [
+    "tooling/provenance.ts",
+    "tooling/process.ts",
+    "tests/worker/provenance.test.ts",
+    "eng/policy/reuse-policy.json",
+    "eng/provenance/template.json"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "tooling/provenance.ts",
+        "sha256": "aea1f698aca0429d93cdfe0d64b3ee908ae181749a3d44fee91d6f758cf60824",
+        "finding": "Reviewed the merged Cloud file under its explicit SPDX header or owner root AGPL scope; the port preserves the same AGPL boundary and has no runtime or sibling build dependency."
+      },
+      {
+        "path": "tooling/process.ts",
+        "sha256": "3c51ccd13b9412750872935a013842ca71afa3f72ed1b3b70e35cfc2bcf9f736",
+        "finding": "Reviewed the merged Cloud file under its explicit SPDX header or owner root AGPL scope; the port preserves the same AGPL boundary and has no runtime or sibling build dependency."
+      },
+      {
+        "path": "tests/worker/provenance.test.ts",
+        "sha256": "9c6dfaf540be157c313f6937cf10bf68007c2d6e9ddbbbcb2a0ca99256defa0f",
+        "finding": "Reviewed the merged Cloud file under its explicit SPDX header or owner root AGPL scope; the port preserves the same AGPL boundary and has no runtime or sibling build dependency."
+      },
+      {
+        "path": "eng/policy/reuse-policy.json",
+        "sha256": "c75269219934e821acd8fa35ddabbb5bf308e739f7dcdc3537228ac042dcf279",
+        "finding": "Reviewed the merged Cloud file under its explicit SPDX header or owner root AGPL scope; the port preserves the same AGPL boundary and has no runtime or sibling build dependency."
+      },
+      {
+        "path": "eng/provenance/template.json",
+        "sha256": "3e299f75c790870b15cbc2188a0c4bb58c53dafa287ceef6540e7b8c244c200b",
+        "finding": "Reviewed the merged Cloud file under its explicit SPDX header or owner root AGPL scope; the port preserves the same AGPL boundary and has no runtime or sibling build dependency."
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "finding": "Complete upstream AGPL terms are identical to the receiving owner licence."
+      }
+    ],
+    "scope": "Port of the merged and reviewed Cloud source-audit checker, Git-environment isolation, policy/schema example and failure tests into owned AI JavaScript tooling. Type annotations are erased with Node 24.21 stripTypeScriptTypes; imports, owner names, fixture paths and the example are adapted; Prettier formats final source. All runtime validation rules are retained. Manually reviewed AGPL-to-AGPL reuse adds no exception or public-client dependency.",
+    "copyingPermission": null
+  },
+  "attribution": [
+    "Source audit tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only. Exact merged source identity, port disposition and final hashes are retained."
+  ],
+  "targets": [
+    {
+      "path": "eng/provenance.mjs",
+      "sha256": "a3ae7e58ec071e4e0a574d6e338d31d97b9c49b67461afd70d2237e0870641d6",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/tests/provenance.test.mjs",
+      "sha256": "9d265ed00ba6117b4b174c03728bf1cbea8bf757d48f6a78d2a185083296a086",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/policy/reuse-policy.json",
+      "sha256": "564f92b35f27c97aac40b5bea109375c6540612b775a598b6dc138f6e8c52048",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/provenance/template.json",
+      "sha256": "0a5664342afd7d880a6ed263b743da0f929876a3d8dbbf04314b42e08e4d360a",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Rewrite",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Source audit tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only. Exact merged source identity, port disposition and final hashes are retained.",
+    "files": [
+      "eng/provenance/NOTICE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Port of the merged and reviewed Cloud source-audit checker, Git-environment isolation, policy/schema example and failure tests into owned AI JavaScript tooling. Type annotations are erased with Node 24.21 stripTypeScriptTypes; imports, owner names, fixture paths and the example are adapted; Prettier formats final source. All runtime validation rules are retained. Manually reviewed AGPL-to-AGPL reuse adds no exception or public-client dependency."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Port of the merged and reviewed Cloud source-audit checker, Git-environment isolation, policy/schema example and failure tests into owned AI JavaScript tooling. Type annotations are erased with Node 24.21 stripTypeScriptTypes; imports, owner names, fixture paths and the example are adapted; Prettier formats final source. All runtime validation rules are retained. Manually reviewed AGPL-to-AGPL reuse adds no exception or public-client dependency.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": null
+}
