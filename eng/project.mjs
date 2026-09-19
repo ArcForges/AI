@@ -6,6 +6,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { auditLicences } from "./licence-boundary.mjs";
+import { auditProvenance, gitEnvironment, parseDocument } from "./provenance.mjs";
+import { stageProvenance, verifyProvenance } from "./release-provenance.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const CANDIDATE = path.resolve(ROOT, process.env.CANDIDATE_DIR ?? "artifacts/candidate");
@@ -17,6 +19,7 @@ export function run(command, args, options = {}) {
     encoding: "utf8",
     stdio: "pipe",
     ...options,
+    ...(command === "git" ? { env: gitEnvironment() } : {}),
   });
   if (result.status !== 0) {
     throw new Error(
@@ -31,7 +34,7 @@ export function wrangler(args, options) {
 }
 
 export function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, "utf8"));
+  return parseDocument(fs.readFileSync(file));
 }
 
 export function writeJson(file, value) {
@@ -83,6 +86,7 @@ function resetGeneratedCandidate() {
 export function verifyCandidate(directory = CANDIDATE, expectedCommit = process.env.GITHUB_SHA) {
   const manifest = readJson(path.join(directory, "candidate.json"));
   assert.equal(manifest.schemaVersion, 1);
+  assert.match(manifest.version, /^0\.1\.0-(?:local|ci\.[1-9]\d*\.[1-9]\d*)$/u);
   assert.equal(
     typeof manifest.sourceDirty,
     "boolean",
@@ -121,11 +125,13 @@ export function verifyCandidate(directory = CANDIDATE, expectedCommit = process.
   assert.deepEqual(config.workflows, [
     { name: "arcforges-ai-hello", binding: "HELLO_AGENT", class_name: "HelloAgentWorkflow" },
   ]);
+  verifyProvenance(ROOT, directory, manifest);
   return manifest;
 }
 
 async function build() {
   writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
+  writeJson(path.join(ROOT, "artifacts/evidence/source-provenance.json"), auditProvenance(ROOT));
   resetGeneratedCandidate();
   const version = process.env.GITHUB_RUN_NUMBER
     ? versionFromRun(process.env.GITHUB_RUN_NUMBER, process.env.GITHUB_RUN_ATTEMPT ?? "1")
@@ -134,7 +140,14 @@ async function build() {
   const sourceDirty =
     run("git", ["status", "--porcelain", "--untracked-files=normal"]).trim().length > 0;
   process.stdout.write(
-    wrangler(["deploy", "--dry-run", "--outdir", path.join(CANDIDATE, "worker")]),
+    wrangler([
+      "deploy",
+      "--dry-run",
+      "--outdir",
+      path.relative(ROOT, path.join(CANDIDATE, "worker")).split(path.sep).join("/"),
+      "--metafile",
+      path.join(CANDIDATE, "worker-meta.json"),
+    ]),
   );
   assert(
     fs.existsSync(path.join(CANDIDATE, "worker/index.js")),
@@ -186,7 +199,15 @@ async function build() {
   const sbom = JSON.parse(
     run(process.execPath, [npmCli, "sbom", "--sbom-format", "cyclonedx", "--omit=dev"]),
   );
+  // npm otherwise uses the checkout directory as this private root's display name.
+  sbom.metadata.component.name = readJson(path.join(ROOT, "package.json")).name;
   writeJson(path.join(CANDIDATE, "sbom.cdx.json"), sbom);
+  const provenance = stageProvenance(ROOT, CANDIDATE, {
+    sourceCommit: commit,
+    sourceDirty,
+    version,
+  });
+  writeJson(path.join(ROOT, "artifacts/evidence/release-provenance.json"), provenance);
   const files = Object.fromEntries(
     filesUnder(CANDIDATE).map((file) => [
       path.relative(CANDIDATE, file).split(path.sep).join("/"),
@@ -294,6 +315,7 @@ async function testBundle() {
 
 function check() {
   writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
+  writeJson(path.join(ROOT, "artifacts/evidence/source-provenance.json"), auditProvenance(ROOT));
   const listed = run("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"])
     .split("\0")
     .filter(Boolean);

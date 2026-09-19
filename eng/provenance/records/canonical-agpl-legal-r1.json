@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "canonical-agpl-legal-r1",
+  "kind": "legal-document",
+  "sourceRepository": "https://github.com/github/choosealicense.com",
+  "sourceCommit": "58267f8f2c5c0099810849cfd7677f52ae0c0eb3",
+  "sourcePaths": [
+    "_licenses/agpl-3.0.txt"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "_licenses/agpl-3.0.txt",
+        "sha256": "2a1fda78234b71502e2cf8035021b5592f5eba7e8107228aca4d95bba645e397",
+        "finding": "Reconciliation against an immutable authoritative canonical AGPL template, excluding site front matter. This asserts byte identity, not an unknown historical download origin."
+      }
+    ],
+    "scope": "Reconciliation against an immutable authoritative canonical AGPL template, excluding site front matter. This asserts byte identity, not an unknown historical download origin.",
+    "copyingPermission": "Preserve this complete legal document verbatim under its stated reproduction and attribution terms. Legal text does not admit the implementation it governs."
+  },
+  "attribution": [
+    "GNU Affero General Public License v3; Copyright Free Software Foundation, Inc.; its verbatim-copying permission and complete text are retained."
+  ],
+  "targets": [
+    {
+      "path": "LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "GNU Affero General Public License v3; Copyright Free Software Foundation, Inc.; its verbatim-copying permission and complete text are retained.",
+    "files": [
+      "eng/provenance/NOTICE.txt",
+      "LICENSE"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reconciliation against an immutable authoritative canonical AGPL template, excluding site front matter. This asserts byte identity, not an unknown historical download origin."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Reconciliation against an immutable authoritative canonical AGPL template, excluding site front matter. This asserts byte identity, not an unknown historical download origin.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": true
+  },
+  "supersedes": null
+}

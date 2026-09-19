@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "id": "ai-worker-bundle-r3",
+  "kind": "generated",
+  "sourceRepository": "https://github.com/ArcForges/AI",
+  "sourceCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+  "sourcePaths": [
+    "src/deployment.ts",
+    "src/hello.ts",
+    "src/index.ts",
+    "src/model-diagnostics.ts",
+    "src/model.ts"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+      }
+    ],
+    "scope": "Actual Worker closure: five owned inputs, the published Contracts package, two exact protobuf runtimes with Apache and explicit BSD varint scopes, the generated descriptor with original Google BSD terms, esbuild MIT helpers and the Wrangler MIT README template. All 104 parsed inputs, 45 emitted inputs and 43 source-map bodies are reviewed; non-emitted well-known descriptors are not represented as distributed source. Models and development runtime implementations are not bundled.",
+    "copyingPermission": null
+  },
+  "attribution": [
+    "Worker: Copyright ArcForges contributors, AGPL-3.0-only. Contracts: ArcForges contributors, Apache-2.0. Protobuf runtimes: Copyright 2021-2026 Buf Technologies, Inc., Apache-2.0; varint/descriptor material: Copyright 2008 Google Inc., BSD-3-Clause. Helpers: Copyright 2020 Evan Wallace, MIT. Generated README: Copyright 2020 Cloudflare, Inc., MIT. Complete respective texts and source-bound records accompany the actual candidate."
+  ],
+  "targets": [],
+  "artifactTargets": [
+    {
+      "project": "package.json",
+      "package": "@arcforges/ai",
+      "kind": "worker-bundle",
+      "profile": "eng/provenance/artifact-profiles/ai-worker-r3.json",
+      "sha256": "48b4c4381b7c963db5a9422aa72e5d759b7bd1c576594e78b43b7732baae894d"
+    }
+  ],
+  "disposition": "Rewrite",
+  "verification": {
+    "kind": "regeneration",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Worker: Copyright ArcForges contributors, AGPL-3.0-only. Contracts: ArcForges contributors, Apache-2.0. Protobuf runtimes: Copyright 2021-2026 Buf Technologies, Inc., Apache-2.0; varint/descriptor material: Copyright 2008 Google Inc., BSD-3-Clause. Helpers: Copyright 2020 Evan Wallace, MIT. Generated README: Copyright 2020 Cloudflare, Inc., MIT. Complete respective texts and source-bound records accompany the actual candidate.",
+    "files": [
+      "eng/provenance/NOTICE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Actual Worker closure: five owned inputs, the published Contracts package, two exact protobuf runtimes with Apache and explicit BSD varint scopes, the generated descriptor with original Google BSD terms, esbuild MIT helpers and the Wrangler MIT README template. All 104 parsed inputs, 45 emitted inputs and 43 source-map bodies are reviewed; non-emitted well-known descriptors are not represented as distributed source. Models and development runtime implementations are not bundled."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": {
+    "generators": [
+      {
+        "repository": "https://github.com/cloudflare/workers-sdk",
+        "commit": "a256f9556bb24081e01281284056c6d370992cd7",
+        "paths": [
+          "packages/wrangler/src/deployment-bundle/bundle.ts",
+          "packages/wrangler/src/deployment-bundle/maybe-build-worker.ts"
+        ],
+        "spdx": "MIT",
+        "evidence": [
+          {
+            "path": "LICENSE-MIT",
+            "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+            "finding": "Reviewed the particular type-generation, bundling and README-template paths; no subordinate override was found. Select the compatible MIT alternative and retain its full terms."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/evanw/esbuild",
+        "commit": "bb9db84c02433fbe37b3509f53f9f3e3cc48725e",
+        "paths": [
+          "internal/runtime/runtime.go"
+        ],
+        "spdx": "MIT",
+        "evidence": [
+          {
+            "path": "LICENSE.md",
+            "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+            "finding": "The generated __defProp/__name helpers come from internal/runtime/runtime.go and retain MIT terms; compiler implementation is not bundled."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/microsoft/TypeScript",
+        "commit": "050880ce59e30b356b686bd3144efe24f875ebc8",
+        "paths": [
+          "src/compiler/transformers/ts.ts"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "a5e9f9b1575301c7a7a03508fdaa2e05a918cc17fd21c6e898096a96d6a34f61",
+            "finding": "Only independent upstream reproduction uses 6.0.3; the application stays on 7.0.2. No compiler implementation is distributed."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "09c98f182a86cd6d4bb89a418f261812d8eb2108",
+        "paths": [
+          "packages/protoc-gen-es/src/protoc-gen-es-plugin.ts"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+            "finding": "Generated descriptor source retains the plugin Apache position; the actual bundled original descriptor schema has separately preserved Google BSD terms."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "f72f5295c853b7be8c0828f350e4f2803c8afdde",
+        "paths": [
+          "packages/protoc-gen-es/src/protoc-gen-es-plugin.ts"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+            "finding": "Generated descriptor source retains the plugin Apache position; the actual bundled original descriptor schema has separately preserved Google BSD terms."
+          }
+        ]
+      }
+    ],
+    "inputs": [
+      {
+        "repository": "https://github.com/ArcForges/AI",
+        "commit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+        "paths": [
+          "src/deployment.ts",
+          "src/hello.ts",
+          "src/index.ts",
+          "src/model-diagnostics.ts",
+          "src/model.ts",
+          "wrangler.json"
+        ],
+        "spdx": "AGPL-3.0-only",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+            "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/ArcForges/Contracts",
+        "commit": "1fb1dfaaaaa7a9f2f4c64a6e1c6a2b7de47d67b0",
+        "paths": [
+          "public/proto/arcforges/hello/v1/hello.proto",
+          "src/public/ts/proto/src/index.ts",
+          "eng/contracts.py"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+            "finding": "Reviewed exact original schema, export source and generator. The input is the SHA512-locked published npm package, not copied contract implementation."
+          },
+          {
+            "path": "public/proto/arcforges/hello/v1/hello.proto",
+            "sha256": "92489f89d1898a3d3bbea56c72116416cd0152ae8866c98745739437020c67d9",
+            "finding": "Authored public Hello schema under the Contracts Apache boundary."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "09c98f182a86cd6d4bb89a418f261812d8eb2108",
+        "paths": [
+          "packages/protobuf/src/reflect/names.ts",
+          "packages/protobuf/src/proto-int64.ts",
+          "packages/protobuf/src/descriptors.ts",
+          "packages/protobuf/src/reflect/scalar.ts",
+          "packages/protobuf/src/reflect/unsafe.ts",
+          "packages/protobuf/src/codegenv2/restore-json-names.ts",
+          "packages/protobuf/src/wire/text-format.ts",
+          "packages/protobuf/src/reflect/nested-types.ts",
+          "packages/protobuf/src/registry.ts",
+          "packages/protobuf/src/codegenv2/boot.ts",
+          "packages/protobuf/src/fields.ts",
+          "packages/protobuf/src/wire/base64-encoding.ts",
+          "packages/protobuf/src/wire/text-encoding.ts",
+          "packages/protobuf/src/wire/binary-encoding.ts",
+          "packages/protobuf/src/reflect/error.ts",
+          "packages/protobuf/src/is-message.ts",
+          "packages/protobuf/src/reflect/guard.ts",
+          "packages/protobuf/src/wkt/wrappers.ts",
+          "packages/protobuf/src/create.ts",
+          "packages/protobuf/src/reflect/message.ts",
+          "packages/protobuf/src/to-binary.ts",
+          "packages/protobuf/src/reflect/reflect-check.ts",
+          "packages/protobuf/src/reflect/reflect.ts",
+          "packages/protobuf/src/clone.ts",
+          "packages/protobuf/src/codegenv2/message.ts",
+          "packages/protobuf/src/codegenv2/enum.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/descriptor_pb.ts",
+          "packages/protobuf/src/codegenv2/embed.ts",
+          "packages/protobuf/src/codegenv2/extension.ts",
+          "packages/protobuf/src/from-binary.ts",
+          "packages/protobuf/src/codegenv2/file.ts",
+          "packages/protobuf/src/codegenv2/service.ts",
+          "packages/protobuf/src/codegenv2/symbols.ts",
+          "packages/protobuf/src/codegenv2/scalar.ts",
+          "packages/protobuf/src/codegenv2/types.ts",
+          "packages/protobuf/src/codegenv2/index.ts"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+            "finding": "Each selected source has the Buf Apache header; the explicit varint BSD override is separately recorded. All published parsed modules were reproduced exactly."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "09c98f182a86cd6d4bb89a418f261812d8eb2108",
+        "paths": [
+          "packages/protobuf/src/wire/varint.ts"
+        ],
+        "spdx": "BSD-3-Clause",
+        "evidence": [
+          {
+            "path": "packages/protobuf/src/wire/varint.ts",
+            "sha256": "794a4cffb99eb15483efa73ee038e493d28bea3d247c0be9f13740c546b0c259",
+            "finding": "This particular varint source has its own complete Google BSD header; the Apache repository label is not substituted for it."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "f72f5295c853b7be8c0828f350e4f2803c8afdde",
+        "paths": [
+          "packages/protobuf/src/types.ts",
+          "packages/protobuf/src/is-message.ts",
+          "packages/protobuf/src/descriptors.ts",
+          "packages/protobuf/src/proto-int64.ts",
+          "packages/protobuf/src/reflect/scalar.ts",
+          "packages/protobuf/src/reflect/unsafe.ts",
+          "packages/protobuf/src/reflect/guard.ts",
+          "packages/protobuf/src/wkt/wrappers.ts",
+          "packages/protobuf/src/create.ts",
+          "packages/protobuf/src/reflect/error.ts",
+          "packages/protobuf/src/wire/text-encoding.ts",
+          "packages/protobuf/src/wire/binary-encoding.ts",
+          "packages/protobuf/src/reflect/reflect-check.ts",
+          "packages/protobuf/src/reflect/message.ts",
+          "packages/protobuf/src/reflect/reflect.ts",
+          "packages/protobuf/src/clone.ts",
+          "packages/protobuf/src/wire/base64-encoding.ts",
+          "packages/protobuf/src/reflect/names.ts",
+          "packages/protobuf/src/codegenv2/restore-json-names.ts",
+          "packages/protobuf/src/wire/text-format.ts",
+          "packages/protobuf/src/reflect/nested-types.ts",
+          "packages/protobuf/src/registry.ts",
+          "packages/protobuf/src/codegenv2/boot.ts",
+          "packages/protobuf/src/codegenv2/message.ts",
+          "packages/protobuf/src/codegenv2/enum.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/descriptor_pb.ts",
+          "packages/protobuf/src/from-binary.ts",
+          "packages/protobuf/src/codegenv2/file.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/timestamp_pb.ts",
+          "packages/protobuf/src/wkt/timestamp.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/duration_pb.ts",
+          "packages/protobuf/src/wkt/duration.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/any_pb.ts",
+          "packages/protobuf/src/to-binary.ts",
+          "packages/protobuf/src/wkt/any.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/source_context_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/type_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/api_pb.ts",
+          "packages/protobuf/src/codegenv2/extension.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/cpp_features_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/empty_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/field_mask_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/go_features_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/java_features_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/struct_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/wrappers_pb.ts",
+          "packages/protobuf/src/wkt/gen/google/protobuf/compiler/plugin_pb.ts",
+          "packages/protobuf/src/wkt/index.ts",
+          "packages/protobuf/src/extensions.ts",
+          "packages/protobuf/src/equals.ts",
+          "packages/protobuf/src/fields.ts",
+          "packages/protobuf/src/wkt/json.ts",
+          "packages/protobuf/src/wire/size-delimited.ts",
+          "packages/protobuf/src/wire/index.ts",
+          "packages/protobuf/src/to-json.ts",
+          "packages/protobuf/src/from-json.ts",
+          "packages/protobuf/src/merge.ts",
+          "packages/protobuf/src/unknown-enum.ts",
+          "packages/protobuf/src/index.ts"
+        ],
+        "spdx": "Apache-2.0",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449",
+            "finding": "Each selected source has the Buf Apache header; the explicit varint BSD override is separately recorded. All published parsed modules were reproduced exactly."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/bufbuild/protobuf-es",
+        "commit": "f72f5295c853b7be8c0828f350e4f2803c8afdde",
+        "paths": [
+          "packages/protobuf/src/wire/varint.ts"
+        ],
+        "spdx": "BSD-3-Clause",
+        "evidence": [
+          {
+            "path": "packages/protobuf/src/wire/varint.ts",
+            "sha256": "794a4cffb99eb15483efa73ee038e493d28bea3d247c0be9f13740c546b0c259",
+            "finding": "This particular varint source has its own complete Google BSD header; the Apache repository label is not substituted for it."
+          }
+        ]
+      },
+      {
+        "repository": "https://github.com/protocolbuffers/protobuf",
+        "commit": "4b0c3aacf0657fbf38253b38918d3358dd4319ec",
+        "paths": [
+          "src/google/protobuf/descriptor.proto"
+        ],
+        "spdx": "BSD-3-Clause",
+        "evidence": [
+          {
+            "path": "src/google/protobuf/descriptor.proto",
+            "sha256": "32f3df357257f556b311c7e4ad33625a7aa13de541cb53a29ae85ac746c11a07",
+            "finding": "The only generated well-known type emitted in this Worker/source map is descriptor.proto; its own Google BSD header is preserved with the complete upstream licence."
+          }
+        ]
+      }
+    ],
+    "command": "Locked npm restore; reproduce 37 protobuf 2.14.1 and 60 protobuf 2.15.0 modules with upstream TypeScript 6.0.3; build with locked Wrangler/esbuild and inspect its actual metafile, Worker, source map, README and legal resources. Verify candidate closure and compiled Workflow harness.",
+    "outputSpdx": "AGPL-3.0-only"
+  },
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-19",
+    "decision": "approved",
+    "rationale": "Actual Worker closure: five owned inputs, the published Contracts package, two exact protobuf runtimes with Apache and explicit BSD varint scopes, the generated descriptor with original Google BSD terms, esbuild MIT helpers and the Wrangler MIT README template. All 104 parsed inputs, 45 emitted inputs and 43 source-map bodies are reviewed; non-emitted well-known descriptors are not represented as distributed source. Models and development runtime implementations are not bundled. Final implementation review additionally binds the exact existing Wrangler configuration and requires the entire candidate deployment configuration to match, except the declared output path, no-bundle flag and candidate version/source variables. The prior record/profile remain unchanged. Actual generation review confirmed Wrangler sets sourceRoot to its output directory. The revised oracle requires that precise relative directory and relative source paths, preserving mappings and source-body hashes without embedding a local absolute checkout path. Previous records/profiles are retained.",
+    "baselineCommit": "a896c8d58230892c66ea1076ca6f6b4d2b2d639f",
+    "reconciliation": false
+  },
+  "supersedes": "ai-worker-bundle-r2"
+}

@@ -9,3 +9,5 @@ Pin exact direct dependency versions and update `package-lock.json` together wit
 Describe the problem, resulting behavior and concrete validation in the PR. Distinguish mocked runtime tests from real Cloudflare inference. Never include credentials or private prompts in issues, logs or artifacts. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 Contributions to original repository code and tooling are provided under the existing AGPL-3.0-only license. Preserve dependency licenses and notices. Adding a reference project's feature does not authorize copying its implementation or changing product scope.
+
+Follow the [provenance process](docs/provenance.md) before reusing source, tests, legal text or generated resources. Source and actual candidate checks require complete reviewed records, immutable history and preserved full notices.

@@ -23,6 +23,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "pretest:tooling": "node eng/project.mjs build",
     "test:tooling": "node --test eng/tests/*.test.mjs",
     "check": "node eng/project.mjs check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:tooling",
     "build": "node eng/project.mjs build",
