@@ -2,7 +2,7 @@
 
 ArcForges' AI execution runtime on Cloudflare Workers and Workflows. The repository currently contains a private Hello Agent: a selected Workers AI model calls one validated greeting tool, then writes a final reply. The greeting tool uses the published ArcForges protobuf package.
 
-The intended product architecture keeps the only model/tool loop in a Workflow. Cloud owns business authorization, PostgreSQL transactions, approvals and accounting. This bootstrap demonstrates the runtime, package boundary, build and deployment path; it does not implement the full product harness, streaming, R2 routes or commercial behavior.
+The intended product architecture keeps the only model/tool loop in a Workflow. Cloud owns business authorization, D1 transactions, approvals and accounting under the [current runtime authority](https://github.com/ArcForges/ArcForges-Design/blob/e2dd78058ce2d4bd1a8434a34d049bbc1158eacb/docs/architecture/30-runtime-and-source-ownership-policy.md). This bootstrap demonstrates the runtime, package boundary, build and deployment path; it does not implement the full product harness, streaming, R2 routes or commercial behavior.
 
 ## Quick start
 
