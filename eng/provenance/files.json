@@ -51,6 +51,7 @@
     "eng/provenance/artifact-profiles/ai-worker-r4.json",
     "eng/provenance/artifact-profiles/ai-worker-r5.json",
     "eng/provenance/artifact-profiles/ai-worker-r6.json",
+    "eng/provenance/artifact-profiles/ai-worker-r7.json",
     "eng/provenance/files.json",
     "eng/provenance/records/ai-worker-bundle-r1.json",
     "eng/provenance/records/ai-worker-bundle-r2.json",
@@ -58,6 +59,7 @@
     "eng/provenance/records/ai-worker-bundle-r4.json",
     "eng/provenance/records/ai-worker-bundle-r5.json",
     "eng/provenance/records/ai-worker-bundle-r6.json",
+    "eng/provenance/records/ai-worker-bundle-r7.json",
     "eng/provenance/records/buf-legal-r1.json",
     "eng/provenance/records/canonical-agpl-legal-r1.json",
     "eng/provenance/records/cloud-build-identity-r1.json",
@@ -65,6 +67,7 @@
     "eng/provenance/records/esbuild-legal-r1.json",
     "eng/provenance/records/protobuf-legal-r1.json",
     "eng/provenance/records/wrangler-bindings-r1.json",
+    "eng/provenance/records/wrangler-bindings-r2.json",
     "eng/provenance/records/wrangler-legal-r1.json",
     "eng/release-provenance.mjs",
     "eng/tests/cloudflare.test.mjs",
@@ -92,7 +95,7 @@
     "wrangler.json"
   ],
   "reused": {
-    "src/env.generated.d.ts": "wrangler-bindings-r1",
+    "src/env.generated.d.ts": "wrangler-bindings-r2",
     "LICENSE": "canonical-agpl-legal-r1",
     "third-party/Wrangler.LICENSE.txt": "wrangler-legal-r1",
     "third-party/Esbuild.LICENSE.txt": "esbuild-legal-r1",
@@ -106,5 +109,5 @@
     "eng/tests/build-identity.test.mjs": "cloud-build-identity-r1",
     "eng/version-sources.json": "cloud-build-identity-r1"
   },
-  "artifacts": ["ai-worker-bundle-r6"]
+  "artifacts": ["ai-worker-bundle-r7"]
 }

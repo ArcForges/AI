@@ -6,9 +6,9 @@
 | ---------------------------------- | ---------------------- | ------------------------------------------------------------------------------- |
 | Node / npm                         | 24.21.0 / 11.19.0      | Current LTS line shared with Contracts                                          |
 | TypeScript                         | 7.0.2                  | Current release checked on 2026-09-14                                           |
-| Wrangler                           | 4.131.2                | Worker bundling, deployment and local test harness                              |
-| Workers types                      | 5.20260914.1           | Current binding and model input/output types                                    |
-| Cloudflare Vitest plugin           | 1.1.9                  | Local Workerd/Workflow integration                                              |
+| Wrangler                           | 4.135.0                | Worker bundling, deployment and local test harness                              |
+| Workers types                      | 5.20260918.1           | Current binding and model input/output types                                    |
+| Cloudflare Vitest plugin           | 1.1.13                 | Local Workerd/Workflow integration                                              |
 | Vitest                             | 4.1.11                 | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
 | Biome / Prettier                   | 2.5.14 / 3.9.8         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
 | ArcForges proto / protobuf runtime | 1.0.0-ci.44.1 / 2.15.0 | Published Contracts messages, not sibling source                                |

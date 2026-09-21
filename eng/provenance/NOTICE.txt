@@ -2,8 +2,8 @@ AI source provenance
 
 Original material retains its recorded licence and full legal text.
 
-ai-worker-bundle-r6
-https://github.com/ArcForges/AI @ 41241c4fb93cdef6c538d051fbc0a19f3194696f
+ai-worker-bundle-r7
+https://github.com/ArcForges/AI @ d5595a85d030c2458263d755cad868529552d6a5
 AGPL-3.0-only
 Worker: Copyright ArcForges contributors, AGPL-3.0-only. Contracts: ArcForges contributors, Apache-2.0. Protobuf runtimes: Copyright 2021-2026 Buf Technologies, Inc., Apache-2.0; varint/descriptor material: Copyright 2008 Google Inc., BSD-3-Clause. Helpers: Copyright 2020 Evan Wallace, MIT. Generated README: Copyright 2020 Cloudflare, Inc., MIT. Complete respective texts and source-bound records accompany the actual candidate.
 
@@ -37,8 +37,8 @@ https://github.com/protocolbuffers/protobuf @ 4b0c3aacf0657fbf38253b38918d3358dd
 BSD-3-Clause
 Copyright 2008 Google Inc. Full BSD terms are retained for the original descriptor schema; the existing published varint BSD header is also preserved independently.
 
-wrangler-bindings-r1
-https://github.com/ArcForges/AI @ a896c8d58230892c66ea1076ca6f6b4d2b2d639f
+wrangler-bindings-r2
+https://github.com/ArcForges/AI @ d5595a85d030c2458263d755cad868529552d6a5
 AGPL-3.0-only
 Generated binding declarations: Copyright ArcForges contributors; generator templates Copyright (c) 2020 Cloudflare, Inc., MIT alternative retained in third-party/Wrangler.LICENSE.txt.
 
