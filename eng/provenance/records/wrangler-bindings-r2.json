@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "id": "wrangler-bindings-r2",
+  "kind": "generated",
+  "sourceRepository": "https://github.com/ArcForges/AI",
+  "sourceCommit": "d5595a85d030c2458263d755cad868529552d6a5",
+  "sourcePaths": [
+    "wrangler.json",
+    "src/index.ts"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+      },
+      {
+        "path": "src/env.generated.d.ts",
+        "sha256": "1f86a2f1b832c1c6b268cbc892cb1ff3168a0edf070168f86866b249ee8a25d1",
+        "finding": "Retained generated declarations reproduce the pinned Wrangler MIT template and owner configuration; no Workerd runtime or web UI is embedded."
+      }
+    ],
+    "scope": "Reconciliation of existing configuration-derived declarations from owner AGPL inputs and compatible Wrangler MIT templates. Preserve the MIT notice alongside the AGPL source. This development declaration is absent from the deployed Worker.",
+    "copyingPermission": null
+  },
+  "attribution": [
+    "Generated binding declarations: Copyright ArcForges contributors; generator templates Copyright (c) 2020 Cloudflare, Inc., MIT alternative retained in third-party/Wrangler.LICENSE.txt."
+  ],
+  "targets": [
+    {
+      "path": "src/env.generated.d.ts",
+      "sha256": "1f86a2f1b832c1c6b268cbc892cb1ff3168a0edf070168f86866b249ee8a25d1",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Rewrite",
+  "verification": {
+    "kind": "regeneration",
+    "command": "Regenerate with locked Wrangler 4.135.0 and --include-runtime=false; require the same admitted declaration bytes, then typecheck with the updated Workers declarations.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Generated binding declarations: Copyright ArcForges contributors; generator templates Copyright (c) 2020 Cloudflare, Inc., MIT alternative retained in third-party/Wrangler.LICENSE.txt.",
+    "files": [
+      "eng/provenance/NOTICE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reconciliation of existing configuration-derived declarations from owner AGPL inputs and compatible Wrangler MIT templates. Preserve the MIT notice alongside the AGPL source. This development declaration is absent from the deployed Worker."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": {
+    "generators": [
+      {
+        "repository": "https://github.com/cloudflare/workers-sdk",
+        "commit": "f9e7727dbef58e71c6b297dc688d3c544cef87cb",
+        "paths": [
+          "packages/wrangler/src/type-generation/index.ts",
+          "packages/wrangler/src/type-generation/helpers.ts"
+        ],
+        "spdx": "MIT",
+        "evidence": [
+          {
+            "path": "LICENSE-MIT",
+            "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4",
+            "finding": "Reviewed the particular type-generation, bundling and README-template paths; no subordinate override was found. Select the compatible MIT alternative and retain its full terms."
+          }
+        ]
+      }
+    ],
+    "inputs": [
+      {
+        "repository": "https://github.com/ArcForges/AI",
+        "commit": "d5595a85d030c2458263d755cad868529552d6a5",
+        "paths": [
+          "wrangler.json",
+          "src/index.ts"
+        ],
+        "spdx": "AGPL-3.0-only",
+        "evidence": [
+          {
+            "path": "LICENSE",
+            "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+            "finding": "Unchanged owner AGPL legal text and explicit SPDX headers on authored inputs; the current baseline contains these exact inputs."
+          }
+        ]
+      }
+    ],
+    "command": "npm ci --ignore-scripts; npm run types; git diff --exit-code -- src/env.generated.d.ts. The current configuration reproduces the r1 declaration byte-for-byte; Workerd runtime is not embedded.",
+    "outputSpdx": "AGPL-3.0-only"
+  },
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-21",
+    "decision": "approved",
+    "rationale": "Wrangler 4.135.0 generator identity advances to the official f9e7727 commit. Helpers and full MIT terms are unchanged. Reviewed type-generation/index delta removes only websearch binding branches, absent from this configuration. Actual --include-runtime=false generation retained every byte of the admitted r1 declaration, so target SHA remains unchanged. Record the generator update as an immutable successor rather than rewriting the original record.",
+    "baselineCommit": "d5595a85d030c2458263d755cad868529552d6a5",
+    "reconciliation": false
+  },
+  "supersedes": "wrangler-bindings-r1"
+}
