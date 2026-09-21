@@ -47,7 +47,7 @@ test("actual locked candidate retains both protobuf runtimes and all packaged pr
   assert.equal(receipt.sourceCommit, manifest.sourceCommit);
   assert.equal(
     receipt.worker.sha256,
-    "cb2991b875f0b301b50d54e88d95a92ae2e8c6f40d19307cdc1a9fd9040c08b1",
+    "fa719bbbd6ae9c5a3cbec7e6080d385845c680995799cbf9de796db91679a52a",
   );
   assert.equal(receipt.worker.parsedInputs, 104);
   assert.equal(receipt.worker.emittedInputs, 45);
