@@ -10,7 +10,7 @@
 | Workers types                      | 5.20260914.1           | Current binding and model input/output types                                    |
 | Cloudflare Vitest plugin           | 1.1.9                  | Local Workerd/Workflow integration                                              |
 | Vitest                             | 4.1.11                 | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
-| Biome / Prettier                   | 2.5.13 / 3.9.6         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
+| Biome / Prettier                   | 2.5.14 / 3.9.8         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
 | ArcForges proto / protobuf runtime | 1.0.0-ci.25.1 / 2.15.0 | Published Contracts messages, not sibling source                                |
 
 `npm ci --ignore-scripts` restores the committed dependency graph on Windows and Linux without lifecycle scripts. The selected tools work with this installation mode. `package-lock.json` includes transitive/platform packages for reproducibility; do not shorten it by hand. Platform-independent source checks run once on Linux CI; no Windows duplicate or macOS job is required.
@@ -34,7 +34,7 @@ To inspect the local health response, run `npm run dev -- --remote-bindings=fals
 
 ## Dependency and contract changes
 
-Update exact versions with `npm install --save-exact <package>@<version>` or `--save-dev` as appropriate, preserving `--ignore-scripts`. Review the manifest and lockfile together. Run the complete check/build/bundle sequence and the dependency audit. A binding/toolchain update also requires regeneration and review of `src/env.generated.d.ts`.
+Update exact versions with `npm install --save-exact <package>@<version>` or `--save-dev` as appropriate, preserving `--ignore-scripts`. Review the manifest and lockfile together. Run the affected offline checks, one candidate build and the dependency audit. Bundle/Workflow runtime diagnostics remain explicit local opt-in under the validation policy. A binding/toolchain update also requires regeneration and review of `src/env.generated.d.ts`.
 
 Keep the Cloudflare plugin, Wrangler and Vitest updates in a compatible group. Dependabot does not independently propose a Vitest major upgrade; review that upgrade explicitly when the Cloudflare plugin supports it. Keep `@arcforges/proto` and `@bufbuild/protobuf` compatible with the published Contracts manifest. No package can float to a different implementation between candidate testing and deployment.
 
