@@ -22,7 +22,7 @@
 | `npm run hooks`       | Enables this worktree's pre-commit and pre-push hooks                                  |
 | `npm run format`      | Formats repository text; generated bindings and npm's lockfile are excluded            |
 | `npm run types`       | Regenerates the small binding declaration from Wrangler config                         |
-| `npm run check`       | Repository policy, formatting, lint, type checks, unit/Workflow and release-tool tests |
+| `npm run check`       | Repository policy, formatting, lint, type checks, pure offline units and tooling tests |
 | `npm run build`       | Offline dry-run bundle and hash-verified candidate under `artifacts/candidate/`        |
 | `npm run test:bundle` | Optional local final-bundle runtime with explicit model-step mocks                     |
 | `npm run deploy`      | Uploads the verified candidate using Cloudflare credentials; does not rebuild          |

@@ -95,4 +95,4 @@ Do not overwrite an existing GitHub release with different artifacts. To release
 - [Workflow status](https://developers.cloudflare.com/api/resources/workflows/subresources/instances/methods/get/)
 - [Selected GPT-OSS model and binding usage](https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/)
 
-The pinned Wrangler trigger implementation sends an object in `params`, as the Workflow event expects. The current REST reference labels that field a JSON string; this implementation follows the shipping CLI and does not double-encode the payload. Actual service behavior remains part of the live gate.
+The pinned Wrangler trigger implementation sends an object in `params`, as the Workflow event expects. The current REST reference labels that field a JSON string; this implementation follows the shipping CLI and does not double-encode the payload. Actual service behavior requires an explicit local diagnostic when relevant; it is not a CI or publication gate.
