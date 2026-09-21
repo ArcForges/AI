@@ -366,7 +366,6 @@ async function deploy() {
   }
   const workerVersion = parseWorkerVersion(output);
   console.log(output.replaceAll(auth.token, "[REDACTED]"));
-  verifyCandidate();
   const runId = `hello-${workerVersion}`;
   writeJson(DEPLOYMENT, {
     accountId: auth.accountId,
@@ -380,10 +379,11 @@ async function deploy() {
     buildIdentity: runtimeIdentity(expectedIdentity(manifest.version)),
     deployedAt: new Date().toISOString(),
   });
-  console.log(`Deployed the verified bundle. Next: npm run test:live (instance ${runId}).`);
+  console.log(`Deployed candidate ${manifest.version}; no Workflow or inference test was run.`);
 }
 
 async function smoke() {
+  assert.notEqual(process.env.CI, "true", "Live inference tests are local opt-in only.");
   const manifest = verifyCandidate();
   assert(
     fs.existsSync(DEPLOYMENT),

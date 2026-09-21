@@ -1,5 +1,7 @@
 # Hello Agent bootstrap plan
 
+Historical implementation plan. Its former CI/runtime acceptance requirements are superseded by [the current validation policy](validation-policy.md). Retained results are historical, not instructions to repeat them.
+
 ## Collected inputs
 
 - AI main starts at `010c5bef4f63a8052fc074e99d24fa6affde1c0c`, containing only the AGPL-3.0 license. Preserve this license and the primary checkout.

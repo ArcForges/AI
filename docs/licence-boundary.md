@@ -14,8 +14,4 @@ existing candidate license texts and notices remain required.
 
 `artifacts/evidence/licence-boundary.json` records the source commit, dirty state,
 project declarations, dependency edges and findings. CI retains it separately from
-the candidate. Existing source tests, bundle/Workflow tests and immutable delivery
-gates continue to apply. Local model fixtures remain mocked inference; only the
-post-merge Cloudflare Workflow smoke can establish the actual deployment and model
-result. No product capability, account permission or commercial gate closes from a
-licence declaration.
+the candidate. Source checks and sealed build provenance remain required. Workflow/bundle execution and post-merge inference are optional local diagnostics under [validation policy](validation-policy.md), not CI gates. These checks do not establish complete product or commercial behavior.

@@ -1,5 +1,7 @@
 # Validation evidence
 
+Historical verification evidence. Current execution follows [validation policy](validation-policy.md); these recorded runs are not repeated CI or post-merge requirements.
+
 This file records observed bootstrap results and their boundaries. The table summarizes the initial bootstrap; later corrections and their verification appear below. Each live record identifies its exact runtime commit; documentation-only updates do not imply another deployment.
 
 | Gate                          | Evidence                                                                                                                                                                                                                                 |

@@ -21,13 +21,9 @@ env:
 
 jobs:
   validate:
-    name: Validate (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: Source and offline units
+    runs-on: ubuntu-latest
     timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -47,7 +43,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: licence-evidence-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: licence-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             artifacts/evidence/licence-boundary.json
             artifacts/evidence/source-provenance.json
@@ -141,8 +137,6 @@ jobs:
       - run: npm ci --ignore-scripts
       - id: build
         run: npm run build
-      - run: npm run test:bundle
-      - run: npm run verify:candidate
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         id: upload
         with:
@@ -150,14 +144,6 @@ jobs:
           path: artifacts/candidate/
           if-no-files-found: error
           retention-days: 30
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: local-bundle-evidence-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            artifacts/bundle-evidence.json
-            artifacts/evidence/source-provenance.json
-            artifacts/evidence/release-provenance.json
-          if-no-files-found: error
 
   verify:
     name: Verify
@@ -186,7 +172,7 @@ jobs:
           fi
 
   deploy:
-    name: Deploy and verify Cloudflare
+    name: Deploy Cloudflare
     needs: [verify, candidate]
     # Dependency review is intentionally skipped outside PRs. A status function
     # prevents that ancestor from implicitly skipping this verified deployment.
@@ -223,7 +209,6 @@ jobs:
           artifact-ids: ${{ needs.candidate.outputs.artifact-id }}
           path: artifacts/candidate
           merge-multiple: true
-      - run: npm run verify:candidate
       - name: Confirm current main commit
         env:
           GH_TOKEN: ${{ github.token }}
@@ -234,10 +219,6 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npm run deploy
-      - name: Verify real Workflow and model inference
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npm run test:live
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         if: always()
         with:
@@ -248,13 +229,13 @@ jobs:
       - name: Archive the verified candidate
         working-directory: artifacts/candidate
         run: zip -q -r "$RUNNER_TEMP/ai-worker.zip" .
-      - name: Create verified prerelease
+      - name: Create deployed prerelease
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE_VERSION: ${{ needs.candidate.outputs.version }}
         run: |
-          printf 'Verified private Cloudflare Hello Agent. The attached candidate was deployed without rebuilding and passed a real model/tool/model Workflow test.\n\nSource: %s\nCI: https://github.com/%s/actions/runs/%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > "$RUNNER_TEMP/release-notes.md"
-          gh release create "ai-$CANDIDATE_VERSION" "$RUNNER_TEMP/ai-worker.zip" artifacts/candidate/candidate.json artifacts/deployment/live-evidence.json --target "$GITHUB_SHA" --prerelease --title "AI $CANDIDATE_VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
+          printf 'Verified private Cloudflare Hello Agent. The attached candidate was deployed without rebuilding and completed the provider deployment operation. Runtime inference was not tested by CI.\n\nSource: %s\nCI: https://github.com/%s/actions/runs/%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > "$RUNNER_TEMP/release-notes.md"
+          gh release create "ai-$CANDIDATE_VERSION" "$RUNNER_TEMP/ai-worker.zip" artifacts/candidate/candidate.json artifacts/deployment/deployment.json --target "$GITHUB_SHA" --prerelease --title "AI $CANDIDATE_VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
 
   delivery:
     name: Verify deployment

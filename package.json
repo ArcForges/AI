@@ -23,15 +23,16 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "pretest:tooling": "node eng/project.mjs build",
-    "test:tooling": "node --test eng/tests/*.test.mjs",
+    "test:tooling": "node --test eng/tests/build-identity.test.mjs eng/tests/cloudflare.test.mjs eng/tests/licence-boundary.test.mjs eng/tests/provenance.test.mjs",
     "check": "node eng/project.mjs check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:tooling",
     "build": "node eng/project.mjs build",
     "verify:candidate": "node eng/project.mjs verify",
     "test:bundle": "node eng/project.mjs test-bundle",
     "deploy": "node eng/cloudflare.mjs deploy",
     "test:live": "node eng/cloudflare.mjs smoke",
-    "hooks": "node eng/project.mjs hooks"
+    "hooks": "node eng/project.mjs hooks",
+    "test:artifact": "npm run build && node --test eng/tests/project.test.mjs eng/tests/release-provenance.test.mjs",
+    "test:runtime": "vitest run --config vitest.runtime.config.ts"
   },
   "dependencies": {
     "@arcforges/proto": "1.0.0-ci.25.1",

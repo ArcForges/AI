@@ -38,6 +38,7 @@
     "docs/evidence/workflow-runtime-verification-2026-09-14.json",
     "docs/licence-boundary.md",
     "docs/provenance.md",
+    "docs/validation-policy.md",
     "docs/validation.md",
     "eng/cloudflare.mjs",
     "eng/licence-boundary.mjs",
@@ -83,6 +84,7 @@
     "tsconfig.json",
     "tsconfig.tools.json",
     "vitest.config.ts",
+    "vitest.runtime.config.ts",
     "wrangler.json"
   ],
   "reused": {

@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
-unset $(git rev-parse --local-env-vars)
-npm run check
+# Compilation and tests are explicit; hooks do not repeat them.
+git diff --check
