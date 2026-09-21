@@ -232,3 +232,24 @@ scenario(
   },
   /Changed candidate deployment configuration/u,
 );
+
+scenario(
+  "reject report tampering even after resealing the candidate",
+  ({ read, write }) => {
+    const identity = read("build-identity.json");
+    identity.build.buildId = "another-run";
+    write("build-identity.json", identity);
+  },
+  /Built identity differs/u,
+);
+scenario(
+  "reject a substituted runtime binding even after resealing",
+  ({ read, write }) => {
+    const config = read("wrangler.json");
+    const identity = JSON.parse(config.vars.BUILD_IDENTITY);
+    identity.reportSha256 = "0".repeat(64);
+    config.vars.BUILD_IDENTITY = JSON.stringify(identity);
+    write("wrangler.json", config);
+  },
+  /Expected values to be strictly deep-equal/u,
+);

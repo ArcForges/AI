@@ -48,3 +48,5 @@ Before the first merge, complete [Cloudflare setup and deployment](docs/deployin
 - [Cloudflare setup, release and recovery](docs/deploying.md)
 - [Contributing](CONTRIBUTING.md), [conduct](CODE_OF_CONDUCT.md) and [security](SECURITY.md)
 - [AGPL-3.0-only license](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md)
+
+Build candidates also carry the [WP02.04 build identity](docs/build-identity.md), checked against actual private Worker and Workflow metadata.

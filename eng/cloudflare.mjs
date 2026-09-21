@@ -5,6 +5,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
+import { expectedIdentity, runtimeIdentity } from "./build-identity.mjs";
 import { readModelFailure } from "../src/model-diagnostics.ts";
 import {
   CANDIDATE,
@@ -142,6 +143,11 @@ export function validateLiveOutput(result, expected) {
   assert.equal(output.modelCalls, 2);
   assert.equal(output.tool, "say_hello");
   assert.equal(output.toolMessage, "Hello, ArcForges!");
+  assert.deepEqual(
+    output.buildIdentity,
+    expected.buildIdentity,
+    "Workflow compiled candidate identity differs.",
+  );
   assert(
     typeof output.message === "string" && output.message.trim() && output.message.length <= 4096,
     "Model did not return a bounded greeting.",
@@ -371,6 +377,7 @@ async function deploy() {
     sourceCommit: manifest.sourceCommit,
     version: manifest.version,
     candidateSha256,
+    buildIdentity: runtimeIdentity(expectedIdentity(manifest.version)),
     deployedAt: new Date().toISOString(),
   });
   console.log(`Deployed the verified bundle. Next: npm run test:live (instance ${runId}).`);
@@ -387,6 +394,7 @@ async function smoke() {
   assert.equal(expected.accountId, auth.accountId);
   assert.equal(expected.sourceCommit, manifest.sourceCommit);
   assert.equal(expected.version, manifest.version);
+  assert.deepEqual(expected.buildIdentity, runtimeIdentity(expectedIdentity(manifest.version)));
   assert.equal(
     expected.candidateSha256,
     sha256(fs.readFileSync(path.join(CANDIDATE, "candidate.json"))),

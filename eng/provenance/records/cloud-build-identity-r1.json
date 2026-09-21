@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "cloud-build-identity-r1",
+  "kind": "source",
+  "sourceRepository": "https://github.com/ArcForges/Cloud",
+  "sourceCommit": "749de4b702a0de86859b8ae4a5f22ac90f856ffa",
+  "sourcePaths": [
+    "tooling/build-identity.ts",
+    "tests/worker/build-identity.test.ts",
+    "eng/version-sources.json"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "tooling/build-identity.ts",
+        "sha256": "95ac59d60388c944c980c9ac287c650495437db92c5c8c49589c702fd651707a",
+        "finding": "Reviewed the exact merged source under its SPDX header and complete owner AGPL terms."
+      },
+      {
+        "path": "tests/worker/build-identity.test.ts",
+        "sha256": "62789316338dc33554fdec3ac7edcde33de5097d2754d777a836490d09583245",
+        "finding": "Reviewed the exact merged source under its SPDX header and complete owner AGPL terms."
+      },
+      {
+        "path": "eng/version-sources.json",
+        "sha256": "9a848f211b5b64ce5b75ff398e991e16adc5f20fa716c5b46ccc71ddab210766",
+        "finding": "Reviewed the exact merged source under its SPDX header and complete owner AGPL terms."
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "finding": "Full upstream AGPL terms equal receiving owner terms."
+      }
+    ],
+    "scope": "Reviewed AGPL-to-AGPL adaptation of Cloud nine-axis resolver and independence tests. Node type erasure, owner/import/catalog paths and npm producer-pin check replace Cloud-specific .NET/image inputs. Compact runtime identity binds the full report by SHA-256; no sibling source is a build input. All unknown-source, alias, dirty/CI and retry-attempt checks remain.",
+    "copyingPermission": null
+  },
+  "attribution": [
+    "Build identity tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only."
+  ],
+  "targets": [
+    {
+      "path": "eng/build-identity.mjs",
+      "sha256": "1dd5fd5dd3b10c6569ba6a039e7e0cbeb5e8ed922faf2e2642c3c6c3001b4d47",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/tests/build-identity.test.mjs",
+      "sha256": "a0dc1571946e05afcaf9499a34289c26684d353aa0764b6cd593d9770a0d89d4",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/version-sources.json",
+      "sha256": "aa520ffbe293b0feb9c39f53ea9ece1a152d6f4626b2927f969853628f6b2adf",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Rewrite",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Run the source audit, exact binding regeneration, actual candidate verifier and negative tests. Match declared byte identities against the retained official source/package evidence.",
+    "expected": "Every target and distributed legal/resource member matches its reviewed immutable source; unclassified or changed bytes fail.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Build identity tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only.",
+    "files": [
+      "eng/provenance/NOTICE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed AGPL-to-AGPL adaptation of Cloud nine-axis resolver and independence tests. Node type erasure, owner/import/catalog paths and npm producer-pin check replace Cloud-specific .NET/image inputs. Compact runtime identity binds the full report by SHA-256; no sibling source is a build input. All unknown-source, alias, dirty/CI and retry-attempt checks remain."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer's implementation/review authorization",
+    "reviewedOn": "2026-09-21",
+    "decision": "approved",
+    "rationale": "Reviewed AGPL-to-AGPL adaptation of Cloud nine-axis resolver and independence tests. Node type erasure, owner/import/catalog paths and npm producer-pin check replace Cloud-specific .NET/image inputs. Compact runtime identity binds the full report by SHA-256; no sibling source is a build input. All unknown-source, alias, dirty/CI and retry-attempt checks remain.",
+    "baselineCommit": "48837287694b825f727448430fccab72e172ed3c",
+    "reconciliation": false
+  },
+  "supersedes": null
+}

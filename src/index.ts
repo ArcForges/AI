@@ -12,6 +12,7 @@ export interface Env {
   HELLO_AGENT: Workflow<WorkflowParams>;
   BUILD_VERSION: string;
   SOURCE_COMMIT: string;
+  BUILD_IDENTITY?: string;
   CF_VERSION: { id: string };
 }
 
@@ -71,6 +72,7 @@ export class HelloAgentWorkflow extends WorkflowEntrypoint<Env, WorkflowParams> 
     requireVersion();
     return {
       ...identity(),
+      buildIdentity: JSON.parse(this.env.BUILD_IDENTITY ?? "null"),
       ...(admission ? { admission } : {}),
       model: MODEL_ID,
       modelCalls: 2,
@@ -91,6 +93,7 @@ export default {
       version: env.BUILD_VERSION,
       sourceCommit: env.SOURCE_COMMIT,
       inferenceVerified: false,
+      buildIdentity: JSON.parse(env.BUILD_IDENTITY ?? "null"),
     });
   },
 } satisfies ExportedHandler<Env>;

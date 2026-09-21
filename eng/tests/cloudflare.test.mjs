@@ -17,6 +17,7 @@ const expected = {
   workerVersion: "11111111-1111-4111-8111-111111111111",
   sourceCommit: "a".repeat(40),
   version: "0.1.0-ci.1.1",
+  buildIdentity: { fixture: "synthetic candidate identity" },
 };
 const otherWorker = "22222222-2222-4222-8222-222222222222";
 const completed = (runId = expected.runId) => ({
@@ -29,6 +30,7 @@ const completed = (runId = expected.runId) => ({
       expected: verifiedHelloParams(expected).expected,
       actual: { runId, ...verifiedHelloParams(expected).expected },
     },
+    buildIdentity: expected.buildIdentity,
     model: "@cf/openai/gpt-oss-20b",
     modelCalls: 2,
     tool: "say_hello",
@@ -456,4 +458,12 @@ test("a failed step with opaque output reports its timeout instead of a JSON par
   );
   assert.equal(reads, 1);
   assert.equal(records.at(-1).failure.modelUsage, "possibly-incurred");
+});
+
+test("live output rejects changed or missing compiled candidate identity", () => {
+  for (const changed of [undefined, { fixture: "another candidate" }]) {
+    const output = completed();
+    output.output.buildIdentity = changed;
+    assert.throws(() => validateLiveOutput(output, expected), /compiled candidate identity/u);
+  }
 });
