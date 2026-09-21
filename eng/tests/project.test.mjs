@@ -4,7 +4,13 @@ import { test } from "node:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { CANDIDATE, readJson, verifyCandidate, versionFromRun } from "../project.mjs";
+import {
+  CANDIDATE,
+  readJson,
+  verifyCandidate,
+  verifyToolchain,
+  versionFromRun,
+} from "../project.mjs";
 
 test("automatic versions include both run number and attempt", () => {
   assert.equal(versionFromRun("31", "2"), "0.1.0-ci.31.2");
@@ -26,4 +32,10 @@ test("candidate validation rejects tampering and another source commit", () => {
     assert(path.basename(directory).startsWith("arcforges-ai-candidate-test-"));
     fs.rmSync(directory, { recursive: true });
   }
+});
+
+test("toolchain pins reject a different Node or npm patch", () => {
+  verifyToolchain("v24.21.0", "11.19.0");
+  assert.throws(() => verifyToolchain("v24.21.1", "11.19.0"), /pinned Node/u);
+  assert.throws(() => verifyToolchain("v24.21.0", "11.19.1"), /pinned npm/u);
 });

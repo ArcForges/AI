@@ -313,7 +313,19 @@ async function testBundle() {
   console.log("Final bundled Worker and Workflow passed; inference was explicitly mocked.");
 }
 
+export function verifyToolchain(nodeVersion, npmVersion) {
+  const expectedNode = fs.readFileSync(path.join(ROOT, ".node-version"), "utf8").trim();
+  const manifest = readJson(path.join(ROOT, "package.json"));
+  assert.equal(nodeVersion, `v${expectedNode}`, "Select the pinned Node version.");
+  assert.equal(`npm@${npmVersion}`, manifest.packageManager, "Select the pinned npm version.");
+}
+
 function check() {
+  assert(process.env.npm_execpath, "Run this check through npm run check.");
+  verifyToolchain(
+    process.version,
+    run(process.execPath, [process.env.npm_execpath, "--version"]).trim(),
+  );
   writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
   writeJson(path.join(ROOT, "artifacts/evidence/source-provenance.json"), auditProvenance(ROOT));
   const listed = run("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"])
