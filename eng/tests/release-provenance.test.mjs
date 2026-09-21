@@ -41,24 +41,24 @@ function scenario(name, change, expected) {
   });
 }
 
-test("actual locked candidate retains both protobuf runtimes and all packaged provenance", () => {
+test("actual locked candidate retains the deduplicated protobuf runtime and all packaged provenance", () => {
   const manifest = verifyCandidate();
   const receipt = readJson(path.join(CANDIDATE, "provenance.json"));
   assert.equal(receipt.sourceCommit, manifest.sourceCommit);
   assert.equal(
     receipt.worker.sha256,
-    "fa719bbbd6ae9c5a3cbec7e6080d385845c680995799cbf9de796db91679a52a",
+    "8c3c32fb0d7e37238eb52c882ca74f80e3d7be70447a0fed00e426a63f607e93",
   );
-  assert.equal(receipt.worker.parsedInputs, 104);
-  assert.equal(receipt.worker.emittedInputs, 45);
-  assert.equal(receipt.worker.sourceMapBodies, 43);
+  assert.equal(receipt.worker.parsedInputs, 73);
+  assert.equal(receipt.worker.emittedInputs, 33);
+  assert.equal(receipt.worker.sourceMapBodies, 31);
   const sbom = readJson(path.join(CANDIDATE, "sbom.cdx.json"));
   assert.deepEqual(
     sbom.components
       .filter((entry) => entry.name === "@bufbuild/protobuf")
       .map((entry) => entry.version)
       .sort(),
-    ["2.14.1", "2.15.0"],
+    ["2.15.0"],
   );
   assert.equal(sbom.metadata.component.name, "@arcforges/ai");
 });
@@ -184,10 +184,10 @@ scenario(
 );
 
 scenario(
-  "reject omission of the nested protobuf runtime from the SBOM",
+  "reject omission of the protobuf runtime from the SBOM",
   ({ read, write }) => {
     const sbom = read("sbom.cdx.json");
-    sbom.components = sbom.components.filter((entry) => entry.version !== "2.14.1");
+    sbom.components = sbom.components.filter((entry) => entry.name !== "@bufbuild/protobuf");
     write("sbom.cdx.json", sbom);
   },
   /Changed runtime SBOM component closure/u,

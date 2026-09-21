@@ -3,9 +3,9 @@
 useDefault = true
 
 [[allowlists]]
-description = "Verified SHA-256 of protobuf 2.15.0 api_pb.js in five immutable reviewed profiles"
+description = "Verified SHA-256 of protobuf 2.15.0 api_pb.js in six immutable reviewed profiles"
 targetRules = ["generic-api-key"]
 condition = "AND"
-paths = ['''^eng/provenance/artifact-profiles/ai-worker-r[12345]\.json$''']
+paths = ['''^eng/provenance/artifact-profiles/ai-worker-r[123456]\.json$''']
 regexTarget = "line"
 regexes = ['''^\s*"node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/api_pb\.js": "73e489001027c703bc0224ae73f78ecefe028e88284bd06952e8603c3d81472c",?\s*$''']

@@ -50,12 +50,14 @@
     "eng/provenance/artifact-profiles/ai-worker-r3.json",
     "eng/provenance/artifact-profiles/ai-worker-r4.json",
     "eng/provenance/artifact-profiles/ai-worker-r5.json",
+    "eng/provenance/artifact-profiles/ai-worker-r6.json",
     "eng/provenance/files.json",
     "eng/provenance/records/ai-worker-bundle-r1.json",
     "eng/provenance/records/ai-worker-bundle-r2.json",
     "eng/provenance/records/ai-worker-bundle-r3.json",
     "eng/provenance/records/ai-worker-bundle-r4.json",
     "eng/provenance/records/ai-worker-bundle-r5.json",
+    "eng/provenance/records/ai-worker-bundle-r6.json",
     "eng/provenance/records/buf-legal-r1.json",
     "eng/provenance/records/canonical-agpl-legal-r1.json",
     "eng/provenance/records/cloud-build-identity-r1.json",
@@ -104,5 +106,5 @@
     "eng/tests/build-identity.test.mjs": "cloud-build-identity-r1",
     "eng/version-sources.json": "cloud-build-identity-r1"
   },
-  "artifacts": ["ai-worker-bundle-r5"]
+  "artifacts": ["ai-worker-bundle-r6"]
 }

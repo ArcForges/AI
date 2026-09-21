@@ -11,7 +11,7 @@
 | Cloudflare Vitest plugin           | 1.1.9                  | Local Workerd/Workflow integration                                              |
 | Vitest                             | 4.1.11                 | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
 | Biome / Prettier                   | 2.5.14 / 3.9.8         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
-| ArcForges proto / protobuf runtime | 1.0.0-ci.25.1 / 2.15.0 | Published Contracts messages, not sibling source                                |
+| ArcForges proto / protobuf runtime | 1.0.0-ci.44.1 / 2.15.0 | Published Contracts messages, not sibling source                                |
 
 `npm ci --ignore-scripts` restores the committed dependency graph on Windows and Linux without lifecycle scripts. The selected tools work with this installation mode. `package-lock.json` includes transitive/platform packages for reproducibility; do not shorten it by hand. Platform-independent source checks run once on Linux CI; no Windows duplicate or macOS job is required.
 
