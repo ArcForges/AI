@@ -18,7 +18,7 @@
     "dev": "wrangler dev",
     "types": "wrangler types src/env.generated.d.ts --include-runtime=false",
     "typecheck": "tsc -p tsconfig.json && tsc -p tests/tsconfig.json && tsc -p tsconfig.tools.json",
-    "lint": "biome lint .",
+    "lint": "biome lint --error-on-warnings .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
