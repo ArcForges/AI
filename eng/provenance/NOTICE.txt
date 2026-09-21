@@ -2,8 +2,8 @@ AI source provenance
 
 Original material retains its recorded licence and full legal text.
 
-ai-worker-bundle-r3
-https://github.com/ArcForges/AI @ a896c8d58230892c66ea1076ca6f6b4d2b2d639f
+ai-worker-bundle-r4
+https://github.com/ArcForges/AI @ fbdcda7c63aebb3445a76890a76d3e25d408439a
 AGPL-3.0-only
 Worker: Copyright ArcForges contributors, AGPL-3.0-only. Contracts: ArcForges contributors, Apache-2.0. Protobuf runtimes: Copyright 2021-2026 Buf Technologies, Inc., Apache-2.0; varint/descriptor material: Copyright 2008 Google Inc., BSD-3-Clause. Helpers: Copyright 2020 Evan Wallace, MIT. Generated README: Copyright 2020 Cloudflare, Inc., MIT. Complete respective texts and source-bound records accompany the actual candidate.
 
@@ -16,6 +16,11 @@ canonical-agpl-legal-r1
 https://github.com/github/choosealicense.com @ 58267f8f2c5c0099810849cfd7677f52ae0c0eb3
 AGPL-3.0-only
 GNU Affero General Public License v3; Copyright Free Software Foundation, Inc.; its verbatim-copying permission and complete text are retained.
+
+cloud-build-identity-r1
+https://github.com/ArcForges/Cloud @ 749de4b702a0de86859b8ae4a5f22ac90f856ffa
+AGPL-3.0-only
+Build identity tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only.
 
 cloud-provenance-port-r1
 https://github.com/ArcForges/Cloud @ 3165c97cccd3ea1e0b230d66e22ab9c775ca19d8

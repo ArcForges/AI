@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { auditLicences } from "./licence-boundary.mjs";
 import { auditProvenance, gitEnvironment, parseDocument } from "./provenance.mjs";
 import { stageProvenance, verifyProvenance } from "./release-provenance.mjs";
+import { expectedIdentity, verifyIdentity, runtimeIdentity } from "./build-identity.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const CANDIDATE = path.resolve(ROOT, process.env.CANDIDATE_DIR ?? "artifacts/candidate");
@@ -125,6 +126,9 @@ export function verifyCandidate(directory = CANDIDATE, expectedCommit = process.
   assert.deepEqual(config.workflows, [
     { name: "arcforges-ai-hello", binding: "HELLO_AGENT", class_name: "HelloAgentWorkflow" },
   ]);
+  const identity = readJson(path.join(directory, "build-identity.json"));
+  verifyIdentity(identity, manifest.version);
+  assert.deepEqual(JSON.parse(config.vars.BUILD_IDENTITY), runtimeIdentity(identity));
   verifyProvenance(ROOT, directory, manifest);
   return manifest;
 }
@@ -157,7 +161,14 @@ async function build() {
   delete config.$schema;
   config.main = "worker/index.js";
   config.no_bundle = true;
-  config.vars = { BUILD_VERSION: version, SOURCE_COMMIT: commit };
+  const identity = expectedIdentity(version);
+  assert.equal(identity.build.sourceCommit, commit);
+  writeJson(path.join(CANDIDATE, "build-identity.json"), identity);
+  config.vars = {
+    BUILD_VERSION: version,
+    SOURCE_COMMIT: commit,
+    BUILD_IDENTITY: JSON.stringify(runtimeIdentity(identity)),
+  };
   writeJson(path.join(CANDIDATE, "wrangler.json"), config);
   for (const file of ["LICENSE", "THIRD_PARTY_NOTICES.md", "package-lock.json"]) {
     fs.copyFileSync(path.join(ROOT, file), path.join(CANDIDATE, file));
@@ -247,6 +258,8 @@ async function testBundle() {
     const health = await response.json();
     assert.equal(health.sourceCommit, manifest.sourceCommit);
     assert.equal(health.version, manifest.version);
+    const expectedBuild = runtimeIdentity(expectedIdentity(manifest.version));
+    assert.deepEqual(health.buildIdentity, expectedBuild);
     const bindings = await worker.getEnv();
     const target = {
       workerVersion: bindings.CF_VERSION.id,
@@ -299,6 +312,7 @@ async function testBundle() {
       assert.equal(output.admission.accepted, true);
       assert.deepEqual(output.admission.actual, { runId: id, ...target });
       assert.equal(output.sourceCommit, manifest.sourceCommit);
+      assert.deepEqual(output.buildIdentity, expectedBuild);
       writeJson(path.join(ROOT, "artifacts/bundle-evidence.json"), {
         kind: "local-bundle-mocked-inference",
         ...output,

@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { lstatSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { expectedIdentity, runtimeIdentity } from "./build-identity.mjs";
 import { isDeepStrictEqual } from "node:util";
 import {
   auditProvenance,
@@ -239,6 +240,7 @@ function verifyContents(owner, directory, identity, manifest) {
   const profile = identity.profile;
   const expected = [
     "candidate.json",
+    "build-identity.json",
     "provenance.json",
     "worker/index.js",
     "worker/index.js.map",
@@ -286,7 +288,11 @@ function verifyContents(owner, directory, identity, manifest) {
   delete configuration.$schema;
   configuration.main = "worker/index.js";
   configuration.no_bundle = true;
-  configuration.vars = { BUILD_VERSION: manifest.version, SOURCE_COMMIT: manifest.sourceCommit };
+  configuration.vars = {
+    BUILD_VERSION: manifest.version,
+    SOURCE_COMMIT: manifest.sourceCommit,
+    BUILD_IDENTITY: JSON.stringify(runtimeIdentity(expectedIdentity(manifest.version))),
+  };
   equal(
     read(directory, "wrangler.json"),
     configuration,
