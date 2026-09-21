@@ -17,7 +17,7 @@ npm run build
 
 These commands need no Cloudflare account. Default tests run pure offline units in Node. Workflow engine and bundle runtime tests are separate explicit local opt-in commands, never CI gates. The build produces `artifacts/candidate/`, including the deployable bundle, configuration, hashes, provenance, licenses and runtime SBOM.
 
-The toolchain pins TypeScript **7.0.2**, Wrangler **4.131.2** and `@arcforges/proto` **1.0.0-ci.25.1**. See [development](docs/development.md) for tool compatibility, local health testing and dependency updates.
+The toolchain pins TypeScript **7.0.2**, Wrangler **4.131.2** and `@arcforges/proto` **1.0.0-ci.44.1**. See [development](docs/development.md) for tool compatibility, local health testing and dependency updates.
 
 ## Hello Agent
 
