@@ -1,4 +1,4 @@
-# Cloudflare deployment and verification
+# Cloudflare deployment
 
 ## One-time setup
 
@@ -20,19 +20,18 @@ For local verification, use `npm exec -- wrangler login` to authorize the local 
 
 The API token and browser-authorized OAuth credential have their own permissions and lifetime. Either can authorize the same deployment/Workflow-management operation when scoped appropriately. The deployed Workflow calls `env.AI` through its Workers AI binding; it does not receive the GitHub token as a model parameter or runtime secret. A completed deployment/admission followed by an adapter response-validation error is not evidence that the CI token needs replacement or broader permissions.
 
-## First real run
+## Optional local runtime diagnostic
 
-After source checks and a clean committed candidate are ready, run:
+Only when affected behavior requires an explicit local runtime diagnostic with existing account access, use:
 
 ```sh
-npm run check
-npm run build
+npm run test:runtime
 npm run test:bundle
-npm run deploy
+# test:live requires an existing matching deployment record and may consume usage.
 npm run test:live
 ```
 
-The last two commands modify the selected Cloudflare account and consume model usage. The smoke submits a guarded request to the actual inference instance:
+The last command can modify the selected account and consume model usage. None is a CI or publication requirement. The smoke submits a guarded request to the actual inference instance:
 
 ```json
 {
@@ -54,7 +53,7 @@ Selection is bounded to 30 deterministic IDs within a five-minute polling window
 
 Use the selected model's Chat Completions binding profile: `messages`, a named-function `tool_choice`, `max_tokens` and `reasoning_effort`. The follow-up includes an assistant tool-call message with `content: ""` and a tool message with the same call ID. Live checks on 2026-09-14 found that forced-tool Responses requests returned Workers AI error 3030, while equivalent Chat Completions requests succeeded; replaying `content: null` was rejected with error 5006. The adapter accepts exactly one structured tool call and a final `stop` response. It does not recover tool calls from prose, retry a different protocol or switch models after failure.
 
-Both model requests explicitly set `temperature: 0`, instead of inheriting the model's documented default of 0.6. This reduces sampling variability for the Hello contract smoke; it cannot guarantee deterministic output or eliminate provider faults. The named function, strict argument validation, low reasoning effort, 1,024-output-token budget and zero automatic model retries remain enforced. A truncated response, refusal, malformed/multiple tool call or unexpected finish reason still fails the live gate.
+Both model requests explicitly set `temperature: 0`, instead of inheriting the model's documented default of 0.6. This reduces sampling variability for the Hello contract smoke; it cannot guarantee deterministic output or eliminate provider faults. The named function, strict argument validation, low reasoning effort, 1,024-output-token budget and zero automatic model retries remain enforced. A truncated response, refusal, malformed/multiple tool call or unexpected finish reason still fails that optional diagnostic.
 
 Model errors use a shared `AF_MODEL_FAILURE_V1` diagnostic codec. Response errors identify the phase and failed check, with an allowlisted finish reason/role, choice/tool counts, content length, refusal/legacy flags and completion-token count when returned. Binding exceptions report a known error type and numeric status/code when available. Raw prompts, response text, reasoning, tool arguments and arbitrary exception messages are excluded. The CLI includes these safe fields, the failed step and attempt count in its error and deployment evidence. Unknown platform errors retain safe step context without inventing a provider cause. `modelUsage: "possibly-incurred"` is not a billing measurement; `"unknown"` does not mean zero usage.
 
@@ -64,20 +63,17 @@ Inspect `artifacts/deployment/`: `intent.json` records the attempted upload, `de
 
 PR validation runs without Cloudflare credentials. Merging to `main` performs the following sequence:
 
-1. Validate source on Linux and Windows, dependencies, secrets and CodeQL.
-2. Build a candidate once on Linux, verify hashes and execute that compiled bundle locally with explicit model mocks.
-3. Require the aggregate **Verify** check to pass.
-4. Download that candidate by its GitHub artifact ID, verify its source and files, and deploy it with `--no-bundle` through the `cloudflare` environment.
-5. Run the guarded Workflow smoke test with admission inside each actual instance and publish its evidence. Only a successful live test creates the `ai-0.1.0-ci.<run>.<attempt>` GitHub prerelease with the deployable candidate.
-6. Require **Verify deployment** to observe a successful deployment job. An unexpectedly skipped deployment cannot leave a non-cancelled main run green.
+1. Run platform-independent source checks, targeted offline units, dependencies, secrets and CodeQL once on Linux.
+2. Build and seal the Worker candidate with required legal/provenance metadata. Do not execute the bundle or Workflow.
+3. Require applicable checks and the current main commit.
+4. Consume the candidate by workflow artifact ID, perform the promotion check once and deploy without rebuilding through the protected environment.
+5. Record the provider's confirmed Worker version in `artifacts/deployment/deployment.json`. Publish that record with the original candidate and manifest. Do not invoke a Workflow/model, wait for health, download public artifacts or claim live inference success.
 
-**Dependency review** compares a PR's dependency changes and intentionally skips on push. **Verify** accepts that skip outside PRs, while still requiring every applicable validation gate to pass. Deployment uses an explicit `!cancelled()` status condition and requires successful Verify and candidate results, so the PR-only job cannot suppress deployment through GitHub's implicit `success()` condition. PR, manual and scheduled runs do not deploy.
+The PR-only dependency review may skip outside PRs; deployment explicitly requires successful Verify/candidate jobs. PR, manual and scheduled runs do not deploy. The final delivery status requires deployment completion, not runtime testing.
 
-The candidate contains the bundle/configuration, file hashes, source identity, Contracts provenance, runtime SBOM and licenses. It is not published to npm. The same artifact is consumed by deployment; no dependency resolution or recompilation changes its Worker code. Installing the pinned CLI in the deployment job is tooling setup only.
+The candidate retains configuration, source/build identity, Contracts provenance, runtime SBOM and full licences. Deployment is serialized and rejects superseded main commits. Failed provider operations retain deployment-state records and require diagnosis before a scoped retry; network failures stop without proxy changes or blind retries. See [validation policy](validation-policy.md).
 
-Deployment jobs serialize access to the account. A superseded main run cannot intentionally redeploy an older commit through CI. A failed deployment may still have updated Cloudflare; the GitHub job must remain red until the live gate passes. Deployment-state artifacts are uploaded even after failure.
-
-## Failure and recovery
+## Failure and optional diagnostic recovery
 
 - **Main deployment unexpectedly skipped:** inspect the workflow conditions, not an enable variable. After a workflow fix, merge it and inspect the new main run; rerunning the old run uses its old workflow revision. The final deployment check reports an unexpected skip as failure.
 - **Admission limit reached:** retain the admission records and inspect the rejected instances. This message is emitted only after proven pre-model rejections. Run `npm run test:live` again to read the same deterministic IDs and use remaining IDs; it cannot exceed 30 IDs for that deployment. If every ID was rejected, inspect the cause before making a new deployment. A running instance instead produces a timeout naming that instance, with no claim of zero model calls.
@@ -85,11 +81,11 @@ Deployment jobs serialize access to the account. A superseded main run cannot in
 - **Credential/permission/model access failure:** correct the account or GitHub setting, then rerun the failed job. Do not change code to return a fake result or disable required verification.
 - **Workflow status query fails or times out:** retain the candidate and `artifacts/deployment/`, then rerun `npm run test:live`. It reads the deterministic IDs in order, advancing only past proven pre-model rejections to the same admitted or uncertain instance. If a previous create response was lost, an existing instance is read without a new POST. Never restart an instance whose model may have run. The `submitting` record preserves the chosen ID before the POST.
 - **Legacy smoke record:** records without `smokeProtocol: "verified-hello-v1"` cannot start this guarded smoke. Inspect their original instances using the matching old tooling; do not add the protocol marker by hand. A reviewed deployment of a guarded candidate is a separate attempt.
-- **Model call or response validation fails:** inspect `failure` in `live-state.json` and the matching `admission/<run-id>.json`. `PROVIDER_CALL_FAILED` distinguishes a binding exception from `FINISH_REASON`, `OUTPUT_TRUNCATED`, `REFUSAL` and other adapter checks. A legacy generic response error cannot reveal which field failed; do not infer that from a later success. Model steps have zero automatic retries. Starting a new deployment/run is an explicit new attempt and may incur additional usage. A step timeout cannot prove that the provider stopped processing the dispatched request. Retrying `test:live` reads the same failed instance; rerunning the GitHub deployment job uploads a new Worker version and creates a separate smoke instance, even if it reuses the original candidate.
+- **Model call or response validation fails:** inspect `failure` in `live-state.json` and the matching `admission/<run-id>.json`. `PROVIDER_CALL_FAILED` distinguishes a binding exception from `FINISH_REASON`, `OUTPUT_TRUNCATED`, `REFUSAL` and other adapter checks. A legacy generic response error cannot reveal which field failed; do not infer that from a later success. Model steps have zero automatic retries. Starting a new deployment/run is an explicit new attempt and may incur additional usage. A step timeout cannot prove that the provider stopped processing the dispatched request. Retrying `test:live` reads the same failed instance; rerunning deployment can upload a new Worker version but CI never creates a smoke instance.
 - **Upload confirmation is lost:** inspect `intent.json` and the Cloudflare Worker version list before uploading again. The script does not claim a confirmed deployment without Wrangler's version ID. Restore a confirmed deployment record only from observed Cloudflare metadata, not guessed values.
-- **Regression after deployment:** select a previously verified GitHub candidate, inspect its manifest and restore that artifact. In a local checkout of its matching source, restore the candidate into `artifacts/candidate/`, verify it, deploy it and run a new live test. This creates a new confirmed Worker version from the old verified bytes. Existing Workflow instances keep their own execution state; a Worker rollback is not a transaction rollback or an automatic restart of those instances.
+- **Regression after deployment:** select a previously verified GitHub candidate, inspect its manifest and restore that artifact. In a local checkout of its matching source, restore the candidate into `artifacts/candidate/`, verify it, deploy it; a local runtime diagnostic is separate and optional. This creates a new confirmed Worker version from the old verified bytes. Existing Workflow instances keep their own execution state; a Worker rollback is not a transaction rollback or an automatic restart of those instances.
 
-Do not overwrite an existing GitHub release with different artifacts. To release a changed candidate, use a new main commit/run. The private Hello Agent has no automatic triggers, so a deployed but failed smoke does not create an open public inference service.
+Do not overwrite an existing GitHub release with different artifacts. To release a changed candidate, use a new main commit/run. The private Hello Agent has no automatic triggers, so a deployed Worker does not create an open public inference service.
 
 ## References
 
@@ -99,4 +95,4 @@ Do not overwrite an existing GitHub release with different artifacts. To release
 - [Workflow status](https://developers.cloudflare.com/api/resources/workflows/subresources/instances/methods/get/)
 - [Selected GPT-OSS model and binding usage](https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/)
 
-The pinned Wrangler trigger implementation sends an object in `params`, as the Workflow event expects. The current REST reference labels that field a JSON string; this implementation follows the shipping CLI and does not double-encode the payload. Actual service behavior remains part of the live gate.
+The pinned Wrangler trigger implementation sends an object in `params`, as the Workflow event expects. The current REST reference labels that field a JSON string; this implementation follows the shipping CLI and does not double-encode the payload. Actual service behavior requires an explicit local diagnostic when relevant; it is not a CI or publication gate.

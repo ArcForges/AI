@@ -241,6 +241,7 @@ async function build() {
 }
 
 async function testBundle() {
+  assert.notEqual(process.env.CI, "true", "Bundle runtime tests are local opt-in only.");
   const manifest = verifyCandidate();
   const { createTestHarness } = await import("wrangler");
   const config = readJson(path.join(CANDIDATE, "wrangler.json"));

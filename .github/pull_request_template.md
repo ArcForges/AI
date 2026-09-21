@@ -4,7 +4,7 @@ Describe the concrete problem and resulting behavior.
 
 ## Validation
 
-List the checks performed. Distinguish mocked Workflow tests, compiled-bundle checks and real Cloudflare inference. Identify any pending account-dependent gate.
+List the checks performed. Distinguish offline units, optional local runtime observations and provider deployment completion. State untested coverage without introducing live or download gates.
 
 ## Deployment impact
 

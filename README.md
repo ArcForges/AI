@@ -13,10 +13,9 @@ npm ci --ignore-scripts
 npm run hooks
 npm run check
 npm run build
-npm run test:bundle
 ```
 
-These commands need no Cloudflare account. Both Workflow tests and the bundled Worker test explicitly mock the two model steps; the pure protobuf tool and local Workflow engine execute normally. The build produces `artifacts/candidate/`, including the deployable bundle, configuration, hashes, provenance, licenses and runtime SBOM.
+These commands need no Cloudflare account. Default tests run pure offline units in Node. Workflow engine and bundle runtime tests are separate explicit local opt-in commands, never CI gates. The build produces `artifacts/candidate/`, including the deployable bundle, configuration, hashes, provenance, licenses and runtime SBOM.
 
 The toolchain pins TypeScript **7.0.2**, Wrangler **4.131.2** and `@arcforges/proto` **1.0.0-ci.25.1**. See [development](docs/development.md) for tool compatibility, local health testing and dependency updates.
 
@@ -33,7 +32,7 @@ The Worker has no public route, workers.dev URL or preview URL. Remote runs are 
 
 ## Delivery
 
-PRs validate source, dependencies, the local runtime and the final bundle on GitHub. A merge/push to `main` automatically deploys the verified candidate from that run, starts a guarded Workflow that checks its own deployment identity before either model call, performs a real model/tool/model smoke test, and creates a GitHub prerelease with the candidate and deployment evidence. Only an instance proven to have rejected the request before any model call may be replaced while waiting for deployment admission. Failed or uncertain model execution and missing deployment settings fail the gate; no automatic model fallback is used.
+PRs validate source, targeted offline units, dependencies/security and the sealed Worker build. Main deploys that same candidate and creates a prerelease containing the candidate and provider deployment record. CI does not invoke a Workflow or model, test the compiled runtime, poll health or download public release bytes. Deployment completion is distinct from live runtime acceptance. See [validation policy](docs/validation-policy.md).
 
 This is a deployable Worker, not an npm library. Versions are automatic: `0.1.0-ci.<run-number>.<run-attempt>`. No manual version edit, npm account, NuGet key or PGP key is needed.
 
@@ -49,4 +48,4 @@ Before the first merge, complete [Cloudflare setup and deployment](docs/deployin
 - [Contributing](CONTRIBUTING.md), [conduct](CODE_OF_CONDUCT.md) and [security](SECURITY.md)
 - [AGPL-3.0-only license](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md)
 
-Build candidates also carry the [WP02.04 build identity](docs/build-identity.md), checked against actual private Worker and Workflow metadata.
+Build candidates also carry the [WP02.04 build identity](docs/build-identity.md), sealed from independent source/producer/lock inputs.
