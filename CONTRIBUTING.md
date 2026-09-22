@@ -11,3 +11,5 @@ Describe the problem, resulting behavior and concrete validation in the PR. Dist
 Contributions to original repository code and tooling are provided under the existing AGPL-3.0-only license. Preserve dependency licenses and notices. Adding a reference project's feature does not authorize copying its implementation or changing product scope.
 
 Follow the [provenance process](docs/provenance.md) before reusing source, tests, legal text or generated resources. Source and actual candidate checks require complete reviewed records, immutable history and preserved full notices.
+
+Dependency additions and upgrades follow [the enforced admission policy](docs/dependency-policy.md); update its input-bound review and retain the existing class and provenance gates.
