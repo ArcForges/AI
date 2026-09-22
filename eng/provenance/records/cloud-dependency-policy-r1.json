@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "cloud-dependency-policy-r1",
+  "kind": "source",
+  "sourceRepository": "https://github.com/ArcForges/Cloud",
+  "sourceCommit": "015b35008c2d8f613284c981d3cacbecf4e13b96",
+  "sourcePaths": [
+    "tooling/dependency-policy.ts",
+    "tooling/dependency-policy.test.ts",
+    "docs/dependency-policy.md"
+  ],
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "category": "agpl-compatible",
+    "evidence": [
+      {
+        "path": "tooling/dependency-policy.ts",
+        "sha256": "aab8319f8ee774cd00b2e10917072dcd6bcade2ee2bafc963c4dffdd7f60f9e6",
+        "finding": "Explicit AGPL SPDX for source/tests, with the contributor guide under the same owner root grant; identical recipient AGPL boundary and retained attribution."
+      },
+      {
+        "path": "tooling/dependency-policy.test.ts",
+        "sha256": "06f9d3887f425549bb7eb1545c25c2fb37d626d3ed117e7428e2b87b6bc137f2",
+        "finding": "Explicit AGPL SPDX for source/tests, with the contributor guide under the same owner root grant; identical recipient AGPL boundary and retained attribution."
+      },
+      {
+        "path": "docs/dependency-policy.md",
+        "sha256": "822b4b57ad3409ad4fa8dcced7799b17af896248c64acf5c0cee95b9cb8e0cdb",
+        "finding": "Explicit AGPL SPDX for source/tests, with the contributor guide under the same owner root grant; identical recipient AGPL boundary and retained attribution."
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "finding": "Complete source and recipient AGPL-3.0-only terms are identical."
+      }
+    ],
+    "scope": "Reviewed AGPL-to-AGPL copy of the Cloud dependency admission checker, offline refusal tests and contributor guide. AI relocates tooling files under eng; relative checker imports remain valid. Target bytes equal the exact upstream source. No sibling checkout is a build input and no generated public client or runtime code is copied.",
+    "copyingPermission": null
+  },
+  "attribution": [
+    "Dependency admission tooling and guide copied from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only. Exact source commit and target hashes are retained."
+  ],
+  "targets": [
+    {
+      "path": "eng/dependency-policy.ts",
+      "sha256": "aab8319f8ee774cd00b2e10917072dcd6bcade2ee2bafc963c4dffdd7f60f9e6",
+      "normalization": "lf"
+    },
+    {
+      "path": "eng/dependency-policy.test.ts",
+      "sha256": "06f9d3887f425549bb7eb1545c25c2fb37d626d3ed117e7428e2b87b6bc137f2",
+      "normalization": "lf"
+    },
+    {
+      "path": "docs/dependency-policy.md",
+      "sha256": "822b4b57ad3409ad4fa8dcced7799b17af896248c64acf5c0cee95b9cb8e0cdb",
+      "normalization": "lf"
+    }
+  ],
+  "artifactTargets": [],
+  "disposition": "Copy",
+  "verification": {
+    "kind": "source-and-byte-review",
+    "command": "Compare each LF-normalized target with its declared immutable Cloud source; run the source provenance audit and targeted offline dependency tests.",
+    "expected": "Identical source hashes, preserved AGPL terms and notices, no sibling build dependency; dependency policy refusal fixtures pass.",
+    "artifacts": []
+  },
+  "notice": {
+    "required": true,
+    "text": "Dependency admission tooling and guide copied from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only. Exact source commit and target hashes are retained.",
+    "files": [
+      "eng/provenance/NOTICE.txt"
+    ],
+    "distribution": "source-and-applicable-artifacts",
+    "reason": "Reviewed AGPL-to-AGPL copy of the Cloud dependency admission checker, offline refusal tests and contributor guide. AI relocates tooling files under eng; relative checker imports remain valid. Target bytes equal the exact upstream source. No sibling checkout is a build input and no generated public client or runtime code is copied."
+  },
+  "lifetime": {
+    "status": "permanent",
+    "owner": "AI Licensing and Provenance Owner",
+    "removalTrigger": null
+  },
+  "generation": null,
+  "review": {
+    "owner": "Licensing and Provenance Owner",
+    "reviewer": "Codex, acting under the maintainer implementation and review authorization",
+    "reviewedOn": "2026-09-21",
+    "decision": "approved",
+    "rationale": "Reviewed AGPL-to-AGPL copy of the Cloud dependency admission checker, offline refusal tests and contributor guide. AI relocates tooling files under eng; relative checker imports remain valid. Target bytes equal the exact upstream source. No sibling checkout is a build input and no generated public client or runtime code is copied. This record reconciles the initial same-work-package copy identified by complete PR review; its earlier firstParty classification was incorrect and is removed.",
+    "baselineCommit": "c590f60603962e6478bc4df712c10167aa379b2e",
+    "reconciliation": true
+  },
+  "supersedes": null
+}

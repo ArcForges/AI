@@ -42,6 +42,8 @@
     "docs/validation.md",
     "eng/cloudflare.mjs",
     "eng/licence-boundary.mjs",
+    "eng/policy/dependency-policy.json",
+    "eng/policy/dependency-reviews/admission-r1.json",
     "eng/policy/licence-boundary.json",
     "eng/project.mjs",
     "eng/provenance/NOTICE.txt",
@@ -63,6 +65,7 @@
     "eng/provenance/records/buf-legal-r1.json",
     "eng/provenance/records/canonical-agpl-legal-r1.json",
     "eng/provenance/records/cloud-build-identity-r1.json",
+    "eng/provenance/records/cloud-dependency-policy-r1.json",
     "eng/provenance/records/cloud-provenance-port-r1.json",
     "eng/provenance/records/esbuild-legal-r1.json",
     "eng/provenance/records/protobuf-legal-r1.json",
@@ -107,7 +110,10 @@
     "eng/provenance/template.json": "cloud-provenance-port-r1",
     "eng/build-identity.mjs": "cloud-build-identity-r1",
     "eng/tests/build-identity.test.mjs": "cloud-build-identity-r1",
-    "eng/version-sources.json": "cloud-build-identity-r1"
+    "eng/version-sources.json": "cloud-build-identity-r1",
+    "eng/dependency-policy.ts": "cloud-dependency-policy-r1",
+    "eng/dependency-policy.test.ts": "cloud-dependency-policy-r1",
+    "docs/dependency-policy.md": "cloud-dependency-policy-r1"
   },
   "artifacts": ["ai-worker-bundle-r7"]
 }

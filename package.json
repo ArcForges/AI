@@ -24,7 +24,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:tooling": "node --test eng/tests/build-identity.test.mjs eng/tests/cloudflare.test.mjs eng/tests/licence-boundary.test.mjs eng/tests/provenance.test.mjs",
-    "check": "node eng/project.mjs check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:tooling",
+    "check": "npm run test:dependencies && node eng/project.mjs check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:tooling",
     "build": "node eng/project.mjs build",
     "verify:candidate": "node eng/project.mjs verify",
     "test:bundle": "node eng/project.mjs test-bundle",
@@ -32,7 +32,9 @@
     "test:live": "node eng/cloudflare.mjs smoke",
     "hooks": "node eng/project.mjs hooks",
     "test:artifact": "npm run build && node --test eng/tests/project.test.mjs eng/tests/release-provenance.test.mjs",
-    "test:runtime": "vitest run --config vitest.runtime.config.ts"
+    "test:runtime": "vitest run --config vitest.runtime.config.ts",
+    "check:dependencies": "node eng/dependency-policy.ts",
+    "test:dependencies": "node --test eng/dependency-policy.test.ts"
   },
   "dependencies": {
     "@arcforges/proto": "1.0.0-ci.44.1",
