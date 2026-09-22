@@ -22,6 +22,11 @@ https://github.com/ArcForges/Cloud @ 749de4b702a0de86859b8ae4a5f22ac90f856ffa
 AGPL-3.0-only
 Build identity tooling adapted from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only.
 
+cloud-dependency-policy-r1
+https://github.com/ArcForges/Cloud @ 015b35008c2d8f613284c981d3cacbecf4e13b96
+AGPL-3.0-only
+Dependency admission tooling and guide copied from ArcForges Cloud, Copyright ArcForges contributors, AGPL-3.0-only. Exact source commit and target hashes are retained.
+
 cloud-provenance-port-r1
 https://github.com/ArcForges/Cloud @ 3165c97cccd3ea1e0b230d66e22ab9c775ca19d8
 AGPL-3.0-only
