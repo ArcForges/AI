@@ -42,13 +42,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
-    "@cloudflare/vitest-plugin": "1.1.13",
-    "@cloudflare/workers-types": "5.20260918.1",
+    "@cloudflare/vitest-plugin": "1.2.6",
+    "@cloudflare/workers-types": "5.20260925.1",
     "@types/node": "26.6.1",
     "prettier": "3.9.8",
     "typescript": "7.0.2",
     "vitest": "4.1.11",
-    "wrangler": "4.135.0"
+    "wrangler": "4.139.0"
   },
   "arcforges": {
     "licenceBoundary": "AGPL"
