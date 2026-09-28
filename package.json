@@ -37,7 +37,7 @@
     "test:dependencies": "node --test eng/dependency-policy.test.ts"
   },
   "dependencies": {
-    "@arcforges/proto": "1.0.0-ci.44.1",
+    "@arcforges/proto": "1.0.0-ci.94.1",
     "@bufbuild/protobuf": "2.15.0"
   },
   "devDependencies": {
