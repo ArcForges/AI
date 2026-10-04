@@ -101,6 +101,27 @@ export function resolveAxes(catalog, read) {
       }
       const input = object(JSON.parse(content));
       if (kind === "contracts") {
+        if (input.schema === "arcforges.build-identity.v1") {
+          // The published producer's own build identity: every declared subject keeps its
+          // schema version; the package version never supplies one.
+          assert.equal(input.owner, "Contracts");
+          assert.equal(object(input.build).dirty, false);
+          const declared = object(object(input.axes).ContractSet);
+          assert.equal(declared.status, "present");
+          const entries = array(declared.values);
+          assert(entries.length > 0, "Missing published ContractSet values");
+          for (const entry of entries) {
+            const value = object(entry);
+            const descriptor = value.descriptorSha256;
+            if (descriptor !== undefined) assert.match(string(descriptor), /^[a-f0-9]{64}$/u);
+            add(
+              string(value.subject),
+              string(value.version),
+              descriptor === undefined ? undefined : string(descriptor),
+            );
+          }
+          continue;
+        }
         const schema = /^([a-zA-Z0-9_.]+)\.v([1-9][0-9]*)$/u.exec(string(input.schema));
         assert(schema?.[1] && schema[2]);
         assert.match(string(input.descriptorSha256), /^[a-f0-9]{64}$/u);
@@ -175,6 +196,38 @@ export function candidateEnvironment(version, environment) {
   return producer;
 }
 
+// The published receipt must account for every schema source of the producer's source receipt, once.
+export function verifyContractSources(contractSetValue, contracts) {
+  const schemaSources = object(contracts.schemaSources);
+  const seen = new Set();
+  for (const entry of array(object(contractSetValue).values)) {
+    const value = object(entry);
+    // A subject names one source file, or a closed list when its schema spans several files.
+    assert(
+      (value.source === undefined) !== (value.sources === undefined),
+      "A contract subject names exactly one of source or sources",
+    );
+    const declared =
+      value.source === undefined ? array(value.sources).map(object) : [object(value.source)];
+    assert(declared.length > 0, "A contract subject names no source");
+    const protos = declared.map((source) => string(source.path).endsWith(".proto"));
+    assert(
+      protos.every((proto) => proto === protos[0]),
+      "A contract subject mixes protobuf and JSON schema sources",
+    );
+    for (const source of declared) {
+      const sourcePath = string(source.path);
+      assert.match(string(source.sha256), /^[a-f0-9]{64}$/u);
+      assert.equal(schemaSources[sourcePath], source.sha256);
+      assert(!seen.has(sourcePath), "A schema source is named by two subjects");
+      seen.add(sourcePath);
+    }
+    if (protos[0]) assert.equal(value.descriptorSha256, contracts.descriptorSha256);
+    else assert.equal(value.descriptorSha256, undefined);
+  }
+  assert.deepEqual([...seen].sort(), Object.keys(schemaSources).sort());
+}
+
 export function expectedIdentity(version) {
   const git = (...args) =>
     execFileSync("git", args, {
@@ -197,6 +250,11 @@ export function expectedIdentity(version) {
       return JSON.stringify({ versions: [{ subject: "AI", version }] });
     if (name === "packages/contracts/source.json")
       return readFileSync(path.join(root, "node_modules/@arcforges/proto/source.json"), "utf8");
+    if (name === "packages/contracts/build-identity.json")
+      return readFileSync(
+        path.join(root, "node_modules/@arcforges/proto/build-identity.json"),
+        "utf8",
+      );
     return readFileSync(path.join(root, name), "utf8");
   };
   // The consumed producer receipt must match the independently pinned npm package.
@@ -205,6 +263,11 @@ export function expectedIdentity(version) {
     "@arcforges/proto"
   ];
   assert.equal(contracts.version, pinned);
+  const published = object(JSON.parse(read("packages/contracts/build-identity.json")));
+  assert.equal(object(published.artifact).id, "@arcforges/proto");
+  assert.equal(object(published.artifact).version, pinned);
+  assert.equal(object(published.build).sourceCommit, contracts.commit);
+  verifyContractSources(object(published.axes).ContractSet, contracts);
   return {
     schema: "arcforges.build-identity.v1",
     owner: "AI",

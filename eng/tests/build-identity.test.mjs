@@ -9,6 +9,7 @@ import {
   resolveAxes,
   sourceBuild,
   verifyHealthIdentity,
+  verifyContractSources,
   verifyIdentity,
 } from "../build-identity.mjs";
 
@@ -97,6 +98,89 @@ test("catalog rejects missing, unknown, aliased and unsafe sources", () => {
         versions: [{ subject: "app", version: "ContractSet" }],
       });
     assert.throws(() => resolveAxes(f.catalog, f.read));
+  }
+});
+
+test("published ContractSet preserves each schema subject independently of the package version", () => {
+  const f = fixture();
+  const receipt = JSON.parse(
+    readFileSync(
+      new URL("../../node_modules/@arcforges/proto/build-identity.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  f.sources["ContractSet.json"] = JSON.stringify(receipt);
+  const result = resolveAxes(f.catalog, f.read).ContractSet;
+  assert(result.values.length > 1);
+  assert(result.values.every((value) => value.version === "1"));
+  assert(result.values.some((value) => value.subject === "arcforges.hello"));
+  assert(result.values.some((value) => value.descriptorSha256));
+  for (const mutate of [
+    (r) => {
+      r.owner = "AI";
+    },
+    (r) => {
+      r.build.dirty = true;
+    },
+    (r) => {
+      r.axes.ContractSet.status = "not-produced";
+    },
+    (r) => {
+      r.axes.ContractSet.values = [];
+    },
+    (r) => {
+      r.axes.ContractSet.values[0].descriptorSha256 = "bad";
+    },
+    (r) => {
+      r.axes.ContractSet.values.push(r.axes.ContractSet.values[0]);
+    },
+  ]) {
+    const changed = structuredClone(receipt);
+    mutate(changed);
+    f.sources["ContractSet.json"] = JSON.stringify(changed);
+    assert.throws(() => resolveAxes(f.catalog, f.read));
+  }
+});
+
+test("the producer receipt must account for every schema source exactly once", () => {
+  const read = (name) =>
+    JSON.parse(
+      readFileSync(new URL(`../../node_modules/@arcforges/proto/${name}`, import.meta.url), "utf8"),
+    );
+  const receipt = read("build-identity.json");
+  const source = read("source.json");
+  verifyContractSources(receipt.axes.ContractSet, source);
+  assert(
+    receipt.axes.ContractSet.values.some((value) => value.sources),
+    "multi-file subject",
+  );
+  const first = receipt.axes.ContractSet.values.find((value) => value.source);
+  for (const mutate of [
+    (r) => {
+      r.values[0].source.sha256 = "0".repeat(64);
+    },
+    (r) => {
+      r.values.pop();
+    },
+    (r) => {
+      r.values.push(structuredClone(first));
+    },
+    (r) => {
+      r.values[0].sources = [r.values[0].source];
+    },
+    (r) => {
+      delete r.values[0].source;
+    },
+    (r) => {
+      r.values[0].descriptorSha256 = "f".repeat(64);
+    },
+    (r) => {
+      r.values.find((value) => value.sources).sources[0].path = "schemas/other.json";
+    },
+  ]) {
+    const changed = structuredClone(receipt.axes.ContractSet);
+    mutate(changed);
+    assert.throws(() => verifyContractSources(changed, source));
   }
 });
 

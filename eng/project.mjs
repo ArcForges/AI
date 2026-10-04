@@ -335,7 +335,7 @@ export function verifyToolchain(nodeVersion, npmVersion) {
   assert.equal(`npm@${npmVersion}`, manifest.packageManager, "Select the pinned npm version.");
 }
 
-function check() {
+async function check() {
   assert(process.env.npm_execpath, "Run this check through npm run check.");
   verifyToolchain(
     process.version,
@@ -343,6 +343,10 @@ function check() {
   );
   writeJson(path.join(ROOT, "artifacts/evidence/licence-boundary.json"), auditLicences(ROOT));
   writeJson(path.join(ROOT, "artifacts/evidence/source-provenance.json"), auditProvenance(ROOT));
+  // Owned Node/TypeScript architecture policy and the published naming scanner (GOV.10).
+  const { runPolicy } = await import("./policy/run.ts");
+  const policy = runPolicy(ROOT);
+  console.log(`Architecture policy passed: ${policy.rules} rules, no findings.`);
   const listed = run("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"])
     .split("\0")
     .filter(Boolean);
@@ -376,7 +380,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       verifyCandidate();
       console.log("Candidate hashes and source verified.");
     } else if (command === "test-bundle") await testBundle();
-    else if (command === "check") check();
+    else if (command === "check") await check();
     else if (command === "hooks") {
       run("git", ["config", "extensions.worktreeConfig", "true"]);
       run("git", ["config", "--worktree", "core.hooksPath", ".githooks"]);

@@ -3,7 +3,14 @@
   "compilerOptions": {
     "types": ["node"],
     "allowJs": true,
-    "checkJs": false
+    "checkJs": false,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true
   },
-  "include": ["vitest.config.ts", "vitest.runtime.config.ts"]
+  "include": [
+    "vitest.config.ts",
+    "vitest.runtime.config.ts",
+    "eng/policy/**/*.ts",
+    "tests/ArchitectureTests/**/*.ts"
+  ]
 }

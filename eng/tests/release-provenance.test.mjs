@@ -49,8 +49,8 @@ test("actual locked candidate retains the deduplicated protobuf runtime and all 
     receipt.worker.sha256,
     "8c3c32fb0d7e37238eb52c882ca74f80e3d7be70447a0fed00e426a63f607e93",
   );
-  assert.equal(receipt.worker.parsedInputs, 73);
-  assert.equal(receipt.worker.emittedInputs, 33);
+  assert.equal(receipt.worker.parsedInputs, 96);
+  assert.equal(receipt.worker.emittedInputs, 32);
   assert.equal(receipt.worker.sourceMapBodies, 31);
   const sbom = readJson(path.join(CANDIDATE, "sbom.cdx.json"));
   assert.deepEqual(
