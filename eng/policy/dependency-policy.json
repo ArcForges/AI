@@ -6,26 +6,26 @@
   "inputs": {
     ".node-version": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
     ".npmrc": "994f7cb40cf8035ac70be35a65bf3cb51aa62e5b8fe94531d596b279f66740cb",
-    "package-lock.json": "7bf300a2927a31ea4f765eb3a22aa70346915223d019d60f08522a9655ebb149",
-    "package.json": "2512fe0e01926545831d560c6c935a709e1c4893fdf977a004808cb80fedce45",
+    "package-lock.json": "7547d431e177f29e749856b78907bfb397d2d439feccc2c6e45f9482200fcba2",
+    "package.json": "5ac0be42bc25ba33ef562afc2702e7ab882441491c80493404cfb371e1c2390f",
     "wrangler.json": "9778f643f32d148fe064986cec486c5ba6f5a107cb2b2adc9c85951cf8c08c40",
-    "eng/provenance/artifact-profiles/ai-worker-r7.json": "4d8336e9189c6d9430c9ab67af36e748c7f6670d39e86fc75a660273e399b6dc",
-    "eng/provenance/records/ai-worker-bundle-r7.json": "1336f8fa2de8b367b39445c0cb39dbc4469cbf33b3b3cc060c8382b7d2708d8d",
+    "eng/provenance/artifact-profiles/ai-worker-r8.json": "9be271305091a0286a05bef5f061674152b53fd3a6babd69d9f0d8ba542e05c1",
+    "eng/provenance/records/ai-worker-bundle-r8.json": "1e8f4c5868ea123285d6da21e73c8eb15de3953c83757075f60b3920de10656a",
     ".github/workflows/ci.yml": "9fb852855e87f9923249d51fb654c804b910f173c12bd58fd96a44014b17a9c7"
   },
   "review": {
     "owner": "AI dependency maintainer",
-    "reviewer": "Codex, maintainer-authorized implementation review",
-    "date": "2026-09-21",
-    "rationale": "WP02.05 reconciles the unchanged current lock closure. Registry integrity and declared licence expressions identify build inputs; exact existing artifact profiles, file-level records and complete legal notices remain the redistribution authority. This admission creates no new native capability or broader source reuse permission.",
+    "reviewer": "ArcForges delivery worker w-c20261004-aiwrangler (implementation); independent review is recorded on the GOV.19 pull request",
+    "date": "2026-10-04",
+    "rationale": "GOV.19 admits the audited Cloudflare development closure so that npm audit --audit-level=high passes again: wrangler 4.135.0 to 4.143.1, @cloudflare/vitest-plugin 1.1.13 to 1.3.2, @cloudflare/workers-types 5.20260918.1 to 5.20260926.1, with transitive miniflare 5.20260926.1-alpha, workerd 1.20260926.1 (five platform packages), undici 7.29.1 and @cloudflare/unenv-preset 2.16.2. Twelve lock entries change, none is added or removed and no licence expression changes. The plugin pins Wrangler and Miniflare exactly, so 1.3.2 (which pins exactly Wrangler 4.143.1 and Miniflare 5.20260926.1-alpha) is the smallest plugin release that clears the advisories; 4.143.1 is the lowest Wrangler whose Miniflare uses undici 7.29.1, and the closure equals the one Cloud admitted as PR 32. All changed packages are development-only and are not emitted: the Worker bytes are expected to be unchanged under the successor profile ai-worker-r8. This admission creates no new native capability or broader source reuse permission.",
     "inputs": {
       ".node-version": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
       ".npmrc": "994f7cb40cf8035ac70be35a65bf3cb51aa62e5b8fe94531d596b279f66740cb",
-      "package-lock.json": "7bf300a2927a31ea4f765eb3a22aa70346915223d019d60f08522a9655ebb149",
-      "package.json": "2512fe0e01926545831d560c6c935a709e1c4893fdf977a004808cb80fedce45",
+      "package-lock.json": "7547d431e177f29e749856b78907bfb397d2d439feccc2c6e45f9482200fcba2",
+      "package.json": "5ac0be42bc25ba33ef562afc2702e7ab882441491c80493404cfb371e1c2390f",
       "wrangler.json": "9778f643f32d148fe064986cec486c5ba6f5a107cb2b2adc9c85951cf8c08c40",
-      "eng/provenance/artifact-profiles/ai-worker-r7.json": "4d8336e9189c6d9430c9ab67af36e748c7f6670d39e86fc75a660273e399b6dc",
-      "eng/provenance/records/ai-worker-bundle-r7.json": "1336f8fa2de8b367b39445c0cb39dbc4469cbf33b3b3cc060c8382b7d2708d8d",
+      "eng/provenance/artifact-profiles/ai-worker-r8.json": "9be271305091a0286a05bef5f061674152b53fd3a6babd69d9f0d8ba542e05c1",
+      "eng/provenance/records/ai-worker-bundle-r8.json": "1e8f4c5868ea123285d6da21e73c8eb15de3953c83757075f60b3920de10656a",
       ".github/workflows/ci.yml": "9fb852855e87f9923249d51fb654c804b910f173c12bd58fd96a44014b17a9c7"
     },
     "checks": [
@@ -37,9 +37,9 @@
       "sbom",
       "framework-posture"
     ],
-    "runtimeAssessment": "No framework version changed. Existing Cloudflare Workers/Workflows posture is preserved. Future framework majors require explicit runtime, native, transport and migration assessment. Local runtime/performance coverage runs only for affected behavior supported by the existing environment; none is asserted here.",
-    "maintenance": "Current exact producer and package locks remain unchanged; dependency review and the existing high-severity audit remain required. Lockfile licence labels are metadata, not replacement file-level redistribution grants. Updates must refresh this reviewed input-bound record and pass applicable existing class checks.",
-    "previous": null,
+    "runtimeAssessment": "No framework version changed. Only development tooling moves (Wrangler, Miniflare, workerd, undici in the test harness, the Cloudflare Vitest plugin); the Worker, Workflow and Workers AI runtime posture is unchanged. Local runtime/performance coverage runs only for affected behavior supported by the existing environment; no Workflow, inference or deployment run is asserted here.",
+    "maintenance": "Exact producer and package locks are unchanged apart from the development closure above; dependency review and the existing high-severity audit remain required. Dependabot PR 27 (Wrangler 4.147.0, plugin 1.3.6) is not required by the audit and is left to supersede or close under policy. Lockfile licence labels are metadata, not replacement file-level redistribution grants. Updates must refresh this reviewed input-bound record and pass applicable existing class checks.",
+    "previous": "eng/policy/dependency-reviews/admission-r1.json",
     "immutableHistory": "Admitted review records are retained in Git history. A dependency change requires a new reviewed source commit and updated input-bound rationale; never amend an already accepted provenance record."
   },
   "closure": {
@@ -116,51 +116,51 @@
       "license": "MIT OR Apache-2.0"
     },
     "node_modules/@cloudflare/unenv-preset": {
-      "version": "2.16.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/unenv-preset/-/unenv-preset-2.16.1.tgz",
-      "integrity": "sha512-ECxObrMfyTl5bhQf/lZCXwo5G6xX9IAUo+nDMKK4SZ8m4Jvvxp52vilxyySSWh2YTZz8+HQ07qGH/2rEom1vDw==",
+      "version": "2.16.2",
+      "resolved": "https://registry.npmjs.org/@cloudflare/unenv-preset/-/unenv-preset-2.16.2.tgz",
+      "integrity": "sha512-JBP1+Z7ZSNG/d4mRP+y8VC5dka3tZVMLEZRvS+rzQ4DGV1EoxRFQckcJTTkXbHSQiTj0DtNI01Zwb/V2fX0mvQ==",
       "license": "MIT OR Apache-2.0"
     },
     "node_modules/@cloudflare/vitest-plugin": {
-      "version": "1.1.13",
-      "resolved": "https://registry.npmjs.org/@cloudflare/vitest-plugin/-/vitest-plugin-1.1.13.tgz",
-      "integrity": "sha512-0yw65BvdySpKlK73YcJE/VXn2gbwyPB8dSpxFOUQbh4Kg2Yx6msxTEzQ+92dNH5q/84FNGzWcJ2aJjHlWCzGkA==",
+      "version": "1.3.2",
+      "resolved": "https://registry.npmjs.org/@cloudflare/vitest-plugin/-/vitest-plugin-1.3.2.tgz",
+      "integrity": "sha512-SsM4eccEiF6MQXIp2fhLCd8EdVCxUVcpBQkIVJg6+hTKkqOiglTBM8u7r9kcJ5aI6pxuwhfmP5oV8XVVEuHyIg==",
       "license": "MIT"
     },
     "node_modules/@cloudflare/workerd-darwin-64": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20260918.1.tgz",
-      "integrity": "sha512-H5Em6Wd0jjxaloYh2rp+WLBl2eWbkk7nSP1svGt6K1RSv/rNVqmKdpjZPJTBSavOmeYGa88qvtOWwS+33OHTqQ==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-darwin-64/-/workerd-darwin-64-1.20260926.1.tgz",
+      "integrity": "sha512-VCIpwgJu5Dm1o+VHLclNOKIdpttEqss7oDHS5DYxgVoonM9Dxxxr1xCQvJbh6IXFuQ1DDrbm5krjte5NsTgX3Q==",
       "license": "Apache-2.0"
     },
     "node_modules/@cloudflare/workerd-darwin-arm64": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20260918.1.tgz",
-      "integrity": "sha512-CR9JRZEQo93fNgBVF4Df2H2/VYO4n7rxSseSwCVv3bJQEb0huADUSCj2FK4ipxar8ToOEB4wawyw0vJo5U/rQQ==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-darwin-arm64/-/workerd-darwin-arm64-1.20260926.1.tgz",
+      "integrity": "sha512-oVuLXfCnr1Xu9sBMNYrEPcFZQNMcviNcacz9l+oqQiLHc5UrVp++lpKbsuWstCfh+/c39Pp37TVeaNBLA8+ReA==",
       "license": "Apache-2.0"
     },
     "node_modules/@cloudflare/workerd-linux-64": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20260918.1.tgz",
-      "integrity": "sha512-UQ2nnY3qpXLzQ80frmWO+8HvtqyWaQILe8QYZwpemdjT+sqwCz4Dz+0/WVkFco0v/04kIIqikVeLTY/7gEhmkw==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-linux-64/-/workerd-linux-64-1.20260926.1.tgz",
+      "integrity": "sha512-BjmiDvYBVBG5248gCHSZS3yONbcm3/3qKTu9RaQA8o7jQHJfXx9JnWbhkld2KsbXnRGEGHFwpLLidIpIGtQYUA==",
       "license": "Apache-2.0"
     },
     "node_modules/@cloudflare/workerd-linux-arm64": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20260918.1.tgz",
-      "integrity": "sha512-4rib51MaLNWweUIUxM/Xj558M5QmyZoBSf0ffv+lYah5VTrvwnez3XGxX72pElnBKHROvAPOi5msQ5Ts8JSI0A==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-linux-arm64/-/workerd-linux-arm64-1.20260926.1.tgz",
+      "integrity": "sha512-28bdfQDIFcpaKXMPisADy8BchpIsX+tEAhD+bhfEBXukFGFr8F3ouyiG3HzN3CqAh/OYvifJizzFZtptUPCy7w==",
       "license": "Apache-2.0"
     },
     "node_modules/@cloudflare/workerd-windows-64": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20260918.1.tgz",
-      "integrity": "sha512-sATrMx5ShYYgmgUGrcTmvsFSJBFuN95NEkX3xwb1qk8w1A6h5N11sea7yN2IeibwPyPmXKjWNjXOno0hZAM71Q==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workerd-windows-64/-/workerd-windows-64-1.20260926.1.tgz",
+      "integrity": "sha512-ehdL3ataKdEmlnW9oom6OZUR8n3XsTL/zl8+KGREpLi5sMSW0mek0PrF4wK9SX51f3Alnlu8tF8eKBg+mc3xFw==",
       "license": "Apache-2.0"
     },
     "node_modules/@cloudflare/workers-types": {
-      "version": "5.20260918.1",
-      "resolved": "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-5.20260918.1.tgz",
-      "integrity": "sha512-bUGc9gIdooYPi6lAUoB/eBXmy/ev9ok0XvDLzfJZQVCT8WCEQwv9f6smz6XeE83JzpX6ZSVi9CG1aDORnErYRQ==",
+      "version": "5.20260926.1",
+      "resolved": "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-5.20260926.1.tgz",
+      "integrity": "sha512-jLtwSjBFtXucrEIj584vNk/k9OwgW4ij7/nK40hnCw137/0ilqfkTlYIUTWlTEbUX2V/+XVBijzZha9spdQTUw==",
       "license": "MIT OR Apache-2.0"
     },
     "node_modules/@cspotcode/source-map-support": {
@@ -1004,9 +1004,9 @@
       "license": "MIT"
     },
     "node_modules/miniflare": {
-      "version": "5.20260918.0-alpha",
-      "resolved": "https://registry.npmjs.org/miniflare/-/miniflare-5.20260918.0-alpha.tgz",
-      "integrity": "sha512-vyIes7yW/OTzHtz4GhcBCTohZfqk2eQNiIkngZ07VRA5Qu24aNgW/TrFwlPkMLMjWDQ8R4JJBBHR/KX+liSDtg==",
+      "version": "5.20260926.1-alpha",
+      "resolved": "https://registry.npmjs.org/miniflare/-/miniflare-5.20260926.1-alpha.tgz",
+      "integrity": "sha512-vc4lgl8YVxR2aundPnVPTIcL46UQKK+ebW7yinXNE1Y9joFS0JoakMazr7r3M8DXRvaemKS8EEmszkv/b05qUw==",
       "license": "MIT"
     },
     "node_modules/nanoid": {
@@ -1142,9 +1142,9 @@
       "license": "Apache-2.0"
     },
     "node_modules/undici": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/undici/-/undici-7.29.0.tgz",
-      "integrity": "sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==",
+      "version": "7.29.1",
+      "resolved": "https://registry.npmjs.org/undici/-/undici-7.29.1.tgz",
+      "integrity": "sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==",
       "license": "MIT"
     },
     "node_modules/undici-types": {
@@ -1178,15 +1178,15 @@
       "license": "MIT"
     },
     "node_modules/workerd": {
-      "version": "1.20260918.1",
-      "resolved": "https://registry.npmjs.org/workerd/-/workerd-1.20260918.1.tgz",
-      "integrity": "sha512-NsjfQlBNQ0iEniv/STOy4zbp8s5k60PzL1Ter02Eg44arbDhHtf6UOs03E31XDRmmBFxSIkAZuCyld3RKH1wqA==",
+      "version": "1.20260926.1",
+      "resolved": "https://registry.npmjs.org/workerd/-/workerd-1.20260926.1.tgz",
+      "integrity": "sha512-YojhsWBuZwk3Jk9OC0QfTgVbLeQOD1tK1olC9ZXAUcmeip8z4NE/xtttpxCsuTvQBRqppvy7Tkac0kxPYMjIXA==",
       "license": "Apache-2.0"
     },
     "node_modules/wrangler": {
-      "version": "4.135.0",
-      "resolved": "https://registry.npmjs.org/wrangler/-/wrangler-4.135.0.tgz",
-      "integrity": "sha512-WrNBQSfIG6YcILJcodYr5ty8vgkzGsV8YX+kfd+uZ5/Bd8cUW0GnUIRKAVfn5kYKqh1m/BPcji9h1d7mE8euFw==",
+      "version": "4.143.1",
+      "resolved": "https://registry.npmjs.org/wrangler/-/wrangler-4.143.1.tgz",
+      "integrity": "sha512-ilQJRMRcMgdk82XWIg7hlgeB1I2CoOWmSiJeoqZufoNCWUiJTN5DaYPYb6M/oIXBXk3+IQIxNDgdtPUuxcxdeg==",
       "license": "MIT OR Apache-2.0"
     },
     "node_modules/ws": {
@@ -1225,20 +1225,20 @@
   },
   "registry": "https://registry.npmjs.org/",
   "channel": "foundation-candidate",
-  "artifactRecords": ["ai-worker-bundle-r7"],
+  "artifactRecords": ["ai-worker-bundle-r8"],
   "native": {
     "mode": "existing-artifact-closure-only",
     "evidence": [
-      "eng/provenance/artifact-profiles/ai-worker-r7.json",
-      "eng/provenance/records/ai-worker-bundle-r7.json"
+      "eng/provenance/artifact-profiles/ai-worker-r8.json",
+      "eng/provenance/records/ai-worker-bundle-r8.json"
     ]
   },
   "buildToolPrereleases": {
-    "miniflare": "5.20260918.0-alpha",
+    "miniflare": "5.20260926.1-alpha",
     "unenv": "2.0.0-rc.24",
     "youch": "4.1.0-beta.10"
   },
-  "reviewRecord": "eng/policy/dependency-reviews/admission-r1.json",
+  "reviewRecord": "eng/policy/dependency-reviews/wrangler-4-143-1-r1.json",
   "dependencyClasses": {
     "build-inputs": "Complete exact npm lock inventory; licence metadata is preserved, not inferred as a redistribution grant. Existing transitive development prereleases are named build-only migration inputs and cannot enter runtime/stable closures.",
     "runtime": "Only the independently enforced existing shipped artifact records admit runtime inputs and legal scopes.",
