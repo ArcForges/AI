@@ -37,8 +37,8 @@
     "test:dependencies": "node --test eng/dependency-policy.test.ts"
   },
   "dependencies": {
-    "@arcforges/proto": "1.0.0-ci.44.1",
-    "@bufbuild/protobuf": "2.15.0"
+    "@arcforges/proto": "1.0.0-ci.270.1",
+    "@bufbuild/protobuf": "2.16.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
