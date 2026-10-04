@@ -8,7 +8,7 @@
     },
     "ContractSet": {
       "kind": "contracts",
-      "sources": ["packages/contracts/source.json"]
+      "sources": ["packages/contracts/build-identity.json"]
     },
     "CapabilityVersion": {
       "kind": "declarations",

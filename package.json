@@ -34,10 +34,11 @@
     "test:artifact": "npm run build && node --test eng/tests/project.test.mjs eng/tests/release-provenance.test.mjs",
     "test:runtime": "vitest run --config vitest.runtime.config.ts",
     "check:dependencies": "node eng/dependency-policy.ts",
+    "policy": "node eng/policy/run.ts",
     "test:dependencies": "node --test eng/dependency-policy.test.ts"
   },
   "dependencies": {
-    "@arcforges/proto": "1.0.0-ci.44.1",
+    "@arcforges/proto": "1.0.0-ci.287.1",
     "@bufbuild/protobuf": "2.15.0"
   },
   "devDependencies": {

@@ -2,16 +2,16 @@
 
 ## Toolchain
 
-| Component                          | Pinned version         | Reason                                                                          |
-| ---------------------------------- | ---------------------- | ------------------------------------------------------------------------------- |
-| Node / npm                         | 24.21.0 / 11.19.0      | Current LTS line shared with Contracts                                          |
-| TypeScript                         | 7.0.2                  | Current release checked on 2026-09-14                                           |
-| Wrangler                           | 4.143.1                | Worker bundling, deployment and local test harness                              |
-| Workers types                      | 5.20260926.1           | Current binding and model input/output types                                    |
-| Cloudflare Vitest plugin           | 1.3.2                  | Local Workerd/Workflow integration                                              |
-| Vitest                             | 4.1.11                 | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
-| Biome / Prettier                   | 2.5.14 / 3.9.8         | Lint/format without depending on the removed TypeScript JavaScript compiler API |
-| ArcForges proto / protobuf runtime | 1.0.0-ci.44.1 / 2.15.0 | Published Contracts messages, not sibling source                                |
+| Component                          | Pinned version          | Reason                                                                          |
+| ---------------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
+| Node / npm                         | 24.21.0 / 11.19.0       | Current LTS line shared with Contracts                                          |
+| TypeScript                         | 7.0.2                   | Current release checked on 2026-09-14                                           |
+| Wrangler                           | 4.143.1                 | Worker bundling, deployment and local test harness                              |
+| Workers types                      | 5.20260926.1            | Current binding and model input/output types                                    |
+| Cloudflare Vitest plugin           | 1.3.2                   | Local Workerd/Workflow integration                                              |
+| Vitest                             | 4.1.11                  | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
+| Biome / Prettier                   | 2.5.14 / 3.9.8          | Lint/format without depending on the removed TypeScript JavaScript compiler API |
+| ArcForges proto / protobuf runtime | 1.0.0-ci.287.1 / 2.15.0 | Published Contracts messages, not sibling source                                |
 
 `npm ci --ignore-scripts` restores the committed dependency graph on Windows and Linux without lifecycle scripts. The selected tools work with this installation mode. `package-lock.json` includes transitive/platform packages for reproducibility; do not shorten it by hand. Platform-independent source checks run once on Linux CI; no Windows duplicate or macOS job is required.
 
