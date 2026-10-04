@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { expect, it } from "vitest";
@@ -62,5 +62,25 @@ it("the published scanner accepts current terms and detects every forbidden term
   } finally {
     rmSync(fixture, { recursive: true, force: true });
     rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+const eol = os.EOL;
+
+it("a failing published scanner becomes a naming-scan finding and a passing one does not", () => {
+  const fake = mkdtempSync(path.join(os.tmpdir(), "ai-naming-fake-"));
+  const scanner = path.join(fake, "node_modules/@arcforges/proto/tools/naming/eng/check_naming.py");
+  const report = path.join(fake, "report.json");
+  try {
+    mkdirSync(path.dirname(scanner), { recursive: true });
+    writeFileSync(scanner, ["import sys", 'print("finding")', "sys.exit(1)", ""].join(eol));
+    const failed = auditNamingScan(fake, report);
+    expect(failed).toHaveLength(1);
+    expect(failed[0]?.rule).toBe("naming-scan");
+    expect(failed[0]?.detail).toContain("exit 1");
+    writeFileSync(scanner, ["import sys", "sys.exit(0)", ""].join(eol));
+    expect(auditNamingScan(fake, report)).toEqual([]);
+  } finally {
+    rmSync(fake, { recursive: true, force: true });
   }
 });

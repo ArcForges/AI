@@ -86,6 +86,8 @@ export function applyExceptions(
       problem("exception-invalid", `${entry.id}: dates must be YYYY-MM-DD`);
       continue;
     }
+    if (milliseconds(entry.created) > milliseconds(today))
+      problem("exception-invalid", `${entry.id}: created date is in the future`);
     const lifetime = (milliseconds(entry.expires) - milliseconds(entry.created)) / 86_400_000;
     if (!(lifetime > 0) || lifetime > MAX_EXCEPTION_DAYS)
       problem("exception-lifetime", `${entry.id}: lifetime must be 1-${MAX_EXCEPTION_DAYS} days`);

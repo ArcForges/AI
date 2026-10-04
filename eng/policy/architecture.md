@@ -70,3 +70,12 @@ covers.
   (package version, producer commit, publication receipt and both asset SHA-256 values). It is
   never imported into the Worker graph. A dependency update that changes the pin must update the
   record in the same reviewed change.
+- Known limits recorded by the independent review (all consequences of the lexical design, none a
+  sandbox): the banned-API rules can be bypassed by aliasing or indirection (`globalThis`,
+  `(0, eval)`, an aliased `Reflect`, `console.log` or `fromBinary`, a provider host built by string
+  concatenation); `wrangler.json` is audited at its top level only, so `env.*` sections, `services`
+  bindings or a moved `main` are not checked (deployment uses the top-level configuration); there is
+  no fixture for an installed package name/version mismatch or a dirty `source.json`; and the
+  maintenance text of the `gov-10-naming-r1` review receipt is copied from GOV.19. Tightening any of
+  these is a reviewed append to the rule catalogue.
+- An exception's `created` date may not be in the future; the 180-day cap is measured against it.

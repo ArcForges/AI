@@ -61,6 +61,12 @@ describe("owned expiring exceptions", () => {
     ).toContain("exception-lifetime");
   });
 
+  it("rejects a creation date in the future, which would defeat the lifetime cap", () => {
+    const future = entry({ created: "2027-01-01", expires: "2027-03-01" });
+    const result = applyExceptions([finding], document(future), "2026-10-04");
+    expect(rules(result)).toContain("exception-invalid");
+  });
+
   it("rejects malformed documents and entries", () => {
     expect(rules(applyExceptions([], null, "2026-10-04"))).toEqual(["exception-invalid"]);
     expect(rules(applyExceptions([], { schemaVersion: 2, exceptions: [] }, "2026-10-04"))).toEqual([
