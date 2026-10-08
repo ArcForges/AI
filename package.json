@@ -51,6 +51,9 @@
     "vitest": "4.1.11",
     "wrangler": "4.143.1"
   },
+  "overrides": {
+    "sharp": "0.35.5"
+  },
   "arcforges": {
     "licenceBoundary": "AGPL"
   }

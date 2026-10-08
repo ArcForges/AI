@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "id": "ai-worker-r10",
+  "ownerCommit": "5421c3789240093b2fce36322c2eb7773325ec7b",
+  "lockSha256": "854086386385f3decbdf13b84dea41f8e6a8c1cbde4a88d26fd7f476a5264d99",
+  "worker": {
+    "sha256": "8c3c32fb0d7e37238eb52c882ca74f80e3d7be70447a0fed00e426a63f607e93",
+    "inputs": {
+      "node_modules/@arcforges/proto/dist/encoded-body.js": "b5bc4ec5380917463e9e7c792fc419764f1de7ee053a9e7a12aa71915118e195",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/catalog/v1/catalog_pb.js": "df42365d40b9a11d292e80e9a3bbe87f549bc78e9ac35715b6f05d9f810e235b",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/events/v1/events_pb.js": "db835cbeaeaaf46cde8a4b88d551d51711bce0de63b014730a7970af2ff2a57b",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/foundation/v1/foundation_pb.js": "7638c99d3d630b611854df53c3467b8b1539cbc4eae210b8fa66d4fd4c5de158",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/hello/v1/hello_pb.js": "34764afd0bb4cb64445a35e4b2c11efbedf90d79f8d44c60a3b764fe50523e75",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/application_pb.js": "2941f1ddc7f67779d802cfe12bdad8876008f9d8b77ae19bbf45239049f4c993",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/chat_pb.js": "8e52efe76f011fab5a6d03eee56ac4b03b0c8eafd4c3ce4fddd3c5ef3eb8018f",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/commerce_pb.js": "6fc9fda25d609bf6c0d25dbbe0d3ed2e8288692c211ef93315d882fca825d865",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/content_pb.js": "efe32453efe6c38749bd44196f21be85f7053c11284034bea61772c03244b8d5",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/descriptors_pb.js": "a7c1ad4131bbbeedb0a4e60824a0af1b8947f20d5b3768929813b2bbe4839b0f",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/export_pb.js": "f5272000cb80d1bf9b84d17e3de2fcf0d9cae35224c1bae82a5e17e56fab3e30",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/identity_pb.js": "c168831f851e7b71aa20b9e0621f10270c5095509f52dcfe08c0722407563602",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/inprocess-values_pb.js": "5d1a6d6db714413f74d35874e62080634949a8e3611a21840225987f9b76d116",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/scope_pb.js": "f861533d9dd1ce724c700c8efda74c27339255ac82c8676d3273ad9cbdfadd69",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/support_pb.js": "8b3ceb2e60435a47b6fa42b89c4e78f81ab77c09ec5f76d9e7468a3aa675b34b",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/sync_pb.js": "65944c7f467e7da00a41b4b2aaa3f805486671e2b76e378e50506996450a371e",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/publicapi/v1/transfer_pb.js": "6f25d1a5845f2bfd7c71210ceac28d6e22fafc2c8b561068e8310b3548488b54",
+      "node_modules/@arcforges/proto/dist/gen/arcforges/simulation/v1/simulation_pb.js": "a4ab1333cd2dd39bb95c916afc5dc25e442c6a20d780435d76e58c057bb08ae0",
+      "node_modules/@arcforges/proto/dist/index.js": "7610828251b56369d2ae3640dd40ef59d5950f26c9b1ea100bc915f4fe9c4a03",
+      "node_modules/@arcforges/proto/dist/semantic-hash.js": "c334157453084c03b85e1fffc6e7e798b3f805574fb016cc61c3d4be4b38056e",
+      "node_modules/@arcforges/proto/dist/services/gen/catalog.js": "c70cddf5d683299a50c898b67a44a654c88fe21dd54a3c0ca4c5006cb4b1816c",
+      "node_modules/@arcforges/proto/dist/shapes/gen/proto.js": "b98a3a1d1e5e043f5b94a58913b65400a729627b51789d3ff93c324d8e0a1ce1",
+      "node_modules/@arcforges/proto/dist/values.js": "dc10bb11f12f6026f88798d15472741fa8e837e8db6b0312d1418025097b7295",
+      "node_modules/@arcforges/proto/dist/values/gen/identifiers.js": "7b42cfa1027ee207756a3b928a4db7bb916483a2fe7c86fb2f7811234ea355e5",
+      "node_modules/@arcforges/proto/dist/wire.js": "ebdc14079de410b5d5afd90b1bf3f0527c8ba72409203932ad11088597de5361",
+      "node_modules/@bufbuild/protobuf/dist/esm/clone.js": "d2750ac2748256be73650606472cbbab097951f100c1dff684cf46e92415908e",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/boot.js": "b4c474e617f91b74f99322f19561ad699933becf7efe73f0582da94db1bec465",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/embed.js": "ff8a37b2bb8113ae3e6414150d1b7e67cf505a49c3c1853bf1eecd61070c4ff7",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/enum.js": "50e504430270aecdea3794d30f17911099946f38eee258b5837967cb989abd93",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/extension.js": "33e7d6bdd22396057d3f8db92384079f7ec2fda4b3582709de2d43fccacc4a9c",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/file.js": "c36e59c8d61f99cb02cc1c1736175b98c95a8cd85517ddedaa0ce53382828d18",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/index.js": "5d00c6d55312c689ae7f1f4b5319a08a844e59a47c1e7e4c1aa823c14785c374",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/message.js": "01bbb6d0134c43ca84f4eb8efe7514106294f4b50208047cd3031dde24ae5ece",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/restore-json-names.js": "59dd7fdcd3eac52054ff1edd4667fbadb66c851a66f60ec528f9db6421a0eed9",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/scalar.js": "0b2994ee1fee5c72c7f27881aea421bdb1757b0c8c4042f155c433015b0b2455",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/service.js": "d4b90e97ac754d086a6ec26756bb2d5cff563396434f16aee3ae34d913d756b9",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/symbols.js": "330dd51c5ed866affe7ab19e38cad9fb9204847a51cc86e932c02771bcfcd702",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/types.js": "d414a5afba053da6809763cf1d29d2255ed6649347a1e0f0c62c8c74f78fb0c6",
+      "node_modules/@bufbuild/protobuf/dist/esm/create.js": "fcc95cb58ba11aabc809d9e199e0918d9a696d495d87e969f18c683483a978b3",
+      "node_modules/@bufbuild/protobuf/dist/esm/descriptors.js": "92884553e5d2d46ea273441deb32dc07187dc8ded3524356fa68536d1f2fc435",
+      "node_modules/@bufbuild/protobuf/dist/esm/equals.js": "630032abddfaaf6bc05e2069c060983e055bcce535f9ccf9c0d742b1f2806936",
+      "node_modules/@bufbuild/protobuf/dist/esm/extensions.js": "3d05089a8c1008f20e06da9907eec7f8824f871edfc95e907c15dc8e2bdf43e7",
+      "node_modules/@bufbuild/protobuf/dist/esm/fields.js": "9c4c967ea6c149011acb8aabfbadb73651f84d572335c48391d627e5283c0cd0",
+      "node_modules/@bufbuild/protobuf/dist/esm/from-binary.js": "819e9bf5bc421bdbe2e3c6f41e419883ffa34c3ad8ba93fef254747634e6dee3",
+      "node_modules/@bufbuild/protobuf/dist/esm/from-json.js": "d363744f2b3485546508c5668c22bfc812936b8c34021b98ddeeeaa09f8079b7",
+      "node_modules/@bufbuild/protobuf/dist/esm/index.js": "8682a066cf855574abf093eb0c0aec93399a9ea135b9641977c5cec90b1400a8",
+      "node_modules/@bufbuild/protobuf/dist/esm/is-message.js": "eda289d9ef0e979fe77a578ffbbf8012cadcfec4629b66cd98c27d6229a9f020",
+      "node_modules/@bufbuild/protobuf/dist/esm/merge.js": "83f6bd206b77bfab38d03069a14f1d0c9e5d998b65716642fab5cf8b4d4f75c5",
+      "node_modules/@bufbuild/protobuf/dist/esm/proto-int64.js": "cdb1f7869edc7171b689fd532fcaa4fa039680e1af44b32cce227cf61ca3fe05",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/error.js": "6ec9654705968f0c75cb0b184d4bb6629a932c05e3d27d603eb42a3cb9447f6f",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/guard.js": "f3b9324922e08cffcc4c7ae3c6e08454f62e187a37404df31a00160cddf34d77",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/message.js": "86c765f093f02c0ec837eebf90458a783537d6acb497a54430ff1417e1d6aad4",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/names.js": "c16595e9f98db8f01f32ed210fca177aa89816ce95303d0520556d31243a9150",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/nested-types.js": "1d1f03bc86ea3788b57b43c7720de2c41a7b133d852262a7615b3b152777cdef",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/reflect-check.js": "247cb28c0ac729c097f0a5de3ee3b9b52fa1a178c05535f074bdf154918a4844",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/reflect.js": "d21865e03a3a9f6348f4979fa77ddb13df7851f3917e89cda131cc5f30ce9e1c",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/scalar.js": "cb095614d5f901cd00d46b930a23c64ebd909a77831aa666768fca47f3e7745f",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/unsafe.js": "be7b00368ec24ab7ccb2f776b7478fa97cffd83772a0489bd80f81955d553326",
+      "node_modules/@bufbuild/protobuf/dist/esm/registry.js": "6a5c9d0cd7855504e9e2ba1cbce64fa7a056a49e989ff66902b972cc2f636e90",
+      "node_modules/@bufbuild/protobuf/dist/esm/to-binary.js": "63241fb54445dbb81561236f074d1a031735ad8cc0abc93269b014e8a9661886",
+      "node_modules/@bufbuild/protobuf/dist/esm/to-json.js": "1c2c618dc490c9b0682ca1f6d0e13c480a0840d6f18b2338ad00ebab116f7e67",
+      "node_modules/@bufbuild/protobuf/dist/esm/types.js": "d414a5afba053da6809763cf1d29d2255ed6649347a1e0f0c62c8c74f78fb0c6",
+      "node_modules/@bufbuild/protobuf/dist/esm/unknown-enum.js": "475e62094c73367833cec6253c5834a887cae9bcfa43a691a9fe3b7495c19106",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/base64-encoding.js": "d65944009ab55b40661572a8bdcaf0374de8566e2bc4a0dc11d7790e79cf9eeb",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/binary-encoding.js": "84ad0859d5ddd83ad2132c729ddc9cf07e3969ebff9229ae027623305e8a7ffc",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/index.js": "4cc137a3eb782f0ab9e8d02f6c5975e55f721f2d63ce2186f0fd6014af9b9bd5",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/size-delimited.js": "1c364712aa61711ce0e654ed81e26fe821e8f7b6dac9c31fe6d49fc184dbacd2",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/text-encoding.js": "145fc2c8a2ee92148dd9fd595b250591574c9b1271a8db7ffb95c78353962cb5",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/text-format.js": "92aa7e4df3bf7dfc02235174f297dcbff6bd02f7eb6325876cbb24ada6d51414",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/varint.js": "5a78ffe702716989b7c1d5f5deb73f7283655af5a7ecb3d885ae0b19f59eeaeb",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/any.js": "f8b97660653e1826c51166d4700d079d2fc89dd923ee522706b11297e06f3165",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/duration.js": "d730efb4ee5b52c492c1d04859568461a4efbfa7474048afa5f8f776a3b6d55b",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/any_pb.js": "8a7db66448dd118e7bc64730a298e9d747cb78bd9604c12bd6ee22de19b64b5c",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/api_pb.js": "73e489001027c703bc0224ae73f78ecefe028e88284bd06952e8603c3d81472c",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/compiler/plugin_pb.js": "25d57b7e880708c04738087de674a8c98092e5bfd39d5193cdb63a2f1e33871e",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/cpp_features_pb.js": "89f8c8a3ca87eacd6d1787156d8a950ce0e3ad85894ed94140f4c696ee142147",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/descriptor_pb.js": "1feb293fbfd20018e4a3790168737afa3705e7bd22dbcf2a6fd4b0cdb7bfac0c",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/duration_pb.js": "fbc88bbf3cea189f0494b0949049ffeac334b8c5015ebfc988217f2fcdb3262b",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/empty_pb.js": "98f5abf9a7fb522aab513ef3831dd9c5837cebcb38a960cb546ffd084926d746",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/field_mask_pb.js": "f793995a80fb30a168ac2ab10f29587e8b5f472464372429468db59af650dd5d",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/go_features_pb.js": "dd9f3f24fb154cfbfbde94e8f2647647c80c8ca050b98e981a407e760a4b9c1e",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/java_features_pb.js": "caa925cb881f7586e9e01f09325f09ebdecf742debbfff21eb7c4c49ea09ef02",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/source_context_pb.js": "063a8e43056578ecec6ba95eb1a9f28d8b704daea2260ef2943840def1cf9526",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/struct_pb.js": "efce20f9f127263ca66d855115e01b37af0afb8b8baafeba7dcc2e0834e99e4f",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/timestamp_pb.js": "b09ee99807e1edeb746b4a4a1e41519edaff1fed9f71a170bc15e8835af93e25",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/type_pb.js": "589afd70975c49b5d8856a85ffb597b1412f04b35b6234c324564d8640fcae15",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/wrappers_pb.js": "f5f56922916f3b22e72a37521c5ca915506b8b205fe28e89a1986dbce15d4b47",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/index.js": "96cb2eb563ccb18dc23fd9f8fb0f65193a1b90f39758a561eed747368ead00b3",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/json.js": "75930436cfbd374ae28c27f8ee5358e15409d8373875951fbce8b425a1e984d0",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/timestamp.js": "3c98fa838c05abcfd8dfda1128f2d1fca9b196a371fe9751abbd8f4c3b9d04ec",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/wrappers.js": "5f084c743c64707a1861d4e6ce05fcc5aede31838e03f13f2882b02dab7e945a",
+      "src/deployment.ts": "5fd095303987e78b909981f2f57aa73e7440867086dd04249161999ed7ccbdd4",
+      "src/hello.ts": "17f81aabf05f4f2c8246f52e29e6a968287edc50088c0544a2bf7b0c3a9f213a",
+      "src/index.ts": "8cc863cd51caa0fa3aa0ce8a4e809e41c2cb133631e72e0737f5344b803a420c",
+      "src/model-diagnostics.ts": "27797ad98123828afb4f7bbf21ec5272001aff8e616a432408674ff1d859429b",
+      "src/model.ts": "4679c94a66195738500763902623de8c98fd3fae85417e9fbdfac6bd41ad2767"
+    },
+    "outputInputs": [
+      "node_modules/@arcforges/proto/dist/gen/arcforges/hello/v1/hello_pb.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/boot.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/file.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/message.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/restore-json-names.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/create.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/descriptors.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/from-binary.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/index.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/is-message.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/proto-int64.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/error.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/guard.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/message.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/names.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/nested-types.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/scalar.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/reflect/unsafe.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/registry.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/to-binary.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/base64-encoding.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/binary-encoding.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/text-encoding.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/text-format.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wire/varint.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/descriptor_pb.js",
+      "node_modules/@bufbuild/protobuf/dist/esm/wkt/wrappers.js",
+      "src/deployment.ts",
+      "src/hello.ts",
+      "src/index.ts",
+      "src/model-diagnostics.ts",
+      "src/model.ts"
+    ],
+    "exports": [
+      "HelloAgentWorkflow",
+      "default"
+    ],
+    "externalImports": [
+      "cloudflare:workers",
+      "cloudflare:workflows"
+    ],
+    "sourceMap": {
+      "version": 3,
+      "sourceRootMode": "output-directory",
+      "sources": [
+        "src/index.ts",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/names.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wire/varint.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/proto-int64.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/descriptors.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/scalar.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/unsafe.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/restore-json-names.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wire/text-format.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/nested-types.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/registry.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/boot.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wire/base64-encoding.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wire/text-encoding.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wire/binary-encoding.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/error.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/is-message.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/guard.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wkt/wrappers.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/create.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/reflect/message.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/to-binary.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/message.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/wkt/gen/google/protobuf/descriptor_pb.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/from-binary.js",
+        "node_modules/@bufbuild/protobuf/dist/esm/codegenv2/file.js",
+        "node_modules/@arcforges/proto/dist/gen/arcforges/hello/v1/hello_pb.js",
+        "src/model-diagnostics.ts",
+        "src/hello.ts",
+        "src/deployment.ts",
+        "src/model.ts"
+      ],
+      "mappingsSha256": "f4bf477e31e9406555c2552f54eaa011ad6a58b4fdbe565debffbb6a3693f4ca",
+      "names": [
+        "ScalarType",
+        "_a",
+        "label",
+        "boot",
+        "WireType",
+        "isMessage",
+        "messageDesc",
+        "EDITION_PROTO3",
+        "EDITION_PROTO2",
+        "IMPLICIT",
+        "messageDesc",
+        "IMPLICIT",
+        "LEGACY_REQUIRED",
+        "record",
+        "ExtensionRangeOptions_VerificationState",
+        "FieldDescriptorProto_Type",
+        "FieldDescriptorProto_Label",
+        "FileOptions_OptimizeMode",
+        "FieldOptions_CType",
+        "FieldOptions_JSType",
+        "FieldOptions_OptionRetention",
+        "FieldOptions_OptionTargetType",
+        "MethodOptions_IdempotencyLevel",
+        "FeatureSet_VisibilityFeature_DefaultSymbolVisibility",
+        "FeatureSet_FieldPresence",
+        "FeatureSet_EnumType",
+        "FeatureSet_RepeatedFieldEncoding",
+        "FeatureSet_Utf8Validation",
+        "FeatureSet_MessageEncoding",
+        "FeatureSet_JsonFormat",
+        "FeatureSet_EnforceNamingStyle",
+        "GeneratedCodeInfo_Annotation_Semantic",
+        "Edition",
+        "SymbolVisibility",
+        "compileMessage",
+        "_a",
+        "record"
+      ]
+    },
+    "readmePrefix": "This folder contains the built output assets for the worker \"arcforges-ai-hello\" generated at "
+  },
+  "packages": {
+    "node_modules/@arcforges/proto": {
+      "version": "1.0.0-ci.287.1",
+      "integrity": "sha512-lJNdv4ReiG1KF54tziiJpkHgDHS96XsO504no07Ly7cnXCqqK9O0d5o6AaufIn08K7J7C5IR+Hpbq2ZFCrL8+w=="
+    },
+    "node_modules/@bufbuild/protobuf": {
+      "version": "2.15.0",
+      "integrity": "sha512-DAheWUkVr/SJTWCc+lg9dhY0eN4SaWlf4+bG1KzHeXbnqt0AfB/NX0Z+VunGlM1ki1B4zVvye27MpKh/svySUA=="
+    },
+    "node_modules/wrangler": {
+      "version": "4.143.1",
+      "integrity": "sha512-ilQJRMRcMgdk82XWIg7hlgeB1I2CoOWmSiJeoqZufoNCWUiJTN5DaYPYb6M/oIXBXk3+IQIxNDgdtPUuxcxdeg=="
+    },
+    "node_modules/esbuild": {
+      "version": "0.28.1",
+      "integrity": "sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw=="
+    }
+  },
+  "fixedLegal": {
+    "LICENSE": {
+      "source": "LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    },
+    "licenses/Apache-2.0.txt": {
+      "source": "node_modules/@arcforges/proto/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "licenses/Contracts-NOTICE.txt": {
+      "source": "node_modules/@arcforges/proto/NOTICE",
+      "sha256": "6d0a53ec8e7e87e73f38e3d639617517619fb9371b1787462e1222eca2c9a741"
+    },
+    "third-party/Wrangler.LICENSE.txt": {
+      "source": "third-party/Wrangler.LICENSE.txt",
+      "sha256": "9bb3b077cc8628334bab25961223dd8207252c8a56aa054195be38f1c042aaf4"
+    },
+    "third-party/Esbuild.LICENSE.txt": {
+      "source": "third-party/Esbuild.LICENSE.txt",
+      "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+    },
+    "third-party/Buf.LICENSE.txt": {
+      "source": "third-party/Buf.LICENSE.txt",
+      "sha256": "c04b4216f1cd4c5a4f7fb2f2a1b0ae70d847e9e0cac7c9dee9bf8cc03177c449"
+    },
+    "third-party/Protobuf.LICENSE.txt": {
+      "source": "third-party/Protobuf.LICENSE.txt",
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    "licenses/protobuf-BSD-3-Clause.txt": {
+      "source": "node_modules/@bufbuild/protobuf/dist/esm/wire/varint.js",
+      "sha256": "0e952cb110ff6944789fbe47c25b38819a3866c04c7c5cbea8d0c0d8f3a92f0e",
+      "transform": "initial-comment-header"
+    }
+  },
+  "authoredLegal": [
+    "THIRD_PARTY_NOTICES.md",
+    "eng/provenance/NOTICE.txt"
+  ],
+  "contracts": {
+    "repository": "https://github.com/ArcForges/Contracts",
+    "commit": "ca45f36cccbdd31380f76b8f6cdecc958fdcb430",
+    "dirty": false,
+    "version": "1.0.0-ci.287.1",
+    "contractAccess": "public",
+    "schemaSources": {
+      "public/proto/arcforges/catalog/v1/catalog.proto": "ff77d24be445e107d4fb4a0b3f7fd6b205664317e856a3696e471be1a18f0828",
+      "public/proto/arcforges/events/v1/events.proto": "33953eb0fa0ade48154efee887abae991d8eb697542516091164b7601e95d25e",
+      "public/proto/arcforges/foundation/v1/foundation.proto": "e7e634103664dcca4c63383dd0eda5d90b408edb4786bfdf4a148856fed92736",
+      "public/proto/arcforges/hello/v1/hello.proto": "92489f89d1898a3d3bbea56c72116416cd0152ae8866c98745739437020c67d9",
+      "public/proto/arcforges/publicapi/v1/application.proto": "a75077033ccc4876460606b35bfd06929b83ee57111637367bef92cbc1a28710",
+      "public/proto/arcforges/publicapi/v1/chat.proto": "b878ad06144a626e426e78addb76ca7fceb3c36d6a99f087f918fad1968e109a",
+      "public/proto/arcforges/publicapi/v1/commerce.proto": "e0ed5700197fdb20006c7ea699d9071dd8c4ac9d4248651f8a148363ad8af9dc",
+      "public/proto/arcforges/publicapi/v1/content.proto": "7d77c5c222dcfa2a5473675873f4d3e1bc8664fa5983f2b40e8c49db652b17fa",
+      "public/proto/arcforges/publicapi/v1/descriptors.proto": "d8a43c27fd345d55786a67ce9776efa0b4bc089f57361c3e532dd1b5f9326161",
+      "public/proto/arcforges/publicapi/v1/export.proto": "585aa18d6ca428c497ee2eb18ada15868dd78db3fde13077ebd7f0be664c2ae6",
+      "public/proto/arcforges/publicapi/v1/identity.proto": "bdc4b2cd3e44b72bbcbdfb6968cf5affb9afd7266645d4f83ae3564750bae3bc",
+      "public/proto/arcforges/publicapi/v1/inprocess-values.proto": "24921ae4f54f48800ea1201a9eee27a4e23a476b738cc3903665dff137a10eea",
+      "public/proto/arcforges/publicapi/v1/scope.proto": "a8c3f33e67631ae0226c96c74069e3ee5ae154afbccc145d13e41600579d3e27",
+      "public/proto/arcforges/publicapi/v1/support.proto": "9ba36c44a6682bb954e023ba5fe06ad46bfc647b59e84abe202f8c610cbcd541",
+      "public/proto/arcforges/publicapi/v1/sync.proto": "2e7861c2cbb6d55aa36c9703b4409f3149365f2f1f53741f2dce3f0589cb84d6",
+      "public/proto/arcforges/publicapi/v1/transfer.proto": "f7d53346a43cd977224154b33d8f1f3f3f4b973c67e513caf384b195654abc0e",
+      "public/proto/arcforges/simulation/v1/simulation.proto": "6be3a09a0ae9f2f28f2cfec9c5a762d0b1d11519336109fd842b14537e53faf7"
+    },
+    "descriptorSha256": "fd76dc0016aa08e150b0d0392306034651ab4f48fa981d9f08452ca846b5d35d",
+    "dependencyLocks": {
+      "package-lock.json": "3e536db25743ceb5a021559dbc1f31d57112211c62d94f84df34daca5382709c",
+      "src/public/dotnet/ArcForges.Contracts.Foundation/packages.lock.json": "fa17fe6057706e36ae0b9370a457536d05d0f3a8f0f72df622881bfc1628337e",
+      "src/public/dotnet/ArcForges.Contracts.PublicApi/packages.lock.json": "950f637a1c8b5152e0fdabff441cb2a8802ac50ae8aae0b97a89b4fa1e633b29",
+      "src/public/dotnet/ArcForges.Contracts.Events/packages.lock.json": "5f4282b8edd354a2197bcc62bf48c640251aa7272bd81b4a51dd340cf28fce45",
+      "src/public/dotnet/ArcForges.Sdk.Contracts/packages.lock.json": "0490ab15d029c97f1015d0483d419737a7963c4d7be002247d917eac684f74ce",
+      "src/public/dotnet/ArcForges.Contracts.Validation/packages.lock.json": "17e9ab54e527b0811319a94b81bbfcb16bd1773fd019ad81bbeffbbe4368508d",
+      "src/public/dotnet/ArcForges.Sdk.Client/packages.lock.json": "2182c09fccd0754761f9160db38c112d496a4ee72047cc052bbcaf2f22351a91",
+      "src/public/dotnet/ArcForges.Cli/packages.lock.json": "103777bb279eafe8ebe643afc4fb1c5d7d33f80f5f7d31fa3c796c64474b24f8",
+      "src/internal/dotnet/ArcForges.Contracts.LocalRpc.Platform/packages.lock.json": "4af9f61c399adec188a1e1717c4ba13b2291d4039af5a374d99832cfd9228586",
+      "src/internal/dotnet/ArcForges.Contracts.LocalRpc.Sandbox/packages.lock.json": "950f637a1c8b5152e0fdabff441cb2a8802ac50ae8aae0b97a89b4fa1e633b29",
+      "src/internal/dotnet/ArcForges.Contracts.LocalRpc.Chat/packages.lock.json": "2ffa6c7fb3cf873b86775fa67fcce30516bed510d126113933bfef7fbed3e052",
+      "src/internal/dotnet/ArcForges.Contracts.LocalRpc.Scope/packages.lock.json": "2ffa6c7fb3cf873b86775fa67fcce30516bed510d126113933bfef7fbed3e052",
+      "src/internal/dotnet/ArcForges.Contracts.CloudInternal/packages.lock.json": "4c4e87d606b9b79824286022accc631f2b8ac6689248b213fc9eb54255121cee",
+      "gradle.lockfile": "b176c43fe3fdb8fc99e36c8ccafc6dd1c07c2a2c0c0e9e5cbb3a328b70d128df",
+      "src/public/kotlin/contract-fixtures/gradle.lockfile": "14dc5803d23ab183aa24b2849ee51541e52e4d26fbada80e19082d15e0b1c654",
+      "src/public/kotlin/contracts-connect-client/gradle.lockfile": "9b5447a219bb4ec726f780a103ce193eaa6468378da8314316558bbf79ff7281",
+      "src/public/kotlin/contracts-proto/gradle.lockfile": "15e984aed92f5b614310976df0ca1d27d23d40b333ae732b5287c4bbd72ca90a"
+    }
+  },
+  "sbom": {
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.5",
+    "rootRef": "@arcforges/ai@0.0.0",
+    "rootPurl": "pkg:npm/%40arcforges/ai@0.0.0",
+    "rootName": "@arcforges/ai",
+    "components": [
+      {
+        "bom-ref": "@arcforges/proto@1.0.0-ci.287.1",
+        "name": "@arcforges/proto",
+        "version": "1.0.0-ci.287.1",
+        "purl": "pkg:npm/%40arcforges/proto@1.0.0-ci.287.1",
+        "hashes": [
+          {
+            "alg": "SHA-512",
+            "content": "94935dbf845e886d4a179e2dce2889a641e00c74bde97b0ee74e27a34ecbcbb7275c2aaa2bd3b4779a3a01ab9f227d3c2bb27b0b9211f87a5bab66450ab2fcfb"
+          }
+        ],
+        "licenses": [
+          {
+            "license": {
+              "id": "Apache-2.0"
+            }
+          }
+        ]
+      },
+      {
+        "bom-ref": "@bufbuild/protobuf@2.15.0",
+        "name": "@bufbuild/protobuf",
+        "version": "2.15.0",
+        "purl": "pkg:npm/%40bufbuild/protobuf@2.15.0",
+        "hashes": [
+          {
+            "alg": "SHA-512",
+            "content": "0c085e594915aff4894d609cfa583d76163478de1269695fe3e6c6d4acc77976e7aadd007c1fcd5f467e56e9c694cd648b5078cd5bf27b6ecca4a87fb2fc9250"
+          }
+        ],
+        "licenses": [
+          {
+            "expression": "(Apache-2.0 AND BSD-3-Clause)"
+          }
+        ]
+      }
+    ],
+    "dependencies": [
+      {
+        "ref": "@arcforges/ai@0.0.0",
+        "dependsOn": [
+          "@arcforges/proto@1.0.0-ci.287.1",
+          "@bufbuild/protobuf@2.15.0"
+        ]
+      },
+      {
+        "ref": "@arcforges/proto@1.0.0-ci.287.1",
+        "dependsOn": [
+          "@bufbuild/protobuf@2.15.0"
+        ]
+      },
+      {
+        "ref": "@bufbuild/protobuf@2.15.0",
+        "dependsOn": []
+      }
+    ]
+  },
+  "configurationSha256": "9778f643f32d148fe064986cec486c5ba6f5a107cb2b2adc9c85951cf8c08c40"
+}

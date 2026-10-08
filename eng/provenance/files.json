@@ -47,6 +47,7 @@
     "eng/policy/dependency-policy.json",
     "eng/policy/dependency-reviews/admission-r1.json",
     "eng/policy/dependency-reviews/gov-10-naming-r1.json",
+    "eng/policy/dependency-reviews/sharp-source-map-js-r1.json",
     "eng/policy/dependency-reviews/wrangler-4-143-1-r1.json",
     "eng/policy/exceptions.json",
     "eng/policy/exceptions.ts",
@@ -58,6 +59,7 @@
     "eng/project.mjs",
     "eng/provenance/NOTICE.txt",
     "eng/provenance/artifact-profiles/ai-worker-r1.json",
+    "eng/provenance/artifact-profiles/ai-worker-r10.json",
     "eng/provenance/artifact-profiles/ai-worker-r2.json",
     "eng/provenance/artifact-profiles/ai-worker-r3.json",
     "eng/provenance/artifact-profiles/ai-worker-r4.json",
@@ -68,6 +70,7 @@
     "eng/provenance/artifact-profiles/ai-worker-r9.json",
     "eng/provenance/files.json",
     "eng/provenance/records/ai-worker-bundle-r1.json",
+    "eng/provenance/records/ai-worker-bundle-r10.json",
     "eng/provenance/records/ai-worker-bundle-r2.json",
     "eng/provenance/records/ai-worker-bundle-r3.json",
     "eng/provenance/records/ai-worker-bundle-r4.json",
@@ -137,5 +140,5 @@
     "eng/dependency-policy.test.ts": "cloud-dependency-policy-r1",
     "docs/dependency-policy.md": "cloud-dependency-policy-r1"
   },
-  "artifacts": ["ai-worker-bundle-r9"]
+  "artifacts": ["ai-worker-bundle-r10"]
 }
