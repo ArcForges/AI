@@ -1,5 +1,7 @@
 # Cloudflare deployment
 
+> **Retirement status (HAR.40, 2026-10-09; pending user confirmation):** the AI runtime role has ended under P2-021. The C# Harness in the Cloud repository and its `ai.internal` Workers AI adapter are to replace the `arcforges-ai-hello` Worker and Workflow described below, and the Cloud adapter is not live until the HAR.40 deploy. That deployment's retirement is pending explicit user confirmation, and its deletion waits for that confirmation. This repository is to be kept read-only as history once its last deployment is retired. Nothing is deleted and no deployment is changed by this change; the steps below describe the deployment that still exists until then.
+
 ## One-time setup
 
 1. Sign in to the Cloudflare account that will own `arcforges-ai-hello`. Workers, Workflows and Workers AI must be available on that account. The selected model is `@cf/openai/gpt-oss-20b`. Accept any account/model terms shown by Cloudflare yourself; do not treat a local mock as proof of access.
