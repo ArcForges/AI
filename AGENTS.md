@@ -6,6 +6,7 @@
 - Preserve the repository's AGPL-3.0-only license. Third-party dependencies retain their licenses and notices.
 - Consume published Contracts packages with exact versions and the committed lockfile. Do not use submodules, sibling source imports or copied generated contracts.
 - The AI loop belongs to Cloudflare Workflows. Use the Workers AI binding directly. Cloud business authority, permissions, balances and transactions do not move into this repository.
+- Retirement status (HAR.40, 2026-10-09; pending user confirmation): the AI runtime role has ended under P2-021. The C# Harness in the Cloud repository and its `ai.internal` Workers AI adapter are to replace the `arcforges-ai-hello` Worker and Workflow; the Cloud adapter is not live until the HAR.40 deploy, so that deployment stays live until then. Its retirement is pending explicit user confirmation, and its deletion waits for that confirmation. This repository is to be kept read-only as history once its last deployment is retired. Nothing is deleted and no deployment is changed by this change.
 - PR checks are credential-free. Local model-step fixtures are mocks, never evidence of real inference. Keep real deployment/model evidence separate.
 - Never commit, print or upload API tokens, OAuth credentials or local secret files. Do not expose the private demo Worker through routes, workers.dev or preview URLs.
 - Follow the user's authorization for remote operations. When Cloudflare setup is missing, complete account-independent work and stop for account configuration.
