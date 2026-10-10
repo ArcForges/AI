@@ -313,9 +313,9 @@ export async function probe(
   );
 }
 
-// HAR.40 retired the arcforges-ai-hello Worker and Workflow. Neither main nor a
-// local `npm run deploy` may recreate it; eng/retire.mjs deletes the deployment
-// only through the retire-cloudflare workflow.
+// HAR.40 retirement of arcforges-ai-hello (authorized; deletion pending). Neither
+// main nor a local `npm run deploy` may redeploy it; eng/retire.mjs deletes the
+// Worker and Workflow only through the retire-cloudflare workflow.
 export const RETIRED = "arcforges-ai-hello is retired (HAR.40)";
 
 export async function deploy() {

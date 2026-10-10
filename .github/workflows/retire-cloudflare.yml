@@ -1,6 +1,6 @@
 name: Retire Cloudflare
 
-# HAR.40: deletes the retired arcforges-ai-hello Workflow and Worker. Dispatch a
+# HAR.40: deletes the arcforges-ai-hello Workflow and Worker being retired. Dispatch a
 # dry-run first; delete re-plans in the same run and requires the exact
 # confirmation. Record both run IDs in the Plan HAR.40 ledger.
 on:

@@ -2,7 +2,7 @@
 
 ArcForges' former AI execution runtime on Cloudflare Workers and Workflows. The repository contains a private Hello Agent: a selected Workers AI model calls one validated greeting tool, then writes a final reply. The greeting tool uses the published ArcForges protobuf package.
 
-> **Retired (HAR.40, authorized by the user on 2026-10-10):** the AI runtime role has ended under P2-021, and the C# Harness in the Cloud repository replaces the `arcforges-ai-hello` Worker and Workflow. Main no longer deploys and `npm run deploy` refuses. The Worker and Workflow are deleted only by the [retirement workflow](docs/deploying.md#retirement-har40), whose run IDs are recorded in the Plan HAR.40 ledger. Releases, records and evidence are kept as history.
+> **Retirement in progress (HAR.40, authorized by the user on 2026-10-10):** the AI runtime role has ended under P2-021, and the C# Harness in the Cloud repository replaces the `arcforges-ai-hello` Worker and Workflow. Main no longer deploys and `npm run deploy` refuses. The Worker and Workflow are not deleted yet: they stay deployed until the [retirement workflow](docs/deploying.md#retirement-har40) deletes them and verifies that both return 404, and that run refuses while, for example, any instance is active or the latest activity is inside the seven-day drain horizon. Its run IDs are recorded in the Plan HAR.40 ledger, and this status changes to retired only in a follow-up after the deletion is performed. Releases, records and evidence are kept as history.
 
 The intended product architecture keeps the only model/tool loop in a Workflow. Cloud owns business authorization, D1 transactions, approvals and accounting under the [current runtime authority](https://github.com/ArcForges/ArcForges-Design/blob/e2dd78058ce2d4bd1a8434a34d049bbc1158eacb/docs/architecture/30-runtime-and-source-ownership-policy.md). This bootstrap demonstrates the runtime, package boundary, build and deployment path; it does not implement the full product harness, streaming, R2 routes or commercial behavior.
 
@@ -38,7 +38,7 @@ PRs and main validate source, targeted offline units, dependencies/security and 
 
 This is a deployable Worker, not an npm library. Versions are automatic: `0.1.0-ci.<run-number>.<run-attempt>`. No manual version edit, npm account, NuGet key or PGP key is needed.
 
-[Cloudflare setup and deployment](docs/deploying.md) records the retirement workflow and, as history, the account settings, the GitHub `cloudflare` environment, live verification and recovery of the retired deployment. [Validation evidence](docs/validation.md) distinguishes completed local checks from pending external gates.
+[Cloudflare setup and deployment](docs/deploying.md) records the retirement workflow and, as history, the account settings, the GitHub `cloudflare` environment, live verification and recovery of the former main deployment. [Validation evidence](docs/validation.md) distinguishes completed local checks from pending external gates.
 
 ## Repository guide
 
@@ -46,7 +46,7 @@ This is a deployable Worker, not an npm library. Versions are automatic: `0.1.0-
 - [Development and hooks](docs/development.md)
 - [Project licence declarations and checks](docs/licence-boundary.md)
 - [Reuse records and actual artifact provenance](docs/provenance.md)
-- [Cloudflare retirement, and the retired setup, release and recovery](docs/deploying.md)
+- [Cloudflare retirement, and the former setup, release and recovery](docs/deploying.md)
 - [Contributing](CONTRIBUTING.md), [conduct](CODE_OF_CONDUCT.md) and [security](SECURITY.md)
 - [AGPL-3.0-only license](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md)
 

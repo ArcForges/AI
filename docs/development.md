@@ -6,7 +6,7 @@
 | ---------------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
 | Node / npm                         | 24.21.0 / 11.19.0       | Current LTS line shared with Contracts                                          |
 | TypeScript                         | 7.0.2                   | Current release checked on 2026-09-14                                           |
-| Wrangler                           | 4.143.1                 | Worker bundling, retired deployment and local test harness                      |
+| Wrangler                           | 4.143.1                 | Worker bundling, former main deployment and local test harness                  |
 | Workers types                      | 5.20260926.1            | Current binding and model input/output types                                    |
 | Cloudflare Vitest plugin           | 1.3.2                   | Local Workerd/Workflow integration                                              |
 | Vitest                             | 4.1.11                  | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
@@ -25,7 +25,7 @@
 | `npm run check`       | Repository policy, formatting, lint, type checks, pure offline units and tooling tests |
 | `npm run build`       | Offline dry-run bundle and hash-verified candidate under `artifacts/candidate/`        |
 | `npm run test:bundle` | Optional local final-bundle runtime with explicit model-step mocks                     |
-| `npm run deploy`      | Refuses: `arcforges-ai-hello` is retired (HAR.40); see [deploying](deploying.md)       |
+| `npm run deploy`      | Refuses during the HAR.40 retirement; see [deploying](deploying.md)                    |
 | `npm run test:live`   | Optional local diagnostic; never run by CI                                             |
 
 Hooks only check whitespace; they do not rebuild, test, deploy or call a model. They configure `core.hooksPath` for the current worktree, leaving other worktrees' hook choices intact. Applicable CI checks remain authoritative.

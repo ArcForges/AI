@@ -20,8 +20,9 @@ env:
   WRANGLER_SEND_METRICS: "false"
 
 jobs:
-  # HAR.40 retired the arcforges-ai-hello Worker and Workflow: main no longer
-  # deploys. retire-cloudflare.yml deletes them only by workflow_dispatch.
+  # HAR.40 (authorized retirement of arcforges-ai-hello): main no longer
+  # deploys. The Worker and Workflow stay deployed until retire-cloudflare.yml
+  # deletes them by workflow_dispatch and verifies 404.
   validate:
     name: Source and offline units
     runs-on: ubuntu-latest

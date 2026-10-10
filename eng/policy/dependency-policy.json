@@ -11,13 +11,13 @@
     "wrangler.json": "9778f643f32d148fe064986cec486c5ba6f5a107cb2b2adc9c85951cf8c08c40",
     "eng/provenance/artifact-profiles/ai-worker-r10.json": "6b3d70c0d2adbe14dd56ea52926f8c4cb73a8224fe89f9844ec173b2a898a2f8",
     "eng/provenance/records/ai-worker-bundle-r10.json": "7ca4c86a017a0bd11f3c3e91ee0430f9acafc9006e4341c867ccb6ca435e15fc",
-    ".github/workflows/ci.yml": "00aa8e04640e131dbdabe11ebed39b75f2fb0df51f5a290772fb692f3ba481a9"
+    ".github/workflows/ci.yml": "b75dafee8c2eeab22cd329b9e298ee073c9173d083b4b6d40d59653954376392"
   },
   "review": {
     "owner": "AI dependency maintainer",
     "reviewer": "w-deku-20261010-rev-har-40",
     "date": "2026-10-10",
-    "rationale": "HAR.40 retires the arcforges-ai-hello Worker and Workflow under the user's 2026-10-10 cleanup authorization (item 5.2), now that the C# Harness in the Cloud repository replaces them. .github/workflows/ci.yml loses only its main-push deploy job and the dependent deployment-verification job, so main no longer deploys or creates ai-* prereleases; validate, quality, codeql, dependencies, candidate and Verify are unchanged and Verify remains the only required check. ci.yml is a bound input, so its digest is rebound here; it is the only bound input that changes. No package, coordinate, lock entry, closure entry, manifest, .node-version, .npmrc, wrangler.json, artifact profile, provenance record or shipped artifact class changes. The publication block keeps naming ci.yml and the cloudflare environment as the former deployment consumer; no new publication path is added, and the separate workflow_dispatch retirement workflow only deletes the two retired Cloudflare resources.",
+    "rationale": "HAR.40 successor of har-40-r1 in the same pull request, written after the independent review of har-40-r1. .github/workflows/ci.yml changes only in its leading jobs comment, which now states that the arcforges-ai-hello retirement is authorized and in progress (main no longer deploys; the Worker and Workflow stay deployed until retire-cloudflare.yml deletes them by workflow_dispatch and verifies 404) instead of claiming they are already retired; no job, step, trigger, permission or required check changes, and validate, quality, codeql, dependencies, candidate and Verify are as bound by har-40-r1. ci.yml is a bound input, so its digest is rebound here; it is the only bound input that changes. No package, coordinate, lock entry, closure entry, manifest, .node-version, .npmrc, wrangler.json, artifact profile, provenance record or shipped artifact class changes. The publication block keeps naming ci.yml and the cloudflare environment as the former deployment consumer; no new publication path is added, and the separate workflow_dispatch retirement workflow only deletes the two Cloudflare resources being retired.",
     "inputs": {
       ".node-version": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f",
       ".npmrc": "994f7cb40cf8035ac70be35a65bf3cb51aa62e5b8fe94531d596b279f66740cb",
@@ -26,7 +26,7 @@
       "wrangler.json": "9778f643f32d148fe064986cec486c5ba6f5a107cb2b2adc9c85951cf8c08c40",
       "eng/provenance/artifact-profiles/ai-worker-r10.json": "6b3d70c0d2adbe14dd56ea52926f8c4cb73a8224fe89f9844ec173b2a898a2f8",
       "eng/provenance/records/ai-worker-bundle-r10.json": "7ca4c86a017a0bd11f3c3e91ee0430f9acafc9006e4341c867ccb6ca435e15fc",
-      ".github/workflows/ci.yml": "00aa8e04640e131dbdabe11ebed39b75f2fb0df51f5a290772fb692f3ba481a9"
+      ".github/workflows/ci.yml": "b75dafee8c2eeab22cd329b9e298ee073c9173d083b4b6d40d59653954376392"
     },
     "checks": [
       "locked-restore",
@@ -39,7 +39,7 @@
     ],
     "runtimeAssessment": "No runtime or build closure change. The candidate job still builds and seals the same Worker against profile r10 on every run, but no workflow deploys it any more. No live service, Workers AI, Workflow or installed-consumer validation is claimed.",
     "maintenance": "Every input bound by this receipt is named in its inputs map. A later change to any of them needs a new immutable successor receipt that chains from the active one, and the policy input and its review are re-bound together. Committed receipts are never edited or reused.",
-    "previous": "eng/policy/dependency-reviews/sharp-source-map-js-r1.json",
+    "previous": "eng/policy/dependency-reviews/har-40-r1.json",
     "immutableHistory": "Admitted review records are retained in Git history. A dependency change requires a new reviewed source commit and updated input-bound rationale; never amend an already accepted provenance record.",
     "reviewedOn": "2026-10-10",
     "decision": "approved"
@@ -1240,7 +1240,7 @@
     "unenv": "2.0.0-rc.24",
     "youch": "4.1.0-beta.10"
   },
-  "reviewRecord": "eng/policy/dependency-reviews/har-40-r1.json",
+  "reviewRecord": "eng/policy/dependency-reviews/har-40-r2.json",
   "dependencyClasses": {
     "build-inputs": "Complete exact npm lock inventory; licence metadata is preserved, not inferred as a redistribution grant. Existing transitive development prereleases are named build-only migration inputs and cannot enter runtime/stable closures.",
     "runtime": "Only the independently enforced existing shipped artifact records admit runtime inputs and legal scopes.",
