@@ -6,7 +6,7 @@
 | ---------------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
 | Node / npm                         | 24.21.0 / 11.19.0       | Current LTS line shared with Contracts                                          |
 | TypeScript                         | 7.0.2                   | Current release checked on 2026-09-14                                           |
-| Wrangler                           | 4.143.1                 | Worker bundling, deployment and local test harness                              |
+| Wrangler                           | 4.143.1                 | Worker bundling, retired deployment and local test harness                      |
 | Workers types                      | 5.20260926.1            | Current binding and model input/output types                                    |
 | Cloudflare Vitest plugin           | 1.3.2                   | Local Workerd/Workflow integration                                              |
 | Vitest                             | 4.1.11                  | Plugin requires Vitest 4.1; latest Vitest 5 is not a compatible upgrade         |
@@ -25,7 +25,7 @@
 | `npm run check`       | Repository policy, formatting, lint, type checks, pure offline units and tooling tests |
 | `npm run build`       | Offline dry-run bundle and hash-verified candidate under `artifacts/candidate/`        |
 | `npm run test:bundle` | Optional local final-bundle runtime with explicit model-step mocks                     |
-| `npm run deploy`      | Uploads the verified candidate using Cloudflare credentials; does not rebuild          |
+| `npm run deploy`      | Refuses: `arcforges-ai-hello` is retired (HAR.40); see [deploying](deploying.md)       |
 | `npm run test:live`   | Optional local diagnostic; never run by CI                                             |
 
 Hooks only check whitespace; they do not rebuild, test, deploy or call a model. They configure `core.hooksPath` for the current worktree, leaving other worktrees' hook choices intact. Applicable CI checks remain authoritative.
@@ -40,7 +40,7 @@ Keep the Cloudflare plugin, Wrangler and Vitest updates in a compatible group. D
 
 `npm run test:tooling` runs offline policy tests without a candidate build. `test:artifact` is an explicit packaging investigation, not part of normal checks. `npm test` runs only the pure hello/model/diagnostic units using Node; the Cloudflare plugin is loaded only by `vitest.runtime.config.ts`. See [validation policy](validation-policy.md).
 
-Local candidates built with uncommitted changes declare `sourceDirty: true` and can be tested but cannot be deployed. Commit the reviewed source and rebuild to obtain a candidate whose provenance identifies the exact source tree.
+Local candidates built with uncommitted changes declare `sourceDirty: true` and can be tested but could not be deployed. Commit the reviewed source and rebuild to obtain a candidate whose provenance identifies the exact source tree.
 
 ## Test boundaries
 

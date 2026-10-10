@@ -48,6 +48,7 @@
     "eng/policy/dependency-policy.json",
     "eng/policy/dependency-reviews/admission-r1.json",
     "eng/policy/dependency-reviews/gov-10-naming-r1.json",
+    "eng/policy/dependency-reviews/har-40-r1.json",
     "eng/policy/dependency-reviews/sharp-source-map-js-r1.json",
     "eng/policy/dependency-reviews/wrangler-4-143-1-r1.json",
     "eng/policy/exceptions.json",
