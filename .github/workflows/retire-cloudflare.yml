@@ -1,0 +1,64 @@
+name: Retire Cloudflare
+
+# HAR.40: deletes the arcforges-ai-hello Workflow and Worker being retired. Dispatch a
+# dry-run first; delete re-plans in the same run and requires the exact
+# confirmation. Record both run IDs in the Plan HAR.40 ledger.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: dry-run reads only; delete removes the Workflow, then the Worker.
+        type: choice
+        options: [dry-run, delete]
+        default: dry-run
+        required: true
+      confirm:
+        description: For delete, type exactly "delete arcforges-ai-hello".
+        type: string
+        default: ""
+        required: false
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  retire:
+    name: Retire arcforges-ai-hello
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: cloudflare
+    # Shared with the former main deployment; never cancel a Cloudflare operation.
+    concurrency:
+      group: cloudflare-main
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test eng/tests/retire.test.mjs
+      - name: Plan or delete the retired deployment
+        env:
+          RETIRE_MODE: ${{ inputs.mode }}
+          RETIRE_CONFIRM: ${{ inputs.confirm }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node eng/retire.mjs
+      - name: Retain the retirement plan and result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: retirement-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/retirement/
+          if-no-files-found: warn
+          retention-days: 90

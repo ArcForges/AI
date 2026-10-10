@@ -1,6 +1,16 @@
 # Cloudflare deployment
 
-> **Retirement status (HAR.40, 2026-10-09; pending user confirmation):** the AI runtime role has ended under P2-021. The C# Harness in the Cloud repository and its `ai.internal` Workers AI adapter are to replace the `arcforges-ai-hello` Worker and Workflow described below, and the Cloud adapter is not live until the HAR.40 deploy. That deployment's retirement is pending explicit user confirmation, and its deletion waits for that confirmation. This repository is to be kept read-only as history once its last deployment is retired. Nothing is deleted and no deployment is changed by this change; the steps below describe the deployment that still exists until then.
+> **Retirement status (HAR.40, authorized by the user on 2026-10-10; deletion pending):** the AI runtime role has ended under P2-021. The C# Harness in the Cloud repository and its `ai.internal` Workers AI adapter replace the `arcforges-ai-hello` Worker and Workflow described below; the adapter's live Workers AI proof (HAR.40 Proof 1) is blocked on the operator proof-environment deploy, not proven, and the user's authorization covers the retirement with that recorded. Main no longer deploys, and `npm run deploy` refuses. The Worker and Workflow are not deleted yet: they stay deployed until the [retirement workflow](#retirement-har40) deletes them and verifies that both return 404, which it refuses to do while the plan below is not eligible. Its run IDs are recorded in the Plan HAR.40 ledger, and this status changes to deleted only in a follow-up after the deletion is performed. Every `ai-*` release, tag, deployment record and evidence file is kept. The other sections describe the former main deployment and are kept as history; they are not instructions.
+
+## Retirement (HAR.40)
+
+[`retire-cloudflare.yml`](../.github/workflows/retire-cloudflare.yml) runs only by `workflow_dispatch` on `main`, in the existing `cloudflare` environment with its `CLOUDFLARE_ACCOUNT_ID` variable and `CLOUDFLARE_API_TOKEN` secret. It shares the former deployment's `cloudflare-main` concurrency group and never cancels a running Cloudflare operation. It runs the retirement tests, then `node eng/retire.mjs`, and retains `artifacts/retirement/` (`plan.json`, and `result.json` for a delete) for 90 days.
+
+- The targets are the constants `arcforges-ai-hello` (Worker and Workflow), checked against `wrangler.json`; no input names a target. Requests are limited to an allowlist of the endpoints the script uses. No response body or credential is printed or recorded.
+- **`dry-run` (the default)** sends only GET requests. It reads the Worker settings and the Workflow definition, requires the Workflow to be served by `arcforges-ai-hello`, lists every non-terminal instance status (`queued`, `running`, `waiting`, `paused`, `waitingForPause`) and the paged terminal history, and writes `plan.json`. The plan refuses when any non-terminal instance exists, any status is not a known terminal one, a listing cannot be proven complete, or the latest trigger or instance activity is inside the seven-day drain horizon.
+- **`delete`** requires the confirmation `delete arcforges-ai-hello` exactly, checked before any request. It plans again in the same run, deletes the Workflow, then deletes the Worker without `force` (Cloudflare refuses while anything still binds to it), and requires both to return 404 before writing `result.json`. Any non-2xx response stops the run before the next step.
+
+Dispatch a dry-run first and review `plan.json`; then dispatch the delete. If the credentials cannot delete either resource, the run fails without a partial success claim, and an account administrator deletes the Workflow and then the Worker in the Cloudflare dashboard instead, and that deletion is recorded in the same ledger.
 
 ## One-time setup
 
@@ -61,9 +71,9 @@ Model errors use a shared `AF_MODEL_FAILURE_V1` diagnostic codec. Response error
 
 Inspect `artifacts/deployment/`: `intent.json` records the attempted upload, `deployment.json` records its confirmed Worker version, base smoke ID and `verified-hello-v1` protocol, `admission/` retains each guarded instance's observed state and rejection reason, `live-state.json` records progress, and `live-evidence.json` is written only after full live validation. Evidence must match the candidate's source commit, build version and native Worker version metadata. The model's greeting may vary; the tool result and provenance must match exactly.
 
-## Automatic main delivery
+## Automatic main delivery (historical)
 
-PR validation runs without Cloudflare credentials. Merging to `main` performs the following sequence:
+HAR.40 removed the deploy and deployment-verification jobs from `ci.yml`; merging to `main` now validates and builds the candidate only, and no workflow deploys it or creates an `ai-*` prerelease. Until then, PR validation ran without Cloudflare credentials, and merging to `main` performed the following sequence:
 
 1. Run platform-independent source checks, targeted offline units, dependencies, secrets and CodeQL once on Linux.
 2. Build and seal the Worker candidate with required legal/provenance metadata. Do not execute the bundle or Workflow.
@@ -71,13 +81,13 @@ PR validation runs without Cloudflare credentials. Merging to `main` performs th
 4. Consume the candidate by workflow artifact ID, perform the promotion check once and deploy without rebuilding through the protected environment.
 5. Record the provider's confirmed Worker version in `artifacts/deployment/deployment.json`. Publish that record with the original candidate and manifest. Do not invoke a Workflow/model, wait for health, download public artifacts or claim live inference success.
 
-The PR-only dependency review may skip outside PRs; deployment explicitly requires successful Verify/candidate jobs. PR, manual and scheduled runs do not deploy. The final delivery status requires deployment completion, not runtime testing.
+The PR-only dependency review could skip outside PRs; deployment explicitly required successful Verify/candidate jobs. PR, manual and scheduled runs did not deploy. The final delivery status required deployment completion, not runtime testing.
 
-The candidate retains configuration, source/build identity, Contracts provenance, runtime SBOM and full licences. Deployment is serialized and rejects superseded main commits. Failed provider operations retain deployment-state records and require diagnosis before a scoped retry; network failures stop without proxy changes or blind retries. See [validation policy](validation-policy.md).
+The candidate retains configuration, source/build identity, Contracts provenance, runtime SBOM and full licences. Deployment was serialized and rejected superseded main commits. Failed provider operations retain deployment-state records and require diagnosis before a scoped retry; network failures stop without proxy changes or blind retries. See [validation policy](validation-policy.md).
 
 ## Failure and optional diagnostic recovery
 
-- **Main deployment unexpectedly skipped:** inspect the workflow conditions, not an enable variable. After a workflow fix, merge it and inspect the new main run; rerunning the old run uses its old workflow revision. The final deployment check reports an unexpected skip as failure.
+- **Main deployment unexpectedly skipped (historical; main no longer deploys):** inspect the workflow conditions, not an enable variable. After a workflow fix, merge it and inspect the new main run; rerunning the old run uses its old workflow revision. The final deployment check reports an unexpected skip as failure.
 - **Admission limit reached:** retain the admission records and inspect the rejected instances. This message is emitted only after proven pre-model rejections. Run `npm run test:live` again to read the same deterministic IDs and use remaining IDs; it cannot exceed 30 IDs for that deployment. If every ID was rejected, inspect the cause before making a new deployment. A running instance instead produces a timeout naming that instance, with no claim of zero model calls.
 - **Real output identifies another Worker/candidate:** keep the job failed and preserve that completed instance. Retrying the same smoke reads its existing output; it cannot turn into a new-version execution. A reviewed new deployment is a separate attempt. Do not weaken version checks or automatically run replacement model calls.
 - **Credential/permission/model access failure:** correct the account or GitHub setting, then rerun the failed job. Do not change code to return a fake result or disable required verification.
