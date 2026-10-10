@@ -7,15 +7,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { expectedIdentity, runtimeIdentity } from "./build-identity.mjs";
 import { readModelFailure } from "../src/model-diagnostics.ts";
-import {
-  CANDIDATE,
-  ROOT,
-  readJson,
-  sha256,
-  verifyCandidate,
-  wrangler,
-  writeJson,
-} from "./project.mjs";
+import { CANDIDATE, ROOT, readJson, sha256, verifyCandidate, writeJson } from "./project.mjs";
 
 const WORKFLOW = "arcforges-ai-hello";
 const EVIDENCE = path.join(ROOT, "artifacts/deployment");
@@ -23,7 +15,8 @@ const DEPLOYMENT = path.join(EVIDENCE, "deployment.json");
 const SMOKE_PROTOCOL = "verified-hello-v1";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu;
 
-function credentials() {
+// Shared with eng/retire.mjs. Never print the returned token.
+export function credentials() {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   assert(
     /^[0-9a-f]{32}$/iu.test(accountId ?? ""),
@@ -320,66 +313,13 @@ export async function probe(
   );
 }
 
-async function deploy() {
-  const manifest = verifyCandidate();
-  assert.equal(
-    manifest.sourceDirty,
-    false,
-    "Commit source changes and rebuild before deploying a candidate.",
-  );
-  const auth = credentials();
-  const candidateSha256 = sha256(fs.readFileSync(path.join(CANDIDATE, "candidate.json")));
-  // Keep a record even if upload succeeds but CLI confirmation is lost.
-  writeJson(path.join(EVIDENCE, "intent.json"), {
-    accountId: auth.accountId,
-    sourceCommit: manifest.sourceCommit,
-    version: manifest.version,
-    candidateSha256,
-    requestedAt: new Date().toISOString(),
-  });
-  let output;
-  try {
-    output = wrangler(
-      [
-        "deploy",
-        "--config",
-        path.join(CANDIDATE, "wrangler.json"),
-        "--no-bundle",
-        "--tag",
-        manifest.version,
-        "--message",
-        manifest.sourceCommit,
-      ],
-      {
-        env: {
-          ...process.env,
-          CLOUDFLARE_ACCOUNT_ID: auth.accountId,
-          CLOUDFLARE_API_TOKEN: auth.token,
-          NO_COLOR: "1",
-          WRANGLER_SEND_METRICS: "false",
-        },
-      },
-    );
-  } catch (error) {
-    // Wrangler normally redacts credentials; also redact our exact token.
-    throw new Error(String(error).replaceAll(auth.token, "[REDACTED]"));
-  }
-  const workerVersion = parseWorkerVersion(output);
-  console.log(output.replaceAll(auth.token, "[REDACTED]"));
-  const runId = `hello-${workerVersion}`;
-  writeJson(DEPLOYMENT, {
-    accountId: auth.accountId,
-    workflow: WORKFLOW,
-    smokeProtocol: SMOKE_PROTOCOL,
-    workerVersion,
-    runId,
-    sourceCommit: manifest.sourceCommit,
-    version: manifest.version,
-    candidateSha256,
-    buildIdentity: runtimeIdentity(expectedIdentity(manifest.version)),
-    deployedAt: new Date().toISOString(),
-  });
-  console.log(`Deployed candidate ${manifest.version}; no Workflow or inference test was run.`);
+// HAR.40 retired the arcforges-ai-hello Worker and Workflow. Neither main nor a
+// local `npm run deploy` may recreate it; eng/retire.mjs deletes the deployment
+// only through the retire-cloudflare workflow.
+export const RETIRED = "arcforges-ai-hello is retired (HAR.40)";
+
+export async function deploy() {
+  throw new Error(`${RETIRED}; no deployment is made.`);
 }
 
 async function smoke() {
